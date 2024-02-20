@@ -1,0 +1,18 @@
+#+TITLE: CSS
+#+DATE: 2023-09-30 23:27:40
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+KEYWORDS: CSS
+#+CATEGORIES: CSS
+
+* box-shadow
+
+box-shadow: -10px 0px 13px -7px #ffffff, other shadow, other other shaow;
+
+1. horizontal offset: negative to left, positive to right
+2. vertical offset: negative to bottom, positive to top
+4. blur radius: shadow blur level, lager the value, blurrier the shadow edges.
+5. spread radius: The larger the value, the larger the shadow range.
+6. color: shadow color
