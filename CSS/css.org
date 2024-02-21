@@ -1,4 +1,5 @@
 #+TITLE: CSS
+#+SUBTITLE: CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG or XHTML)
 #+DATE: 2023-09-30 23:27:40
 #+DISPLAY: t
 #+STARTUP: indent

@@ -18,6 +18,7 @@
 
 * define Protobuf file
 
+#+NAME: hello.proto
 #+begin_src protobuf
   syntax = "proto3";
 
@@ -401,6 +402,6 @@
   # Locality Name (eg, city) []:
   # Organization Name (eg, company) [Internet Widgits Pty Ltd]:
   # Organizational Unit Name (eg, section) []:
-  # Common Name (e.g. server FQDN or YOUR name) []:一定要填你的域名
-  # Email Address []:你的邮件
+  # Common Name (e.g. server FQDN or YOUR name) []:
+  # Email Address []:
 #+end_src
