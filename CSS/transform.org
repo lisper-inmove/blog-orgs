@@ -1,0 +1,115 @@
+#+TITLE: Transform
+#+DATE: 2024-02-22 06:43:01
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Transforms allow you to modify an element's appearance and position without affecting the layout of other elements around it. This capability enables you to rotate, scale, move, or skew elements.
+#+KEYWORDS: Transform
+#+CATEGORIES: CSS
+
+* Key Concepts
+1. Coordinate System: CSS transforms operate within a coordinate system where the origin (0, 0) is at the center of the element being transformed.
+2. Transform Origin: The transform-origin property allows you to change the point around which a transformation is applied. By default, this is the center of the element, but it can be set to any point within or outside the element, affecting how rotations, scaling, and other transformations are perceived.
+
+* 2D Transform Functions
+1. rotate: Rotate an element clockwise or counterclockwise by a special angle. =rotate(45deg)=
+2. scale: Scales an element up or down in size. =scale(2, 3)= doubles the width, triples the height.
+3. translate: Move an element. =translate(50px, 20px)=
+4. skew: Skew an element by a certain angle along the x-aixs or y-axis.
+
+* 3D Transform Functions
+1. rotateX/rotateY/rotateZ/rotate3d
+2. scaleX/scaleY/scaleZ/scale3d
+3. translateX/translateY/translateZ/translate3d
+
+#+ATTR_HTML: :align start :height 300 :width 300
+#+begin_iframe
+[[http://192.168.3.124:3000/demonstration/transform][3d Cube]]
+#+end_iframe
+
+#+NAME: 3d-cube.tsx
+#+begin_src typescript
+  import "./style.css";
+
+  export default function TransformDemoPage() {
+    return (
+      <>
+        <div className="flex items-center h-[50vh] w-[50vw] justify-center">
+          <div className="cube">
+            <div className="side bg-red-500 left-side"></div>
+            <div className="side bg-green-500 right-side"></div>
+            <div className="side bg-blue-500 top-side"></div>
+            <div className="side bg-gray-500 bottom-side"></div>
+            <div className="side bg-orange-500 front-side"></div>
+            <div className="side bg-cyan-500 back-side"></div>
+          </div>
+        </div>
+      </>
+    );
+  }
+#+end_src
+
+#+NAME: style.css
+#+begin_src css
+  .cube {
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    perspective: 500px;
+    animation: rotate-cube 20s infinite linear;
+  }
+
+  .side {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+  }
+
+  .front-side {
+    transform: translateZ(50px);
+  }
+
+  .back-side {
+    transform: translateZ(-50px);
+  }
+
+  .right-side {
+    transform: translateX(50px) rotateY(90deg);
+  }
+
+  .left-side {
+    transform: translateX(-50px) rotateY(-90deg);
+  }
+
+  .top-side {
+    transform: translateY(-50px) rotateX(90deg);
+  }
+
+  .bottom-side {
+    transform: translateY(50px) rotateX(-90deg);
+  }
+
+  @keyframes rotate-cube {
+    0% {
+      transform: rotateX(45deg) rotateY(45deg);
+    }
+
+    25% {
+      transform: rotateX(-45deg) rotateY(45deg);
+    }
+
+    50% {
+      transform: rotateX(-45deg) rotateY(-45deg);
+    }
+
+    70% {
+      transform: rotateX(45deg) rotateY(-45deg);
+    }
+
+    50% {
+      transform: rotateX(45deg) rotateY(45deg);
+    }
+  }
+#+end_src

@@ -144,7 +144,7 @@ CSS Animation controlled by typescript.
   }
 
   export default function AnimationDemoPage() {
-    function initialAnimation() {
+    function startAnimation() {
       const element = document.getElementById("animation-test");
       if (!element) return; // Exit if element not found
       element?.addEventListener("animationstart", function () {
@@ -156,7 +156,7 @@ CSS Animation controlled by typescript.
       });
 
       element?.addEventListener("animationend", function () {
-        clearAnimation("animation-test");
+        // clearAnimation("animation-test");
         console.log("Animation end");
       });
 
@@ -172,37 +172,23 @@ CSS Animation controlled by typescript.
       });
     }
 
-    function toggleAnimation() {
-      const element = document.getElementById("animation-test");
-      if (!element) return; // Exit if element not found
-      let state = element.style.animationPlayState;
-      console.log("Current State of Animation: ", state);
-      if (state === "paused") {
-        element.style.animationPlayState = "running";
-      } else if (state === "running") {
-        element.style.animationPlayState = "paused";
-      }
-    }
-
     return (
       <>
         <div
-          className="flex flex-col h-[100vh] w-[100vw] justify-center items-center"
+          className="flex h-[100vh] w-[100vw] justify-center items-center"
           id="animation-test"
         >
-          <button onClick={() => initialAnimation()} className="text-2xl">
-            Initial Animation
-          </button>
-          <button onClick={() => toggleAnimation()} className="text-2xl">
-            Toggle Animation
+          <button onClick={() => startAnimation()} className="text-2xl">
+            Start Animation
           </button>
         </div>
       </>
     );
   }
+
 #+end_src
 
-#+ATTR_HTML: :height 200 :align center
+#+ATTR_HTML: :height 200 :align start
 #+begin_iframe
-[[http://192.168.3.124:3000/demonstration/animation][Demo: Animation For BackgroundColor]]
+[[https://inmove.top/demonstration/animation][Animation Change BackgroundColor]]
 #+end_iframe
