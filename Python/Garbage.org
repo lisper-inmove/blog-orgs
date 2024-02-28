@@ -1,0 +1,20 @@
+#+TITLE: Garbage Collection
+#+DATE: 2022-11-28 18:31:14
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: A system that is responsible for deallocating objects that are no longer needed.
+#+KEYWORDS: Memory Management
+#+CATEGORIES: Python
+
+* Reference Counting
+The primary mechanism Python uses for garbage collection is reference counting. Each object in Python has a reference count, which is the number of references pointing to it. When the reference count drops to zero (meaning the object is no longer needed), Python automatically deallocates (or "garbage collects") that object, freeing up the memory.
+* Generational Collection
+Python's garbage collector uses a generational approach to improve efficiency. Objects are divided into generations based on how many collection passes they have survived. Newly created objects are placed in the first generation. If they survive a garbage collection pass, they are moved to the next generation. Older objects (in higher generations) are checked less frequently, which makes garbage collection more efficient, as it is assumed that long-lived objects are less likely to become garbage.
+* Cyclic Garbage Collection
+The cyclic garbage collector periodically scans the object space to find groups of objects that are only reachable by each other.
+This is achieved by performing a graph traversal starting from a set of objects known as "root" objects. Objects that are not reachable from these roots are considered for collection.
+Global variables or objects in current call stack are regard as "root".
+Iterator all those root objects, mark all objects activated that can be reached from root.
+Then iterator all objects, clear objects that are not marked as reachable.

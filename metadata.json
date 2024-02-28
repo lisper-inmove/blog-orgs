@@ -156,6 +156,18 @@
         "sort": 9999
     },
     {
+        "path": "./posts/Fantastic/LocalGitRepo.org",
+        "id": "Li9wb3N0cy9GYW50YXN0aWMvTG9jYWxHaXRSZXBvLm9yZw",
+        "title": "Local Git Repo Behind Router With DDNS",
+        "categories": "Fanatics",
+        "date": "2024-02-28 16:43:26",
+        "keywords": "Local Git Repo",
+        "difficulty": "",
+        "subtitle": "",
+        "display": "t",
+        "sort": 9999
+    },
+    {
         "path": "./posts/NetworkProgramming/tcp.org",
         "id": "Li9wb3N0cy9OZXR3b3JrUHJvZ3JhbW1pbmcvdGNwLm9yZw",
         "title": "TCP",
@@ -200,6 +212,30 @@
         "keywords": "Thread Process Coroutine",
         "difficulty": "",
         "subtitle": "Concurrent programming is a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Python/Python.org",
+        "id": "Li9wb3N0cy9QeXRob24vUHl0aG9uLm9yZw",
+        "title": "Some Functions we must Familiar with in Python",
+        "categories": "Python",
+        "date": "2024-02-28 17:26:13",
+        "keywords": "Mutable Default Argument Function",
+        "difficulty": "",
+        "subtitle": "Some functions or some syntactic sugar we must know in python",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Python/Garbage.org",
+        "id": "Li9wb3N0cy9QeXRob24vR2FyYmFnZS5vcmc",
+        "title": "Garbage Collection",
+        "categories": "Python",
+        "date": "2022-11-28 18:31:14",
+        "keywords": "Memory Management",
+        "difficulty": "",
+        "subtitle": "A system that is responsible for deallocating objects that are no longer needed.",
         "display": "t",
         "sort": 9999
     },
