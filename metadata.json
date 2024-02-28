@@ -36,6 +36,18 @@
         "sort": 9999
     },
     {
+        "path": "./posts/CSS/position.org",
+        "id": "Li9wb3N0cy9DU1MvcG9zaXRpb24ub3Jn",
+        "title": "Position",
+        "categories": "CSS",
+        "date": "2024-02-28 00:54:08",
+        "keywords": "Static, Relative, Absolute, Fixed, Sticky",
+        "difficulty": "",
+        "subtitle": "The position property is used to specify where an element is displayed on the page. When paired with the top,right,bottom,and left properties, the position determines the final location of the element.",
+        "display": "t",
+        "sort": 9999
+    },
+    {
         "path": "./posts/CSS/css.org",
         "id": "Li9wb3N0cy9DU1MvY3NzLm9yZw",
         "title": "CSS",
@@ -149,7 +161,7 @@
         "title": "TCP",
         "categories": "NetworkProgramming",
         "date": "2024-02-23 19:32:14",
-        "keywords": "Three-Way Handshaking, Four-Way Goodbye",
+        "keywords": "Three-Way Handshaking, Four-Way Goodbye, MSL",
         "difficulty": "",
         "subtitle": "Transmission Control Protocol, is a fundamental protocol within the Internet Protocol Suite, which is used for data transmission across network devices. It enables reliable, ordered, and error-checked delivery of a stream of bytes between applications running on hosts communicating via an IP network",
         "display": "t",
