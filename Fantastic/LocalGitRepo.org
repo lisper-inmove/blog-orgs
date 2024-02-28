@@ -1,0 +1,23 @@
+#+TITLE: Local Git Repo Behind Router With DDNS
+#+DATE: 2024-02-28 16:43:26
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE:
+#+KEYWORDS: Local Git Repo
+#+CATEGORIES: Fanatics
+
+* 路由器设置
+路由器版本为: 华为路由AX3 Pro
+更多功能 -> 安全设置 -> NAT服务 中添加，将git服务器的ssh端口映射出来
+假设映射出来的端口是 29099
+
+* 在git服务器上创建仓库
+
+git init --bare blog
+仓库位于 /home/inmove/blog 下面
+
+* 拉取项目
+
+git clone inmove@git-repo.inmove.top:29099/home/inmove/blog
