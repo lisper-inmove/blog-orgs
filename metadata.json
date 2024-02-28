@@ -180,6 +180,30 @@
         "sort": 9999
     },
     {
+        "path": "./posts/Python/Metaclass.org",
+        "id": "Li9wb3N0cy9QeXRob24vTWV0YWNsYXNzLm9yZw",
+        "title": "How Metaclass Work in Python",
+        "categories": "Python",
+        "date": "2024-02-28 12:39:24",
+        "keywords": "Metaclass",
+        "difficulty": "",
+        "subtitle": "A metaclass in Python is a class of a class that defines how a class behaves",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Python/Concurrent.org",
+        "id": "Li9wb3N0cy9QeXRob24vQ29uY3VycmVudC5vcmc",
+        "title": "Concurrent Programming",
+        "categories": "Python",
+        "date": "2023-10-02 13:00:12",
+        "keywords": "Thread Process Coroutine",
+        "difficulty": "",
+        "subtitle": "Concurrent programming is a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially",
+        "display": "t",
+        "sort": 9999
+    },
+    {
         "path": "./posts/resume.org",
         "id": "Li9wb3N0cy9yZXN1bWUub3Jn",
         "title": "Resume",

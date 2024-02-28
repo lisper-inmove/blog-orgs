@@ -1,0 +1,140 @@
+#+TITLE: How Metaclass Work in Python
+#+DATE: 2024-02-28 12:39:24
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: A metaclass in Python is a class of a class that defines how a class behaves
+#+KEYWORDS: Metaclass
+#+CATEGORIES: Python
+
+* Create Class dynamically use type
+type(name: string, bases: [string], attrs: [string]):
+1. name: Class name
+2. bases: Parent class
+3. attrs: Attributes
+
+#+begin_src python :results output
+  class A:
+      a = "A"
+
+  class B:
+      b = "B"
+
+  def function_for_C(a):
+      return a
+
+  def function_for_C_2(self, b):
+      return b
+
+  C = type("C", (A, B), {"name": "c", "function": function_for_C, "function2": function_for_C_2})
+  print(C)
+  c = C()
+  print(c.a, c.b, c.name, C.function(1), c.function2(2))
+#+end_src
+
+#+RESULTS:
+: <class '__main__.C'>
+: A B c 1 2
+
+We can return a class from a function, so that we can do something in the function. For example add a attribute
+#+begin_src python :results output :exports code
+  def metaclass(name, bases, attrs):
+      attrs.update({"__hello__": "hello"})
+      print(name, bases, attrs)
+      return type(name, bases, attrs)
+
+  class A(metaclass=metaclass):
+      name = "A"
+#+end_src
+
+#+RESULTS:
+: A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A', '__hello__': 'hello'}
+
+* More common usage of type
+Metaclass is also a class, it can be inherited.
+#+begin_src python :results output
+  class Metaclass(type):
+      def __new__(cls, name, bases, attrs):
+          print(name, bases, attrs)
+          # Step A:
+          # return type(name, bases, attrs)
+          # return type.__new__(cls, name, bases, attrs)
+          return super().__new__(cls, name, bases, attrs)
+
+  class Metaclass2(Metaclass):
+      def __new__(cls, name, bases, attrs):
+          print(name, bases, attrs)
+          return super().__new__(cls, name, bases, attrs)
+
+  class A(metaclass=Metaclass):
+      name = "A"
+#+end_src
+
+#+RESULTS:
+: A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A'}
+
+* Singleton use Metaclass
+** Thread unsafe
+#+begin_src python :results output
+  class Singleton(type):
+      _instances = {}
+      def __call__(cls, *args, **kargs):
+          print("call Singleton __call__")
+          if cls not in cls._instances:
+              instance = super().__call__(*args, **kargs)
+              cls._instances[cls] = instance
+          return cls._instances[cls]
+
+  # Foo = Singleton("Foo", (), ())
+  class Foo(metaclass=Singleton):
+      def __init__(self):
+          print("Foo")
+
+  f0 = Foo()
+  f1 = Foo()
+  print(f0 == f1)
+#+end_src
+
+#+RESULTS:
+: call Singleton __call__
+: Foo
+: call Singleton __call__
+: True
+
+** Thread safe
+#+begin_src python :results output
+  from threading import Lock, Thread
+
+  class SingletonMeta(type):
+      _instances = {}
+
+      _lock: Lock = Lock()
+      def __call__(cls, *args, **kwargs):
+          with cls._lock:
+              if cls not in cls._instances:
+                  instance = super().__call__(*args, **kwargs)
+                  cls._instances[cls] = instance
+          return cls._instances[cls]
+
+  class Singleton(metaclass=SingletonMeta):
+      value: str = None
+      def __init__(self, value: str) -> None:
+          self.value = value
+      def some_business_logic(self):
+          pass
+
+  def test_singleton(value: str) -> None:
+      singleton = Singleton(value)
+      print(singleton.value)
+
+  if __name__ == "__main__":
+      process1 = Thread(target=test_singleton, args=("FOO",))
+      process2 = Thread(target=test_singleton, args=("BAR",))
+      process2.start()
+      process1.start()
+#+end_src
+
+#+RESULTS:
+: BAR
+: BAR
