@@ -20,3 +20,18 @@
 =border: border-width border-style border-color;=
 =border-top/bottom/left/right: border-width border-style border-color;=
 Pay attention, the border width will occupy the width and height of parent container.
+
+* object-fit
+The `object-fit` property specifies how the content of a replaced element should be resized to fit its container.
+It can be thought of as a way of specifying how you want an image or video to fit into a box of a certain size.
+The property can take following values:
+1. /fill/: This is the default value. The content is sized to fill the lement's content box. If necessary, the object will be stretched to squished to fit.
+2. /contain/: The content is scaled to maintain its aspect ratio. For example, if container height = 100, width = 200, video width:height = 3:1, so the video in the container, height = 200 / 3, width = 200.
+3. /cover/: The content's aspect ratio will be maintained, and it will be cropped to cover the container.
+4. /none/: The content is not resized at all.
+5. /scale-down/: The content will scale down to fit the container if necessary but will not scale up.
+* object-position
+This property specifies the position of the replaced element's content within the element's box. It works in tandem with the object-fit.
+1. Take two keywords representing the horizontal and vertical position. Keywords can be top, right, bottom, left and center.
+2. Length values for x and y coordinates.
+3. Percentage values like 50% to position the content relative to the container's dimensions.

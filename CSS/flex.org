@@ -57,7 +57,14 @@ attentain:
 2. *flex-start*
 3. *flex-end*
 4. *center*
-5. *baseline*: Align by text baseline. see [[https:inmove.top/demonstration/flex][A Demo: How [align-items: baseline] affect container items]].
+5. *baseline*: Align by text baseline.
+
+#+ATTR_HTML: :align start
+#+begin_iframe
+[[https://inmove.top/learning_react/flex-baseline][items-baseline]]
+#+end_iframe
+
+
 ** align-self
 This attribute set to one of the items. Just effect the item itself. Attribute values are same as align-items.
 

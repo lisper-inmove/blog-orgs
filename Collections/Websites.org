@@ -1,0 +1,60 @@
+#+TITLE: Websites Collections
+#+DATE: 2024-02-29 09:17:31
+#+DISPLAY: nil
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE:
+#+KEYWORDS: Websites
+#+CATEGORIES: Collections
+
+* Aceternity UI
+[[https://ui.aceternity.com/][Aceternity UI]]
+[[https://ui.shadcn.com/][Shadcn/ui]]
+[[https://www.43848.com/][简单设计]]
+[[https://nextui.org/][Next UI]]
+
+* Bloc for Beginners
+[[https://medium.com/flutter-community/flutter-bloc-for-beginners-839e22adb9f5][Bloc for Beginners]]
+
+* Neumorphism
+[[https://neumorphism.coldstone.fun][Neumorphism UI]]
+
+* Excalidraw
+[[https://excalidraw.com/][Excalidraw]]
+
+* Icons
+[[https://react-icons.github.io/react-icons/][React Icons]]
+[[https://lucide.dev/][Lucide Icons]]
+
+* Google Fonts
+[[https://fonts.google.com/][Google Fonts]]
+
+* Random Photos
+[[https://picsum.photos/][Lorem Picsum]]
+
+* VIA
+[[https://usevia.app/][VIA]]
+
+* Web Frameworks Benchmark
+[[https://web-frameworks-benchmark.netlify.app/result?asc=0&metric=totalRequestsPerS&order_by=level64][Web Frameworks Benchmark]]
+
+* AI Chats
+[[https://huggingface.co/chat][Huggingface Chat]]
+[[https://gemini.google.com/app][Gemini Chat]]
+
+* CSS
+[[https://tailwindcss.com/][Tailwindcss]]
+
+* PT Station
+[[https://tracker.open.cd/][OpenCD]]
+[[https://springsunday.net/index.php][Spring Sunday]]
+
+* Tools
+[[https://it-tools.tech/][IT Tools]]
+
+* Electronic Part
+[[https://octopart.com/][The electronic part seach engine]]
+
+* Nobe
+[[https://www.nobepay.com/app/login][Nobe]]

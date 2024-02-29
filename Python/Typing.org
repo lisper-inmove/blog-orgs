@@ -1,0 +1,69 @@
+#+TITLE: Typing
+#+DATE: 2024-02-29 21:21:59
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: typing is imported from 3.5. With Type Hints, developers can specify the expected data type for variables and return values.
+#+KEYWORDS: typing, mypy
+#+CATEGORIES: Python
+
+* Why use typing
+
+Use typing is more friendly for mypy.
+We should use typing with mypy to decrease errors.
+
+* Base type
+Base types includes *int* *float* *bool* and *str*
+#+begin_src python :results output
+  def add_numbers(a: int, b: int) -> int:
+      return a + b
+#+end_src
+
+* List Dict and Tuple
+#+begin_src python :results output
+  from typing import List, Dict, Tuple
+
+  def process_items(items: List[int]) -> None:
+      pass
+
+  def map_values(mapping: Dict[str, int]) -> None:
+      pass
+
+  def get_coordinates() -> Tuple[int, int]:
+      return (10, 20)
+#+end_src
+
+* Optional and Union
+#+begin_src python :results output
+  from typing import Optional, Union
+
+  def get_name(user_id: int) -> Optional[str]:
+      pass
+
+  def process(value: Union[int, str]):
+      pass
+#+end_src
+
+* Type alias
+#+begin_src python :results output
+  from typing import Dict, Union, List
+
+  JSON = Dict[str, Union[str, int, float, bool, None, List['JSON'], Dict[str, 'JSON']]]
+
+  def parse_json(data: JSON) -> None:
+      pass
+#+end_src
+
+* NewType and Callable
+#+begin_src python :results output
+  from typing import NewType, Callable
+
+  UserId = NewType('UserId', int)
+
+  def user_processor(user_id: UserId) -> None:
+      pass
+
+  def execute_function(func: Callable[[int, int], int]) -> None:
+      pass
+#+end_src

@@ -1,0 +1,33 @@
+#+TITLE: Git Hooks - pre-commit
+#+DATE: 2024-03-01 00:45:31
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: mypy check hook before commit
+#+KEYWORDS: mypy, pre-commit
+#+CATEGORIES: Git
+
+* pre-commit for mypy for python files
+#+begin_src bash
+  #!/bin/sh
+
+  # Collect files in stage area
+  FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$')
+  if [ -z "$FILES" ]; then
+      exit 0
+  fi
+
+  echo "Running mypy..."
+  for FILE in $FILES; do
+      mypy "$FILE"
+      if [ $? -ne 0 ]; then
+          echo "mypy failed: $FILE"
+          exit 1
+      fi
+  done
+
+  echo "mypy all passed"
+  exit 0
+
+#+end_src

@@ -60,18 +60,6 @@
         "sort": 9999
     },
     {
-        "path": "./posts/CSS/selector.org",
-        "id": "Li9wb3N0cy9DU1Mvc2VsZWN0b3Iub3Jn",
-        "title": "Selector",
-        "categories": "CSS",
-        "date": "2024-02-21 13:55:33",
-        "keywords": "Selector",
-        "difficulty": "",
-        "subtitle": "CSS selectors are patterns used to select the element(s) you want to style in your web page",
-        "display": "t",
-        "sort": 9999
-    },
-    {
         "path": "./posts/CSS/animation.org",
         "id": "Li9wb3N0cy9DU1MvYW5pbWF0aW9uLm9yZw",
         "title": "Animation",
@@ -93,6 +81,18 @@
         "difficulty": "",
         "subtitle": "Transforms allow you to modify an element's appearance and position without affecting the layout of other elements around it. This capability enables you to rotate, scale, move, or skew elements.",
         "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Collections/Websites.org",
+        "id": "Li9wb3N0cy9Db2xsZWN0aW9ucy9XZWJzaXRlcy5vcmc",
+        "title": "Websites Collections",
+        "categories": "Collections",
+        "date": "2024-02-29 09:17:31",
+        "keywords": "Websites",
+        "difficulty": "",
+        "subtitle": "",
+        "display": "nil",
         "sort": 9999
     },
     {
@@ -168,6 +168,18 @@
         "sort": 9999
     },
     {
+        "path": "./posts/Git/Hooks.org",
+        "id": "Li9wb3N0cy9HaXQvSG9va3Mub3Jn",
+        "title": "Git Hooks - pre-commit",
+        "categories": "Git",
+        "date": "2024-03-01 00:45:31",
+        "keywords": "mypy, pre-commit",
+        "difficulty": "",
+        "subtitle": "mypy check hook before commit",
+        "display": "t",
+        "sort": 9999
+    },
+    {
         "path": "./posts/NetworkProgramming/tcp.org",
         "id": "Li9wb3N0cy9OZXR3b3JrUHJvZ3JhbW1pbmcvdGNwLm9yZw",
         "title": "TCP",
@@ -176,6 +188,18 @@
         "keywords": "Three-Way Handshaking, Four-Way Goodbye, MSL",
         "difficulty": "",
         "subtitle": "Transmission Control Protocol, is a fundamental protocol within the Internet Protocol Suite, which is used for data transmission across network devices. It enables reliable, ordered, and error-checked delivery of a stream of bytes between applications running on hosts communicating via an IP network",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Python/Dataclasses.org",
+        "id": "Li9wb3N0cy9QeXRob24vRGF0YWNsYXNzZXMub3Jn",
+        "title": "Dataclasses",
+        "categories": "Python",
+        "date": "2024-03-01 00:04:32",
+        "keywords": "Slot Class",
+        "difficulty": "",
+        "subtitle": "A tool to make it easier to create classes that are primarily used to store data.",
         "display": "t",
         "sort": 9999
     },
@@ -228,6 +252,18 @@
         "sort": 9999
     },
     {
+        "path": "./posts/Python/Libraries.org",
+        "id": "Li9wb3N0cy9QeXRob24vTGlicmFyaWVzLm9yZw",
+        "title": "Libraries",
+        "categories": "Python",
+        "date": "2024-02-29 20:54:57",
+        "keywords": "Library",
+        "difficulty": "",
+        "subtitle": "Python Libraries",
+        "display": "t",
+        "sort": 9999
+    },
+    {
         "path": "./posts/Python/Garbage.org",
         "id": "Li9wb3N0cy9QeXRob24vR2FyYmFnZS5vcmc",
         "title": "Garbage Collection",
@@ -236,6 +272,30 @@
         "keywords": "Memory Management",
         "difficulty": "",
         "subtitle": "A system that is responsible for deallocating objects that are no longer needed.",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Python/Typing.org",
+        "id": "Li9wb3N0cy9QeXRob24vVHlwaW5nLm9yZw",
+        "title": "Typing",
+        "categories": "Python",
+        "date": "2024-02-29 21:21:59",
+        "keywords": "typing, mypy",
+        "difficulty": "",
+        "subtitle": "typing is imported from 3.5. With Type Hints, developers can specify the expected data type for variables and return values.",
+        "display": "t",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Questions/One.org",
+        "id": "Li9wb3N0cy9RdWVzdGlvbnMvT25lLm9yZw",
+        "title": "Quetions Version 1",
+        "categories": "Questions",
+        "date": "2024-02-29 20:32:24",
+        "keywords": "Questions",
+        "difficulty": "",
+        "subtitle": "Questions in Coding",
         "display": "t",
         "sort": 9999
     },
