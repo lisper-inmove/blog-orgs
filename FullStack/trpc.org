@@ -183,6 +183,7 @@ Context can be an object or a function that return an object.
 #+NAME: src/trpc-config/context.ts
 #+begin_src typescript
   import dbConnect from "@/db/mongodb-client";
+  import { inferAsyncReturnType } from "@trpc/server";
 
   export interface ContextType {
     connect: any;
@@ -193,27 +194,43 @@ Context can be an object or a function that return an object.
   export const createContext = async (req?: Request) => {
     let connect = await dbConnect();
 
+    // if (req) {
+    //   if (!req.headers.get("token")) {
+    //     throw new Error("token is missed");
+    //   }
+    // }
+
     return {
       connect,
       version: "123",
       request: req,
     };
   };
+
+  export type Context = inferAsyncReturnType<typeof createContext>;
 #+end_src
 
 #+NAME: src/trpc-config/index.ts
 #+begin_src typescript
-  import { initTRPC } from "@trpc/server";
+  import { TRPCError, initTRPC } from "@trpc/server";
   import superjson from "superjson";
-  import { ContextType } from "./context";
+  import { Context } from "./context";
 
-  const t = initTRPC.context<Promise<ContextType>>().create({
+  const t = initTRPC.context<Context>().create({
     transformer: superjson,
+  });
+
+  const isAuthed = t.middleware(async ({ ctx, next }) => {
+    console.log(ctx.request);
+    // if (Math.random() < 0.5) {
+    //   throw new TRPCError({ code: "UNAUTHORIZED" });
+    // }
+    return next();
   });
 
   export const createCallerFactory = t.createCallerFactory;
   export const router = t.router;
-  export const publicProcedure = t.procedure;
+  export const publicProcedure = t.procedure.use(isAuthed);
 #+end_src
 
 #+NAME: src/trpc-config/routers/user-router.ts
@@ -237,8 +254,7 @@ Context can be an object or a function that return an object.
         return result.data;
       })
       .mutation(async ({ input, ctx }) => {
-        let c = await ctx;
-        console.log(c.request?.headers);
+        console.log("createUser", ctx.version);
         const user: TUser = await userModel.create({
           ...input,
         });
@@ -249,12 +265,7 @@ Context can be an object or a function that return an object.
       }),
 
     getUser: publicProcedure.query(async (opts) => {
-      // opts.ctx.then(({ connect, version }: ContextType) => {
-      //   console.log(connect, version);
-      // });
-
-      // let connect = (await opts.ctx).connect;
-      // console.log(connect);
+      console.log("createUser", opts.ctx.version);
 
       const users: TUser[] = await userModel.aggregate([
         {
