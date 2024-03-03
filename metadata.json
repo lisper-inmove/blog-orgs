@@ -322,5 +322,17 @@
         "subtitle": "Self Introduction",
         "display": "nil",
         "sort": 9999
+    },
+    {
+        "path": "./posts/FullStack/trpc.org",
+        "id": "Li9wb3N0cy9GdWxsU3RhY2svdHJwYy5vcmc",
+        "title": "tRPC setup",
+        "categories": "Typescript FullStack",
+        "date": "2024-03-03 00:09:42",
+        "keywords": "tRPC typescript NextJs",
+        "difficulty": "",
+        "subtitle": "tRPC setup with Next.Js 14 and MongoDB",
+        "display": "t",
+        "sort": 9999
     }
 ]

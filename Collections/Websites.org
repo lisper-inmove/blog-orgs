@@ -58,3 +58,9 @@
 
 * Nobe
 [[https://www.nobepay.com/app/login][Nobe]]
+
+* Send Email
+[[https://resend.com/overview][resend.com]]
+
+* cms
+[[https://payloadcms.com/blog][payloadcms]]

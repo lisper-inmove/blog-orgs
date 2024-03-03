@@ -10,3 +10,7 @@
 
 *  Date and Time
 [[https://pendulum.eustace.io/][Pendulum]]
+
+* Logging and Print
+[[https://github.com/Delgan/loguru][loguru]]
+[[https://github.com/gruns/icecream][icecream]]
