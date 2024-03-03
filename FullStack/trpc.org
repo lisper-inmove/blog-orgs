@@ -304,16 +304,6 @@ Context can be an object or a function that return an object.
   export const clientTrpc = createTRPCReact<AppRouter>({});
 #+end_src
 
-#+NAME: src/trpc-config/server-client.ts
-#+begin_src typescript
-  import { appRouter } from "@/trpc-config/router";
-  import { createCallerFactory } from ".";
-  import { createContext } from "./context";
-  const createCaller = createCallerFactory(appRouter);
-  // use server
-  export const serverClientTrpc = createCaller(createContext());
-#+end_src
-
 * nextjs trpc router
 #+NAME: src/app/api/trpc/[trpc]/route.ts
 #+begin_src typescript
