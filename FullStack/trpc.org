@@ -244,6 +244,7 @@ Context can be an object or a function that return an object.
         });
         return {
           user,
+          token: "My test Token",
         };
       }),
 
@@ -347,6 +348,12 @@ Becase i have set nextConfig.basePath to learning_react, so that here, url must 
 
   const url = "http://192.168.3.124:3000/learning_react/api/trpc";
 
+  let token: string;
+
+  export const setToken = (newToken: string) => {
+    token = `${newToken}-${Math.random()}`;
+  };
+
   export const Provider = ({ children }: { children: ReactNode }) => {
     const [queryClient] = useState(
       () =>
@@ -364,6 +371,11 @@ Becase i have set nextConfig.basePath to learning_react, so that here, url must 
       links: [
         httpBatchLink({
           url: url,
+          headers() {
+            return {
+              Authorization: token,
+            };
+          },
         }),
       ],
     });
@@ -411,20 +423,36 @@ Becase i have set nextConfig.basePath to learning_react, so that here, url must 
   "use client";
 
   import { clientTrpc } from "@/trpc-config/client";
+  import { setToken } from "@/trpc-config/provider";
 
   const CreateUser = () => {
-    const { data, mutate } = clientTrpc.userRouter.createUser.useMutation();
-    const users = clientTrpc.userRouter.getUser.useQuery();
-    console.log(users.data);
+    const { data: users, refetch } = clientTrpc.userRouter.getUser.useQuery();
+    const { data, mutate } = clientTrpc.userRouter.createUser.useMutation({
+      onSuccess({ user, token }) {
+        console.log(user);
+        setToken(token);
+      },
+    });
+
+    function queryUsers() {
+      let data = refetch();
+      data.then((values) => {
+        console.log(values);
+        console.log(values.data);
+      });
+    }
 
     return (
-      <button
-        onClick={() =>
-          mutate({ name: "test", email: "test@gmail.com", password: "123456" })
-        }
-      >
-        Create User
-      </button>
+      <>
+        <button
+          onClick={() =>
+            mutate({ name: "test", email: "test@gmail.com", password: "123456" })
+          }
+        >
+          Create User
+        </button>
+        <button onClick={() => queryUsers()}>Query Users(token is set)</button>
+      </>
     );
   };
 
