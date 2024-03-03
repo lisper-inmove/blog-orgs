@@ -187,17 +187,18 @@ Context can be an object or a function that return an object.
   export interface ContextType {
     connect: any;
     version: string;
+    request?: Request;
   }
 
   export const createContext = async (req?: Request) => {
-    console.log(req);
     let connect = await dbConnect();
 
     return {
       connect,
       version: "123",
+      request: req,
     };
-  }
+  };
 #+end_src
 
 #+NAME: src/trpc-config/index.ts
@@ -236,6 +237,8 @@ Context can be an object or a function that return an object.
         return result.data;
       })
       .mutation(async ({ input, ctx }) => {
+        let c = await ctx;
+        console.log(c.request?.headers);
         const user: TUser = await userModel.create({
           ...input,
         });
