@@ -13,6 +13,7 @@
 [[https://ui.shadcn.com/][Shadcn/ui]]
 [[https://www.43848.com/][简单设计]]
 [[https://nextui.org/][Next UI]]
+[[https://uiverse.io][uiverse]]
 
 * Bloc for Beginners
 [[https://medium.com/flutter-community/flutter-bloc-for-beginners-839e22adb9f5][Bloc for Beginners]]
@@ -52,6 +53,7 @@
 
 * Tools
 [[https://it-tools.tech/][IT Tools]]
+[[https://babeljs.io/repl][babeljs]]
 
 * Electronic Part
 [[https://octopart.com/][The electronic part seach engine]]
@@ -64,3 +66,9 @@
 
 * cms
 [[https://payloadcms.com/blog][payloadcms]]
+
+* Fake data api
+[[https://jsonplaceholder.typicode.com/][JSON Placeholder]]
+
+* templates
+[[https://demo.react.email/preview/welcome/stripe-welcome?view=source][react email templates]]

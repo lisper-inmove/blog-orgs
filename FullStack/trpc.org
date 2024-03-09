@@ -6,7 +6,7 @@
 #+AUTHOR: inmove
 #+SUBTITLE: tRPC setup with Next.Js 14 and MongoDB
 #+KEYWORDS: tRPC typescript NextJs
-#+CATEGORIES: Typescript FullStack
+#+CATEGORIES: NextJs FullStack
 
 * What's tRPC
 [[https://trpc.io/][tRPC Home]]

@@ -30,8 +30,16 @@ The property can take following values:
 3. /cover/: The content's aspect ratio will be maintained, and it will be cropped to cover the container.
 4. /none/: The content is not resized at all.
 5. /scale-down/: The content will scale down to fit the container if necessary but will not scale up.
+
 * object-position
 This property specifies the position of the replaced element's content within the element's box. It works in tandem with the object-fit.
 1. Take two keywords representing the horizontal and vertical position. Keywords can be top, right, bottom, left and center.
 2. Length values for x and y coordinates.
 3. Percentage values like 50% to position the content relative to the container's dimensions.
+
+* inset
+=inset: top right bottom left=
+inset property is a shorthand that combines the four individual properties top,right,bottom and left.
+1. If you specify one value, it applies to all four sides.
+2. If you specify two values, the first applies to the top and bottom, the second to the left and right.
+3. If you specify three values, the first applies to the top, the second to the left and right, and the third to the bottom.
