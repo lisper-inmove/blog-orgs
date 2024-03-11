@@ -76,7 +76,7 @@ For example every time we call =setCount(count + 1)=, in the current page render
 
 #+ATTR_HTML: :width 50% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-state-hook][useState]]
+[[https://inmove.top/learning_react/hooks/use-state-hook][useState]]
 #+end_iframe
 
 * useReducer
@@ -165,7 +165,7 @@ useReducer is used in composite types, so that we can combine all the modify fun
 #+end_src
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-reducer][useReducer]]
+[[https://inmove.top/learning_react/hooks/use-reducer][useReducer]]
 #+end_iframe
 * useContext
 
@@ -284,7 +284,7 @@ This example, we have four files.
 
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-context-hook][useContext]]
+[[https://inmove.top/learning_react/hooks/use-context-hook][useContext]]
 #+end_iframe
 
 * useRef
@@ -342,7 +342,7 @@ We should wrap it with the useMemo hook.
 In this example, only when flag change, the aHeavyFunction will be called.
 When i press 'Set Flag' button, the page is freezed, the results of the Plus button cannot be instantly reflected on the page.
 
-The [[https://inmove.top/learning_react/use-memo-hook][useMemo]] will pending the post page. So i put just the link here.
+The [[https://inmove.top/learning_react/hooks/use-memo-hook][useMemo]] will pending the post page. So i put just the link here.
 
 #+begin_src typescript
   "use client";
@@ -471,7 +471,7 @@ The [[https://inmove.top/learning_react/use-memo-hook][useMemo]] will pending th
 #+end_src
 #+ATTR_HTML: :width 80% :height 300 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-callback-hook][useCallback]]
+[[https://inmove.top/learning_react/hooks/use-callback-hook][useCallback]]
 #+end_iframe
 * useMemo VS useCalback
 *useMemo* is used to /memoize ("remember") the result of a function/. It will only recompute the memoized value when one of its dependencies has changed. This optimization helps to avoid expensive calculations on every render.
@@ -598,7 +598,7 @@ This example, the ref has no reference component, we use the useImperativeHandle
 #+end_src
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-imperative-handle-hook][useImperativeHandle]]
+[[https://inmove.top/learning_react/hooks/use-imperative-handle-hook][useImperativeHandle]]
 #+end_iframe
 
 * useEffect
@@ -697,7 +697,7 @@ The return value is optional, and it must be a function, this function will be c
 Observe the console log when press the button.
 #+ATTR_HTML: :width 80% :height 200 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-effect][useEffect]]
+[[https://inmove.top/learning_react/hooks/use-effect][useEffect]]
 #+end_iframe
 
 * useTransition
@@ -785,7 +785,7 @@ With useTransition, when we press About or Contact before Posts success, content
 #+end_src
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-transition-hook][useTransition]]
+[[https://inmove.top/learning_react/hooks/use-transition-hook][useTransition]]
 #+end_iframe
 
 * useLayoutEffect
@@ -895,5 +895,5 @@ But when we use deferredValue, only we stop type for some milliseconds, the defe
 #+end_src
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
-[[https://inmove.top/learning_react/use-deferred-hook][useDeferred]]
+[[https://inmove.top/learning_react/hooks/use-deferred-hook][useDeferred]]
 #+end_iframe

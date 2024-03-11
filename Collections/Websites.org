@@ -72,3 +72,6 @@
 
 * templates
 [[https://demo.react.email/preview/welcome/stripe-welcome?view=source][react email templates]]
+
+* payment
+[[https://dashboard.stripe.com/test/webhooks][stripe webhook]]

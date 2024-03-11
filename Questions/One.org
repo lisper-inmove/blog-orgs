@@ -1,6 +1,6 @@
 #+TITLE: Quetions Version 1
 #+DATE: 2024-02-29 20:32:24
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
