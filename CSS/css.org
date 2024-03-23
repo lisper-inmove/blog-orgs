@@ -43,3 +43,36 @@ inset property is a shorthand that combines the four individual properties top,r
 1. If you specify one value, it applies to all four sides.
 2. If you specify two values, the first applies to the top and bottom, the second to the left and right.
 3. If you specify three values, the first applies to the top, the second to the left and right, and the third to the bottom.
+
+* accent-color
+=accent-color: red=
+This property is a CSS feature that enables web developers to define a custom color for the built-in UI controls provided by the browser. These controls include form elements like checkboxes, radio buttons, and sliders, which traditionally display in the default style of the user's browser. By setting an accent color, you ensure these elements align with your site's design language, creating a more integrated and harmonious look.
+#+begin_src typescript
+  export default function AccentColorDemo() {
+    return (
+      <>
+        <div className="flex gap-5">
+          <input
+            type="checkbox"
+            id="berries_1"
+            value="strawberries"
+            className="accent-cyan-500"
+          />
+          <input type="radio" className="accent-red-400" />
+          <progress max="100" value="50" className="accent-zinc-600">
+            50%
+          </progress>
+          <label>
+            Range Slider
+            <input type="range" className="accent-sky-600" />
+          </label>
+          <div className="w-10 h-10 hover:text-accent accent-cyan-500">Hello</div>
+        </div>
+      </>
+    );
+  }
+#+end_src
+#+ATTR_HTML: :width 80% :height 100 :align left
+#+begin_iframe
+[[https://inmove.top/learning_react/css/accent-color][accent-color]]
+#+end_iframe

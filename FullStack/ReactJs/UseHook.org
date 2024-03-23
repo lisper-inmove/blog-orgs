@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Use hook in reactjs
-#+KEYWORDS: hook
+#+KEYWORDS: useState useReducer useContext useRef useMemo useCallback forwardRef useEffect useTransition useLayoutEffect useDeferred
 #+CATEGORIES: FullStack ReactJs
 
 * useState
@@ -602,6 +602,8 @@ This example, the ref has no reference component, we use the useImperativeHandle
 #+end_iframe
 
 * useEffect
+
+=useEffect= will be called after the component rendered successfully.
 
 Here are three kinds of usage of useEffect.
 1. Empty dependency array: Run only once. Run the useEffect code bloc when the component mounted.
