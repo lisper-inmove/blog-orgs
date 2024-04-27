@@ -1,6 +1,6 @@
 #+TITLE: Label
 #+DATE: 2023-09-28 16:44:11
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

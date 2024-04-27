@@ -7,6 +7,7 @@
 #+SUBTITLE: A powerful layout system available in CSS that allows for the two-dimensional arrangement of elements on a web page
 #+KEYWORDS: Grid Layout
 #+CATEGORIES: CSS
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-grid.png
 
 * An Image
 

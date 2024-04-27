@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Git handbook
-#+KEYWORDS: Git
+#+KEYWORDS: Merge Remove big file
 #+CATEGORIES: Git
 
 * Save username and password using http clone

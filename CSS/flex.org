@@ -7,6 +7,7 @@
 #+SUBTITLE: Officially known as the CSS Flexible Box Layout Module, is a powerful, efficient layout model designed to distribute space along a single column or row within a container.
 #+KEYWORDS: Flexible Box Layout Module
 #+CATEGORIES: CSS
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-flex.png
 
 * Key Concepts
 

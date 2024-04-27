@@ -1,6 +1,6 @@
 #+TITLE: 300. 最长递增子序列
 #+DATE: 2023-10-08 08:30:57
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

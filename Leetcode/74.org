@@ -1,6 +1,6 @@
 #+TITLE: 74. 搜索二维矩阵
 #+DATE: 2023-10-01 21:18:05
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

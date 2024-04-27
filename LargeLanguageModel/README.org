@@ -1,0 +1,14 @@
+#+TITLE: Large Language Model
+#+DATE: 2024-04-09 16:33:19
+#+DISPLAY: nil
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Learn LLM
+#+KEYWORDS:
+#+CATEGORIES: LLM
+#+CARDIMAGE:
+
+
+* Transformer
+** 注意力机制

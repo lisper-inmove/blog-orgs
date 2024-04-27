@@ -1,6 +1,6 @@
 #+TITLE: 安装Kubernetes
 #+DATE: 2023-09-28 13:52:38
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

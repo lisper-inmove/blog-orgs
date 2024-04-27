@@ -7,6 +7,7 @@
 #+SUBTITLE: CSS transitions allow you to change property values smoothly (over a given duration) from one state to another
 #+KEYWORDS: Simple Animation
 #+CATEGORIES: CSS
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-transition.png
 
 * Key Concepts
 

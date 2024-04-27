@@ -5,7 +5,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: CSS
+#+KEYWORDS: css basic properties
 #+CATEGORIES: CSS
 
 * box-shadow
@@ -72,7 +72,97 @@ This property is a CSS feature that enables web developers to define a custom co
     );
   }
 #+end_src
+
 #+ATTR_HTML: :width 80% :height 100 :align left
 #+begin_iframe
 [[https://inmove.top/learning_react/css/accent-color][accent-color]]
+#+end_iframe
+
+* isolation
+
+The =isolation: isolate= will create a new z-index stack for the element and its children.
+
+In the example, without the =isolation: isolate=, the /open-quote/ will be sheltered by the /isolation-section/ div.
+With the =isolation= the /.isolation-content/ will be always higher than the /isolation-section/.
+So that the /open-quote/ will not be sheltered by the /isolation-section/.
+
+#+NAME: style.css
+#+begin_src css
+  .isolation-section {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    color: white;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    height: 200px;
+  }
+
+  code {
+    display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .isolation-paragraph {
+    display: inline-block;
+    position: relative;
+    isolation: isolate;
+    left: 5rem;
+  }
+
+  .isolation-paragraph::before {
+    content: open-quote;
+    font-family: serif;
+    color: red;
+    z-index: -1;
+    font-size: 15rem;
+    left: 1rem;
+    top: -7.5rem;
+    position: absolute;
+  }
+
+  .isolation-paragraph::after {
+    content: close-quote;
+    font-family: serif;
+    color: red;
+    z-index: -1;
+    left: -1rem;
+  }
+#+end_src
+
+#+NAME: page.tsx
+#+begin_src typescript
+  import "./style.css";
+
+  export default function IsolationDemo() {
+    return (
+      <>
+        <section className="isolation-section">
+          <div className="wrapper">
+            <h2 className="section-title"></h2>
+            <div className="isolation-content">
+              <p>
+                The <code className="bg-gray-800 text-xl">isolation</code>{" "}
+                property is used to create a new stacking context without any
+                other side affects.
+              </p>
+            </div>
+
+            <div className="isolation-content">
+              <p>
+                The <code className="bg-gray-800 text-xl">isolation</code>{" "}
+                property is used to create a new stacking context without any
+                other side affects.
+              </p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+#+end_src
+
+#+ATTR_HTML: :width 80% :height 100 :align left
+#+begin_iframe
+[[https://inmove.top/learning_react/css/isolation][isolation]]
 #+end_iframe

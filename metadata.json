@@ -10,6 +10,7 @@
         "subtitle": "A powerful layout system available in CSS that allows for the two-dimensional arrangement of elements on a web page",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-grid.png",
         "sort": 9999
     },
     {
@@ -23,6 +24,7 @@
         "subtitle": "Officially known as the CSS Flexible Box Layout Module, is a powerful, efficient layout model designed to distribute space along a single column or row within a container.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-flex.png",
         "sort": 9999
     },
     {
@@ -36,6 +38,7 @@
         "subtitle": "CSS transitions allow you to change property values smoothly (over a given duration) from one state to another",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/css-transition.png",
         "sort": 9999
     },
     {
@@ -49,6 +52,7 @@
         "subtitle": "The position property is used to specify where an element is displayed on the page. When paired with the top,right,bottom,and left properties, the position determines the final location of the element.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -57,11 +61,26 @@
         "title": "CSS",
         "categories": "CSS",
         "date": "2023-09-30 23:27:40",
-        "keywords": "CSS",
+        "keywords": "css basic properties",
         "difficulty": "",
         "subtitle": "CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG or XHTML)",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/CSS/selector.org",
+        "id": "Li9wb3N0cy9DU1Mvc2VsZWN0b3Iub3Jn",
+        "title": "Selectors",
+        "categories": "CSS",
+        "date": "2024-03-25 23:22:43",
+        "keywords": "before after",
+        "difficulty": "",
+        "subtitle": "Select a Dom",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -75,6 +94,7 @@
         "subtitle": "css built-in functions",
         "display": "t",
         "transship": "https://css-tricks.com/complete-guide-to-css-functions/",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -88,6 +108,7 @@
         "subtitle": "Animations enable you to animate transitions from one CSS style configuration to another.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -101,6 +122,7 @@
         "subtitle": "Transforms allow you to modify an element's appearance and position without affecting the layout of other elements around it. This capability enables you to rotate, scale, move, or skew elements.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -112,8 +134,9 @@
         "keywords": "Websites",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -127,6 +150,7 @@
         "subtitle": "Actor as \"Last In, First Out\" (LIFO) array, which means that the last element added to the stack is the first one to be removed",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -140,6 +164,7 @@
         "subtitle": "Queue is a fundamental data structure that operates in a First-In-First-Out (FIFO) manner",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -153,6 +178,7 @@
         "subtitle": "Implement a datastructure which has a function named getMin, always return the minimal value.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -166,6 +192,7 @@
         "subtitle": "LinkedList and some operations",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -179,6 +206,7 @@
         "subtitle": "An AVL tree is a type of binary search tree (BST) that maintains a balance condition to ensure that the tree remains approximately balanced, meaning the depth of the two subtrees of any node differ by no more than one.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -192,6 +220,7 @@
         "subtitle": "A Red-Black Tree is a type of self-balancing binary search tree, a data structure used in computer science to organize pieces of comparable data, such as numbers. It is an enhanced version of a binary search tree",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -205,6 +234,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -218,6 +248,7 @@
         "subtitle": "Print binary tree in terminal in a intuitive way.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -231,6 +262,21 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Databases/MongoDB/ImportExport.org",
+        "id": "Li9wb3N0cy9EYXRhYmFzZXMvTW9uZ29EQi9JbXBvcnRFeHBvcnQub3Jn",
+        "title": "MongoDB: Import and Export data",
+        "categories": "Database MongoDB",
+        "date": "2024-03-25 00:48:31",
+        "keywords": "mongodump mongorestore mongoimport mongoexport",
+        "difficulty": "",
+        "subtitle": "Ways of import and export data",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/database-01.png",
         "sort": 9999
     },
     {
@@ -244,6 +290,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -257,6 +304,7 @@
         "subtitle": "First glance of ReactJs source code",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -270,6 +318,7 @@
         "subtitle": "Use hook in reactjs",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -283,6 +332,7 @@
         "subtitle": "An elegant way to handle your request in typescript.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -296,6 +346,21 @@
         "subtitle": "mypy check hook before commit",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Git/Rebase.org",
+        "id": "Li9wb3N0cy9HaXQvUmViYXNlLm9yZw",
+        "title": "Rebase",
+        "categories": "Git",
+        "date": "2024-03-29 21:32:43",
+        "keywords": "Rebase",
+        "difficulty": "",
+        "subtitle": "Rebase use case",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -304,11 +369,12 @@
         "title": "Git",
         "categories": "Git",
         "date": "2023-09-28 00:57:21",
-        "keywords": "Git",
+        "keywords": "Merge Remove big file",
         "difficulty": "",
         "subtitle": "Git handbook",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -320,8 +386,9 @@
         "keywords": "Kubernetes Namespace",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -333,8 +400,9 @@
         "keywords": "Kubernetes",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -346,8 +414,9 @@
         "keywords": "Kubernetes StatefulSet",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -359,8 +428,9 @@
         "keywords": "Kubernetes",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -372,8 +442,9 @@
         "keywords": "Kubernetes PV PVC SC",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -385,8 +456,9 @@
         "keywords": "Kubernetes NFS",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -398,8 +470,9 @@
         "keywords": "Kubernetes Service",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -411,8 +484,9 @@
         "keywords": "Kubernetes DaemonSet",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -424,8 +498,9 @@
         "keywords": "Kubernetes ConfigMap",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -437,8 +512,9 @@
         "keywords": "Kubernetes Secret",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -450,8 +526,9 @@
         "keywords": "Kubernetes label",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -463,8 +540,9 @@
         "keywords": "Kubernetes Deployment",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -476,8 +554,9 @@
         "keywords": "Kubernetes Pod",
         "difficulty": "",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -489,8 +568,23 @@
         "keywords": "Kubernetes Job CronJob",
         "difficulty": "",
         "subtitle": "",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/LargeLanguageModel/README.org",
+        "id": "Li9wb3N0cy9MYXJnZUxhbmd1YWdlTW9kZWwvUkVBRE1FLm9yZw",
+        "title": "Large Language Model",
+        "categories": "LLM",
+        "date": "2024-04-09 16:33:19",
+        "keywords": "",
+        "difficulty": "",
+        "subtitle": "Learn LLM",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -502,8 +596,9 @@
         "keywords": "Leetcode",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 4
     },
     {
@@ -515,8 +610,9 @@
         "keywords": "Leetcode DynamicProgramming",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 5
     },
     {
@@ -528,8 +624,9 @@
         "keywords": "Leetcode DynamicProgramming",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 10
     },
     {
@@ -541,8 +638,9 @@
         "keywords": "滑动窗口",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 11
     },
     {
@@ -554,8 +652,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 22
     },
     {
@@ -567,8 +666,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 24
     },
     {
@@ -580,8 +680,9 @@
         "keywords": "Leetcode",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 25
     },
     {
@@ -593,8 +694,9 @@
         "keywords": "Stack",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 32
     },
     {
@@ -606,8 +708,9 @@
         "keywords": "BinarySearch",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 33
     },
     {
@@ -619,8 +722,9 @@
         "keywords": "Leetcode BinaryTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 34
     },
     {
@@ -632,8 +736,9 @@
         "keywords": "Leetcode",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 34
     },
     {
@@ -645,8 +750,9 @@
         "keywords": "Leetcode",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 42
     },
     {
@@ -658,8 +764,9 @@
         "keywords": "Leetcode DP",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 44
     },
     {
@@ -671,8 +778,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 61
     },
     {
@@ -684,8 +792,9 @@
         "keywords": "Leetcode BinaryTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 64
     },
     {
@@ -697,8 +806,9 @@
         "keywords": "BinarySearch",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 74
     },
     {
@@ -710,8 +820,9 @@
         "keywords": "SlidingWindow",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 76
     },
     {
@@ -723,8 +834,9 @@
         "keywords": "Leetcode MonotonicStack",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 84
     },
     {
@@ -736,8 +848,9 @@
         "keywords": "Leetcode MonotoneStack",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 85
     },
     {
@@ -749,8 +862,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 92
     },
     {
@@ -762,8 +876,9 @@
         "keywords": "BinarySearchTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 98
     },
     {
@@ -775,8 +890,9 @@
         "keywords": "Leetcode BinaryTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 105
     },
     {
@@ -788,8 +904,9 @@
         "keywords": "Leetcode BinaryTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 106
     },
     {
@@ -801,8 +918,9 @@
         "keywords": "Leetcode",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 123
     },
     {
@@ -814,8 +932,9 @@
         "keywords": "BinaryTree",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 124
     },
     {
@@ -827,8 +946,9 @@
         "keywords": "Leetcode 环形LinkedList",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 142
     },
     {
@@ -840,8 +960,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 160
     },
     {
@@ -853,8 +974,9 @@
         "keywords": "Leetcode",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 198
     },
     {
@@ -866,8 +988,9 @@
         "keywords": "Leetcode LinkedList",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 206
     },
     {
@@ -879,8 +1002,9 @@
         "keywords": "DoubleDualQueue",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 239
     },
     {
@@ -892,8 +1016,9 @@
         "keywords": "Leetcode 二叉树",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 255
     },
     {
@@ -905,8 +1030,9 @@
         "keywords": "DynamicProgramming",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 300
     },
     {
@@ -918,8 +1044,9 @@
         "keywords": "栈",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 316
     },
     {
@@ -931,8 +1058,9 @@
         "keywords": "Leetcode MonotonicStack",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 321
     },
     {
@@ -944,8 +1072,9 @@
         "keywords": "Leetcode MonotonicStack",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 402
     },
     {
@@ -957,8 +1086,9 @@
         "keywords": "Leetcode MonotonicStack",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 456
     },
     {
@@ -970,8 +1100,9 @@
         "keywords": "Leetcode",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 496
     },
     {
@@ -983,8 +1114,9 @@
         "keywords": "Leetcode",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 503
     },
     {
@@ -996,8 +1128,9 @@
         "keywords": "Leetcode",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 714
     },
     {
@@ -1009,8 +1142,9 @@
         "keywords": "Leetcode BinaryTree",
         "difficulty": "Medium",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 814
     },
     {
@@ -1022,8 +1156,9 @@
         "keywords": "DP BinarySearch",
         "difficulty": "Hard",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 887
     },
     {
@@ -1035,8 +1170,9 @@
         "keywords": "Stack",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 1021
     },
     {
@@ -1048,8 +1184,9 @@
         "keywords": "Stack",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 1047
     },
     {
@@ -1061,9 +1198,52 @@
         "keywords": "Leetcode",
         "difficulty": "Easy",
         "subtitle": "",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 2511
+    },
+    {
+        "path": "./posts/Linux/CpAndMv.org",
+        "id": "Li9wb3N0cy9MaW51eC9DcEFuZE12Lm9yZw",
+        "title": "cp and mv with progress bar",
+        "categories": "Linux",
+        "date": "2024-03-24 02:25:26",
+        "keywords": "cp mv",
+        "difficulty": "",
+        "subtitle": "It's better to display a progress bar when we copy or move a big file.",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Linux/xrandr.org",
+        "id": "Li9wb3N0cy9MaW51eC94cmFuZHIub3Jn",
+        "title": "xrandr",
+        "categories": "Linux",
+        "date": "2024-04-03 21:40:26",
+        "keywords": "Resolution Ratio",
+        "difficulty": "",
+        "subtitle": "Custom set resolution ratio in ubuntu",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/linux-01.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Databases/MongoDB/Index.org",
+        "id": "Li9wb3N0cy9EYXRhYmFzZXMvTW9uZ29EQi9JbmRleC5vcmc",
+        "title": "Index Optimize",
+        "categories": "MongoDB",
+        "date": "2024-03-31 01:12:09",
+        "keywords": "Index",
+        "difficulty": "",
+        "subtitle": "How to use index in MongoDB.",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/database-02.png",
+        "sort": 9999
     },
     {
         "path": "./posts/NetworkProgramming/CSocket.org",
@@ -1076,6 +1256,7 @@
         "subtitle": "IO多路复用 Epoll",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1087,8 +1268,9 @@
         "keywords": "Tcp",
         "difficulty": "",
         "subtitle": "三次握手 四次挥手 连接队列 滑动窗口",
-        "display": "nil",
+        "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1102,6 +1284,7 @@
         "subtitle": "套接字C-S 高并发: Epoll,内置selectors,asyncio,协程",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1115,6 +1298,7 @@
         "subtitle": "",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1128,6 +1312,7 @@
         "subtitle": "tRPC setup with Next.Js 14 and MongoDB",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1141,6 +1326,7 @@
         "subtitle": "NextJs With Express",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1154,6 +1340,49 @@
         "subtitle": "Middleware allows your run code before and after a request is complete",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Emacs/org-mode-working-with-source-code.org",
+        "id": "Li9wb3N0cy9FbWFjcy9vcmctbW9kZS13b3JraW5nLXdpdGgtc291cmNlLWNvZGUub3Jn",
+        "title": "Source code in OrgMode",
+        "categories": "OrgMode",
+        "date": "2024-03-29 21:19:33",
+        "keywords": "Source Code, Code block, import code",
+        "difficulty": "",
+        "subtitle": "Source code in OrgMode. Code block, run code and import code to file.",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Emacs/org-mode.org",
+        "id": "Li9wb3N0cy9FbWFjcy9vcmctbW9kZS5vcmc",
+        "title": "Study OrgMode",
+        "categories": "OrgMode",
+        "date": "2022-03-29 21:16:14",
+        "keywords": "Headlines TODO Date Tag Templates",
+        "difficulty": "",
+        "subtitle": "OrgMode common",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Projects/digitalhippo.org",
+        "id": "Li9wb3N0cy9Qcm9qZWN0cy9kaWdpdGFsaGlwcG8ub3Jn",
+        "title": "digitalhippo",
+        "categories": "Projects",
+        "date": "2024-03-24 12:45:15",
+        "keywords": "NextJs React",
+        "difficulty": "",
+        "subtitle": "A platform that sells virtual goods",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1167,6 +1396,21 @@
         "subtitle": "A calendar with agenda",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/icalendar.png",
+        "sort": 9999
+    },
+    {
+        "path": "./posts/Projects/featherpdf.org",
+        "id": "Li9wb3N0cy9Qcm9qZWN0cy9mZWF0aGVycGRmLm9yZw",
+        "title": "featherpdf",
+        "categories": "Projects",
+        "date": "2024-03-24 12:46:52",
+        "keywords": "NextJs ReactJs Python Websocket",
+        "difficulty": "",
+        "subtitle": "Talk to your pdf",
+        "display": "t",
+        "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1180,6 +1424,7 @@
         "subtitle": "A local music app",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1193,6 +1438,7 @@
         "subtitle": "A tool to make it easier to create classes that are primarily used to store data.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1206,6 +1452,7 @@
         "subtitle": "gRPC (gRPC Remote Procedure Call) is an open-source framework developed by Google for enabling efficient and scalable communication between services. It is designed to work across different languages and platforms",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1219,6 +1466,7 @@
         "subtitle": "A metaclass in Python is a class of a class that defines how a class behaves",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1232,6 +1480,7 @@
         "subtitle": "Concurrent programming is a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1245,6 +1494,7 @@
         "subtitle": "Some functions or some syntactic sugar we must know in python",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1258,6 +1508,7 @@
         "subtitle": "Python Libraries",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1271,6 +1522,7 @@
         "subtitle": "A system that is responsible for deallocating objects that are no longer needed.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1284,6 +1536,7 @@
         "subtitle": "typing is imported from 3.5. With Type Hints, developers can specify the expected data type for variables and return values.",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1297,6 +1550,7 @@
         "subtitle": "Questions in Coding",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1310,6 +1564,7 @@
         "subtitle": "Resume",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1323,6 +1578,7 @@
         "subtitle": "Self Introduction",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1336,6 +1592,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1349,6 +1606,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1362,6 +1620,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1375,6 +1634,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1388,6 +1648,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1401,6 +1662,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1414,6 +1676,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1427,6 +1690,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/blog-defalut.png",
         "sort": 9999
     },
     {
@@ -1440,6 +1704,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1453,6 +1718,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/kobe-01.png",
         "sort": 9999
     },
     {
@@ -1466,6 +1732,7 @@
         "subtitle": "",
         "display": "t",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     },
     {
@@ -1479,6 +1746,7 @@
         "subtitle": "Write flexible reusable code for data type.",
         "display": "nil",
         "transship": "",
+        "cardimage": "https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/white-tiger.png",
         "sort": 9999
     }
 ]
