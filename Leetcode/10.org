@@ -1,6 +1,6 @@
 #+TITLE: 10. 正则表达式匹配
 #+DATE: 2023-09-28 16:47:06
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

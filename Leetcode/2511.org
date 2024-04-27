@@ -1,6 +1,6 @@
 #+TITLE: 2511. 最多可以摧毁的敌人城堡数目
 #+DATE: 2023-10-01 00:07:09
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

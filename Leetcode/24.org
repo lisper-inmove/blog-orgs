@@ -1,6 +1,6 @@
 #+TITLE: 24. 两两交换LinkedList中的结点
 #+DATE: 2023-09-29 13:38:14
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

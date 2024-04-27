@@ -1,6 +1,6 @@
 #+TITLE: 142. 环形LinkedListII
 #+DATE: 2023-09-28 17:29:28
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

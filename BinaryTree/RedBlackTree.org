@@ -1,7 +1,7 @@
 #+TITLE: Red Black Tree
 #+SUBTITLE: A Red-Black Tree is a type of self-balancing binary search tree, a data structure used in computer science to organize pieces of comparable data, such as numbers. It is an enhanced version of a binary search tree
 #+DATE: 2023-09-28 00:15:14
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

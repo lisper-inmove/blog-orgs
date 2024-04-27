@@ -1,6 +1,6 @@
 #+TITLE: Some Functions we must Familiar with in Python
 #+DATE: 2024-02-28 17:26:13
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

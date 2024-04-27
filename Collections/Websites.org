@@ -1,6 +1,6 @@
 #+TITLE: Websites Collections
 #+DATE: 2024-02-29 09:17:31
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

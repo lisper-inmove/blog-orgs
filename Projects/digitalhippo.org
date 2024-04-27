@@ -1,6 +1,6 @@
 #+TITLE: digitalhippo
 #+DATE: 2024-03-24 12:45:15
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

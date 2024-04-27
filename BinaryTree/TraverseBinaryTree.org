@@ -1,6 +1,6 @@
 #+TITLE: Traverse Binary Tree
 #+DATE: 2023-10-04 00:51:41
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

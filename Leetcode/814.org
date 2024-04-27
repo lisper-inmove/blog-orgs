@@ -1,6 +1,6 @@
 #+TITLE: 814. 二叉树剪枝
 #+DATE: 2023-10-01 02:17:26
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

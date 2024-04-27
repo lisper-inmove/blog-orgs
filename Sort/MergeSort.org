@@ -1,6 +1,6 @@
 #+TITLE: Merge Sort
 #+DATE: 2023-09-27 21:48:50
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

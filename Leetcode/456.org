@@ -1,6 +1,6 @@
 #+TITLE: 456. 132模式
 #+DATE: 2023-09-27 22:01:50
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

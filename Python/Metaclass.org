@@ -1,6 +1,6 @@
 #+TITLE: How Metaclass Work in Python
 #+DATE: 2024-02-28 12:39:24
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

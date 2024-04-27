@@ -1,6 +1,6 @@
 #+TITLE: 44. 通配符匹配
 #+DATE: 2023-10-01 00:23:09
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

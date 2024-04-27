@@ -1,6 +1,6 @@
 #+TITLE: Job 与 CronJob
 #+DATE: 2023-09-28 15:25:26
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

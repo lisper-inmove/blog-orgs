@@ -1,6 +1,6 @@
 #+TITLE: Position
 #+DATE: 2024-02-28 00:54:08
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: Storage
 #+DATE: 2023-09-28 15:33:33
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

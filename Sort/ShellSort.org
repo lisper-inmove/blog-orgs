@@ -1,6 +1,6 @@
 #+TITLE: Shell Sort
 #+DATE: 2023-09-27 21:49:08
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

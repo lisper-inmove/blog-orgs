@@ -1,6 +1,6 @@
 #+TITLE: Config NextJs With Express
 #+DATE: 2024-03-04 16:15:28
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

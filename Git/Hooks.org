@@ -1,6 +1,6 @@
 #+TITLE: Git Hooks - pre-commit
 #+DATE: 2024-03-01 00:45:31
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

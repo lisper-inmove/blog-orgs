@@ -1,6 +1,6 @@
 #+TITLE: 402. 移掉K位数字
 #+DATE: 2023-09-27 21:59:43
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: Start from createRoot
 #+DATE: 2024-03-09 23:31:51
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: 160. 相交LinkedList
 #+DATE: 2023-09-28 18:43:15
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

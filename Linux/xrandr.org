@@ -1,6 +1,6 @@
 #+TITLE: xrandr
 #+DATE: 2024-04-03 21:40:26
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

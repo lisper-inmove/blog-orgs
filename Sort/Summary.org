@@ -1,6 +1,6 @@
 #+TITLE: Summary for Sort
 #+DATE: 2023-09-27 21:51:47
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

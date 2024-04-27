@@ -1,6 +1,6 @@
 #+TITLE: Binary Serach Tree
 #+DATE: 2023-09-28 00:13:27
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

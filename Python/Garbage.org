@@ -1,6 +1,6 @@
 #+TITLE: Garbage Collection
 #+DATE: 2022-11-28 18:31:14
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

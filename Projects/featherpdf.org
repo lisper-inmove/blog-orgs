@@ -1,6 +1,6 @@
 #+TITLE: featherpdf
 #+DATE: 2024-03-24 12:46:52
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

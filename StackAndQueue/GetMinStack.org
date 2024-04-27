@@ -1,6 +1,6 @@
 #+TITLE: Get minimal value stack O(1)
 #+DATE: 2023-09-28 00:35:01
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

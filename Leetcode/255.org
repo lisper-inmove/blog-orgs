@@ -1,6 +1,6 @@
 #+TITLE: 255. 验证二叉搜索树
 #+DATE: 2023-09-29 15:45:43
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

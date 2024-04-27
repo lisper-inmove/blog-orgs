@@ -1,6 +1,6 @@
 #+TITLE: 198. 打家劫舍
 #+DATE: 2023-09-27 20:03:40
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

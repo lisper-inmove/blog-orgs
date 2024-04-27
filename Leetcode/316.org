@@ -1,6 +1,6 @@
 #+TITLE: 316. 去除重复字母
 #+DATE: 2023-10-08 11:27:43
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

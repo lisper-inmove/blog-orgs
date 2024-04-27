@@ -1,6 +1,6 @@
 #+TITLE: Use Hook
 #+DATE: 2024-03-07 20:17:19
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
