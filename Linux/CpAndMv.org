@@ -1,6 +1,6 @@
 #+TITLE: cp and mv with progress bar
 #+DATE: 2024-03-24 02:25:26
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

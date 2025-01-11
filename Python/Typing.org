@@ -1,26 +1,29 @@
 #+TITLE: Typing
-#+DATE: 2024-02-29 21:21:59
+#+DATE: 2021-01-29 21:21:59
 #+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+SUBTITLE: typing is imported from 3.5. With Type Hints, developers can specify the expected data type for variables and return values.
-#+KEYWORDS: typing, mypy
+#+SUBTITLE: typing 是3.5引入的。有了typing的提示，在使用函数时能减少出错的可能性
+#+KEYWORDS: type check
 #+CATEGORIES: Python
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/typing.webp
 
-* Why use typing
+* 为什么要用 typing
 
-Use typing is more friendly for mypy.
-We should use typing with mypy to decrease errors.
+typing对mypy更友好
+用mypy检查代码的话能减少出错
 
-* Base type
-Base types includes *int* *float* *bool* and *str*
+* 基础类型
+
+基础类型包括 int float bool str。他们不需要从typing中导入。
+
 #+begin_src python :results output
   def add_numbers(a: int, b: int) -> int:
       return a + b
 #+end_src
 
-* List Dict and Tuple
+* 列表，字典与元组
 #+begin_src python :results output
   from typing import List, Dict, Tuple
 
@@ -34,7 +37,7 @@ Base types includes *int* *float* *bool* and *str*
       return (10, 20)
 #+end_src
 
-* Optional and Union
+* 可选参数与联合参数
 #+begin_src python :results output
   from typing import Optional, Union
 
@@ -45,7 +48,7 @@ Base types includes *int* *float* *bool* and *str*
       pass
 #+end_src
 
-* Type alias
+* 类型别名
 #+begin_src python :results output
   from typing import Dict, Union, List
 
@@ -55,7 +58,7 @@ Base types includes *int* *float* *bool* and *str*
       pass
 #+end_src
 
-* NewType and Callable
+* 新类 与 可调用
 #+begin_src python :results output
   from typing import NewType, Callable
 

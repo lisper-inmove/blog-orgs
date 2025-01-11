@@ -1,14 +1,25 @@
-#+TITLE: 92. 反转LinkedListII
+#+TITLE: 92. Reverse Linked List II
 #+DATE: 2023-10-01 00:33:53
 #+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Leetcode LinkedList
+#+KEYWORDS: LinkedList
 #+CATEGORIES: Leetcode
 #+DIFFICULTY: Medium
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/linkedlist.png
 
-* Solution
+* 题目解析
+
+[[https://leetcode.cn/problems/reverse-linked-list-ii/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china][Leetcode 92]]
+假设有链表为 a -> b -> c -> e
+反转之后为:  e -> c -> b -> a
+设置 dummy 为虚拟头结点，使其指向 a
+返转之后返回 dummy->next即可
+
+链表的反转的核心要点就是 *每次保存一个节点到临时变量中，指向它的指针就能断开*
+
+* 解决方案
 #+begin_src python
   from typing import Optional
 

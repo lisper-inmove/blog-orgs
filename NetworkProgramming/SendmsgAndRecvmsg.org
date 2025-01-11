@@ -1,9 +1,10 @@
-#+TITLE: 通过sendmsg与recvmsg在进程间交换文件描述符
+#+TITLE: 父子进程间套接字传送
 #+DATE: 2023-10-17 01:39:51
 #+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
+#+SUBTITLE: 通过sendmsg与recvmsg在进程间交换文件描述符
 #+KEYWORDS: sendmsg recvmsg
 #+CATEGORIES: NetworkProgramming
 

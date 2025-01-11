@@ -10,4 +10,4 @@
 
 * Self Intro
 
-I have been working in software development since 2013. I am proficient in *Python* backend development and skilled in using web development frameworks such as *Flask* and *FastAPI*. I am also skilled in frontend developmentz technologies with *TypeScript + NextJs*. Additionally, I am proficient in programming languages such as *C*, *Rust*, and *Common Lisp*. I have a good command of the *Linux* operating system, *socket networking programming*, and container technologies like *Docker* and *Kubernetes*. I am also skilled in using editors like *NeoVim* and *Emacs*.
+我从2013年开始从事软件开发工作，擅长使用 *Python* 进行后端开发，并熟练掌握Flask和FastAPI等Web开发框架。我也熟悉前端开发技术，特别是TypeScript和Next.js。此外，我还精通C、Rust和Common Lisp等编程语言。对 *Linux* 操作系统、Socket网络编程以及像 *Docker* 和 *Kubernetes* 这样的容器技术也有较强的掌握。我还熟练使用 *NeoVim* 和 *Emacs* 等编辑器。

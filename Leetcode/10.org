@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Leetcode DynamicProgramming
+#+KEYWORDS: DynamicProgramming
 #+CATEGORIES: Leetcode
 #+DIFFICULTY: Hard
 

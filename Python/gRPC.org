@@ -5,8 +5,9 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: gRPC (gRPC Remote Procedure Call) is an open-source framework developed by Google for enabling efficient and scalable communication between services. It is designed to work across different languages and platforms
-#+KEYWORDS: Python gRPC
+#+KEYWORDS: gRPC
 #+CATEGORIES: Python
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/gRPC.png
 
 * install dependencies
 

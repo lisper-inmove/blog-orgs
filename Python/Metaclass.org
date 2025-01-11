@@ -1,20 +1,23 @@
-#+TITLE: How Metaclass Work in Python
-#+DATE: 2024-02-28 12:39:24
+#+TITLE: How Metaclass Work
+#+DATE: 2021-10-3 17:39:24
 #+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+SUBTITLE: A metaclass in Python is a class of a class that defines how a class behaves
+#+SUBTITLE: 元类又称生成类的类，用于创建新的类
 #+KEYWORDS: Metaclass
 #+CATEGORIES: Python
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/PythonMetaclass.png
 
-* Create Class dynamically use type
+* 用type来动态的创建一个类
 type(name: string, bases: [string], attrs: [string]):
-1. name: Class name
-2. bases: Parent class
-3. attrs: Attributes
+1. name: 新创建的类的名称
+3. attrs: 新类的属性
+2. bases: 父类
 
 #+begin_src python :results output
+  import inspect
+
   class A:
       a = "A"
 
@@ -27,55 +30,77 @@ type(name: string, bases: [string], attrs: [string]):
   def function_for_C_2(self, b):
       return b
 
+  # C的名称为 C，其父类为A和B，它有一些属性
+  # 其中: name为成员变量
+  #       function: 为指向 function_for_C的类函数
+  #       function2: 为成员函数
   C = type("C", (A, B), {"name": "c", "function": function_for_C, "function2": function_for_C_2})
-  print(C)
+  print(C.function)
+  print(C.function2)
+  print(inspect.signature(C.function))
+  print(inspect.signature(C.function2))
   c = C()
-  print(c.a, c.b, c.name, C.function(1), c.function2(2))
 #+end_src
 
 #+RESULTS:
-: <class '__main__.C'>
-: A B c 1 2
+: <function function_for_C at 0x7f678cca2160>
+: <function function_for_C_2 at 0x7f678cd01080>
+: (a)
+: (self, b)
 
-We can return a class from a function, so that we can do something in the function. For example add a attribute
+我们就可以利用type来写一个函数，该函数用于返回一个类，就叫他 createClass吧.
+同时他也能作为 metaclass 来在类定义时使用，如下
+myA 和 A 都调用了 createClass 函数，并且他们都拥有 __hello__ 这个属性
 #+begin_src python :results output :exports code
-  def metaclass(name, bases, attrs):
+  def createClass(name, bases, attrs):
       attrs.update({"__hello__": "hello"})
       print(name, bases, attrs)
       return type(name, bases, attrs)
 
-  class A(metaclass=metaclass):
+  myA = createClass("myA", (), {})
+
+  class A(metaclass=createClass):
       name = "A"
+
+  myAObject = myA()
+  AObject = A()
+
+  print(myAObject)
+  print(AObject)
 #+end_src
 
 #+RESULTS:
+: myA () {'__hello__': 'hello'}
 : A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A', '__hello__': 'hello'}
+: <__main__.myA object at 0x7fa8cce09250>
+: <__main__.A object at 0x7fa8cce09290>
 
-* More common usage of type
-Metaclass is also a class, it can be inherited.
+* 元类的继承
+元类也是一个类，它也是可以被继承的。
 #+begin_src python :results output
   class Metaclass(type):
       def __new__(cls, name, bases, attrs):
-          print(name, bases, attrs)
-          # Step A:
+          print(f"Metaclass1: {name} {bases} {attrs}")
+          # 等同于如下写法:
           # return type(name, bases, attrs)
           # return type.__new__(cls, name, bases, attrs)
           return super().__new__(cls, name, bases, attrs)
 
   class Metaclass2(Metaclass):
       def __new__(cls, name, bases, attrs):
-          print(name, bases, attrs)
+          print(f"Metaclass2: {name} {bases} {attrs}")
           return super().__new__(cls, name, bases, attrs)
 
-  class A(metaclass=Metaclass):
+  class A(metaclass=Metaclass2):
       name = "A"
 #+end_src
 
 #+RESULTS:
-: A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A'}
+: Metaclass2: A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A'}
+: Metaclass1: A () {'__module__': '__main__', '__qualname__': 'A', 'name': 'A'}
 
-* Singleton use Metaclass
-** Thread unsafe
+* 用元类来实现单例模式
+** 非线程安全的单例
 #+begin_src python :results output
   class Singleton(type):
       _instances = {}
@@ -102,7 +127,7 @@ Metaclass is also a class, it can be inherited.
 : call Singleton __call__
 : True
 
-** Thread safe
+** 线程安全的单例
 #+begin_src python :results output
   from threading import Lock, Thread
 

@@ -1,89 +1,15 @@
-#+TITLE: Some Functions we must Familiar with in Python
-#+DATE: 2024-02-28 17:26:13
+#+TITLE: Something We must know in Python
+#+DATE: 2019-02-28 17:26:13
 #+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+SUBTITLE: Some functions or some syntactic sugar we must know in python
-#+KEYWORDS: Mutable Default Argument Function
 #+CATEGORIES: Python
+#+SUBTITLE: Python 常用的一些写法
+#+CARDIMAGE: https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/python.webp
 
-* Mutable Default Argument in Function
-In the test function, a is mutable(address quote). And it's modified in the test function.
-Next call to the function, a is changed.
-Because a is stored in the heap memory.
-#+begin_src python :results output
-  def test(a = []):
-      a.append(123)
-      print(a, end=",")
-
-  def test2(a = None):
-      if (a is None):
-          a = []
-      a.append(123)
-      print(a, end=",")
-
-  if __name__ == '__main__':
-      test()
-      test()
-      print()
-      test2()
-      test2()
-#+end_src
-
-#+RESULTS:
-: [123],[123, 123],
-: [123],[123],
-
-* Comprehensions
-** List Comprehensions
-#+begin_src python :results output
-  squares = [x ** 2 for x in range(10)]
-  print(squares)
-#+end_src
-
-#+RESULTS:
-: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
-** Tuple Comperhensions
-#+begin_src python :results output
-  squares_tuple = {x ** 2 for x in range(10)}
-  print(squares_tuple)
-#+end_src
-
-#+RESULTS:
-: {0, 1, 64, 4, 36, 9, 16, 49, 81, 25}
-
-** Dictionary Comprehensions
-#+begin_src python :results output
-  square_dict = {x: x ** 2 for x in range(10)}
-  print(square_dict)
-#+end_src
-
-#+RESULTS:
-: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81}
-
-* Walrus Operator(:=)
-This is added in python3.8
-#+begin_src python :results output
-  arr = [1, 2, 3]
-  if (n := len(arr)) >= 3:
-      print(f"length of arr is {n}")
-#+end_src
-
-#+RESULTS:
-: length of arr is 3
-
-* Extended Iterable Unpacking
-#+begin_src python :results output
-  first, *middle, last = range(10)
-  print(first, middle, last)
-#+end_src
-
-#+RESULTS:
-: 0 [1, 2, 3, 4, 5, 6, 7, 8] 9
-
-* Dictionary is Ordered
-After Python 3.7 dictonaries are ordered in the sense that they maintain the insertion order of items.
+* 字典是有序的
+Python >= 3.7
 #+begin_src python :results output
   my_dict = {'apple': 1, 'banana': 2, 'cherry': 3}
 
@@ -100,7 +26,8 @@ After Python 3.7 dictonaries are ordered in the sense that they maintain the ins
 #+RESULTS:
 : apple: 1,banana: 2,cherry: 3,date: 4,
 : apple: 1,banana: 2,cherry: 3,date: 4,
-* Difference between xx and x
+
+* 除 和 双除
 #+begin_src python :results output
   print(4 // 3)
   print(4 / 3)
@@ -109,15 +36,11 @@ After Python 3.7 dictonaries are ordered in the sense that they maintain the ins
 #+RESULTS:
 : 1
 : 1.3333333333333333
-* Round
-Sometimes .5 will be discard, sometimes will added 0.5 to the value.
-Because, if we allways add extra 0.5 to it, it's not fair.
-1.0, 1.1, 1.2, 1.3, 1.4, total discard 1.0
-1.5, 1.6, 1.7, 1.8, 1.9, total add 1.5
-So that, next round, 2.5 will be discard.
-#+begin_quote
-The "banker's rounding" rule (also known as the even rounding rule) is a special case of rounding used to reduce cumulative error during rounding processes. According to this rule, when the fractional part of a number is exactly 0.5, it is rounded to the nearest even number.
-#+end_quote
+
+* 四舍五入
+
+数学上的四舍五入是不公平的
+Python实现的是 银行家算法，总是向偶数靠近
 
 #+begin_src python :results output
   print(round(0.5), end=",")
@@ -129,54 +52,3 @@ The "banker's rounding" rule (also known as the even rounding rule) is a special
 
 #+RESULTS:
 : 0,2,2,4,4,
-* Match Pattern                                                        :3:10:
-From version 3.10 upward, Python has implemented a switch case feature called “structural pattern matching”. You can implement this feature with the match and case keywords.
-#+begin_src python :results output
-  def describe(list):
-      match list:
-          case []:
-              return "an empty list"
-          case [single_item]:
-              return f"a single-element list with {single_item}"
-          case [first, second, *rest]:
-              return f"a list with at least two elements: {first} and {second} and {rest}"
-          case _:
-              return "Default"
-
-  print(describe([]))
-  print(describe([1]))
-  print(describe([1, 2, 3, 4, 5]))
-  print(describe(3))
-#+end_src
-
-#+RESULTS:
-: an empty list
-: a single-element list with 1
-: a list with at least two elements: 1 and 2 and [3, 4, 5]
-: Default
-
-* ExceptionGroupe                                                      :3-11:
-The latest feature of Python 3.11, Exception Groups. The ExceptionGroup can be handled using a new except* syntax.
-#+begin_src python :results output
-  def test():
-      try:
-          raise ExceptionGroup('Example ExceptionGroup', (
-              TypeError('Exception TypeError'),
-              ValueError("Example ValueError"),
-              KeyError("Exception KeyError"),
-              AttributeError("Example of AttributeError")
-          ))
-      except* TypeError:
-          print("Detect TypeError")
-      except* ValueError as e:
-          print(f"Detect ValueError: {e}")
-      except* (KeyError, AttributeError) as e:
-          print(f"Detect KeyError Or AttributeError: {e}")
-
-  test()
-#+end_src
-
-#+RESULTS:
-: Detect TypeError
-: Detect ValueError: Example ExceptionGroup (1 sub-exception)
-: Detect KeyError Or AttributeError: Example ExceptionGroup (2 sub-exceptions)
