@@ -10,3 +10,9 @@
 
 * lsusb
 Display usb devices in linux
+
+* usermod
+检查用户是否有串口访问权限,什么都不返回的话就表示是有权限的
+#+begin_src shell
+  sudo usermod -aG dialout $USER
+#+end_src
