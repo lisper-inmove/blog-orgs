@@ -16,3 +16,8 @@ Display usb devices in linux
 #+begin_src shell
   sudo usermod -aG dialout $USER
 #+end_src
+
+将用户添加到组后立即生效
+#+begin_src shell
+  newgrp 组名
+#+end_src
