@@ -1,0 +1,12 @@
+#+TITLE: Linux Commands
+#+DATE: 2025-01-21 20:59:08
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Linux Commands
+#+KEYWORDS: Linux
+#+CATEGORIES: Linux
+
+* lsusb
+Display usb devices in linux
