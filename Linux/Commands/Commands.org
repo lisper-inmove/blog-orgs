@@ -21,3 +21,9 @@ Display usb devices in linux
 #+begin_src shell
   newgrp 组名
 #+end_src
+
+* find
+批量替换
+#+begin_src shell
+  find . -name "*.csv" -type f -exec sed -i 's/Significance/Accuracy/g' {} \;
+#+end_src
