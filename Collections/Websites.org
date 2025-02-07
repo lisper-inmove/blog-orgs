@@ -108,3 +108,6 @@
 * ML & AI
 [[https://grandmacan.com/courses/WQgj9SntAQ5Vwrk7QpSB/lectures][ML & AI & PyTorch]]
 [[https://www.huaxiaozhuan.com/%E5%B7%A5%E5%85%B7/huggingface_transformer/chapters/6_pipeline.html][Hugging Face Pipeline]]
+
+* Docker
+[[https://docker.aityp.com/s/docker.io][docker.aityp]]
