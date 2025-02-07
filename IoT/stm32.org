@@ -18,3 +18,6 @@
 4. Boot1的跳线帽: 连接0
 5. 打开 FlyMcu.exe，选择uVision生成的hex文件。一般在工程目录的Objects目录下
 6. 点击开始编程，按下Reset按钮
+
+* Error: Flash Downloaad failed - "Cortex-M3" 解决
+uVision 魔法棒 -> Debug -> Settings(选择Debugger的地方) -> Debug(Connect & Reset Options) -> Connect 选择 *under Reset*
