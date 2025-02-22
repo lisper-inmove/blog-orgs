@@ -25,3 +25,504 @@
 
 * Error: Flash Downloaad failed - "Cortex-M3" 解决
 uVision 魔法棒 -> Debug -> Settings(选择Debugger的地方) -> Debug(Connect & Reset Options) -> Connect 选择 *under Reset*
+
+* DMA
+** 基本原理
+DMA (Direct Memory Access) 直接内存访问，是一种用于在外设和内存之间交换数据的机制。
+配置数据传输的方向，可以由 外设到内存，内存到外设，内存到内存。
+** 关键函数
+HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData用于存放数据，在该函数中会将 huart->pRxBufferPtr 指向 pData
+该函数会调用 HAL_DMA_Start_IT函数，参数中的SrcAddress就是pRxBufferPtr, DstAddress就是pData(huart->pRxBufferPtr)
+然后调用 DMA_SetConfig池数，将 CPAR寄存器与SrcAddress(huart->Instance->DR) 绑定，CMAR寄存器与DstAddress(pRxBufferPtr)绑定。
+当 hdma->Instance->Direction == DMA_MEMORY_TO_PERIPH 的时候，则是 CMAR绑定SrcAddress，CPAR绑定DstAddress。
+#+begin_verse
+  HAL_UART_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+  HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+  static void DMA_SetConfig(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
+#+end_verse
+** UART_InitTypeDef
+
+#+begin_src c
+  typedef struct
+  {
+    uint32_t BaudRate;                  /*!< This member configures the UART communication baud rate.
+                                             The baud rate is computed using the following formula:
+                                             - IntegerDivider = ((PCLKx) / (16 * (huart->Init.BaudRate)))
+                                             - FractionalDivider = ((IntegerDivider - ((uint32_t) IntegerDivider)) * 16) + 0.5 */
+
+    uint32_t WordLength;                /*!< Specifies the number of data bits transmitted or received in a frame.
+                                             This parameter can be a value of @ref UART_Word_Length */
+
+    uint32_t StopBits;                  /*!< Specifies the number of stop bits transmitted.
+                                             This parameter can be a value of @ref UART_Stop_Bits */
+
+    uint32_t Parity;                    /*!< Specifies the parity mode.
+                                             This parameter can be a value of @ref UART_Parity
+                                             @note When parity is enabled, the computed parity is inserted
+                                                   at the MSB position of the transmitted data (9th bit when
+                                                   the word length is set to 9 data bits; 8th bit when the
+                                                   word length is set to 8 data bits). */
+
+    uint32_t Mode;                      /*!< Specifies whether the Receive or Transmit mode is enabled or disabled.
+                                             This parameter can be a value of @ref UART_Mode */
+
+    uint32_t HwFlowCtl;                 /*!< Specifies whether the hardware flow control mode is enabled or disabled.
+                                             This parameter can be a value of @ref UART_Hardware_Flow_Control */
+
+    uint32_t OverSampling;              /*!< Specifies whether the Over sampling 8 is enabled or disabled, to achieve higher speed (up to fPCLK/8).
+                                             This parameter can be a value of @ref UART_Over_Sampling. This feature is only available
+                                             on STM32F100xx family, so OverSampling parameter should always be set to 16. */
+  } UART_InitTypeDef;
+
+  #define DMA_PERIPH_TO_MEMORY         0x00000000U                 /*!< Peripheral to memory direction */
+  #define DMA_MEMORY_TO_PERIPH         ((uint32_t)DMA_CCR_DIR)     /*!< Memory to peripheral direction */
+  #define DMA_MEMORY_TO_MEMORY         ((uint32_t)DMA_CCR_MEM2MEM) /*!< Memory to memory direction     */
+#+end_src
+** UART_HandleTypeDef
+该结构体位于stm32f1xx_hal_uart.h文件中
+#+begin_src c
+  typedef struct __UART_HandleTypeDef
+  {
+    USART_TypeDef                 *Instance;        /*!< UART registers base address        */
+
+    UART_InitTypeDef              Init;             /*!< UART communication parameters      */
+
+    // 接收数据的指针
+    uint8_t                       *pTxBuffPtr;      /*!< Pointer to UART Tx transfer Buffer */
+    // 接收数据大小的上限
+    uint16_t                      TxXferSize;       /*!< UART Tx Transfer size              */
+    // 已经接收了多少数据
+    __IO uint16_t                 TxXferCount;      /*!< UART Tx Transfer Counter           */
+    // 发送数据的指针
+    uint8_t                       *pRxBuffPtr;      /*!< Pointer to UART Rx transfer Buffer */
+
+    uint16_t                      RxXferSize;       /*!< UART Rx Transfer size              */
+
+    __IO uint16_t                 RxXferCount;      /*!< UART Rx Transfer Counter           */
+    // 发送数据的dma
+    DMA_HandleTypeDef             *hdmatx;          /*!< UART Tx DMA Handle parameters      */
+    // 接收数据的dma
+    DMA_HandleTypeDef             *hdmarx;          /*!< UART Rx DMA Handle parameters      */
+
+    HAL_LockTypeDef               Lock;             /*!< Locking object                     */
+
+    __IO HAL_UART_StateTypeDef    gState;           /*!< UART state information related to global Handle management
+                                                         and also related to Tx operations.
+                                                         This parameter can be a value of @ref HAL_UART_StateTypeDef */
+
+    __IO HAL_UART_StateTypeDef    RxState;          /*!< UART state information related to Rx operations.
+                                                         This parameter can be a value of @ref HAL_UART_StateTypeDef */
+
+    __IO uint32_t                 ErrorCode;        /*!< UART Error code                    */
+  // 这些都是与中断有关的回调函数
+  #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
+    void (* TxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);        /*!< UART Tx Half Complete Callback        */
+    void (* TxCpltCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Tx Complete Callback             */
+    void (* RxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);        /*!< UART Rx Half Complete Callback        */
+    void (* RxCpltCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Rx Complete Callback             */
+    void (* ErrorCallback)(struct __UART_HandleTypeDef *huart);             /*!< UART Error Callback                   */
+    void (* AbortCpltCallback)(struct __UART_HandleTypeDef *huart);         /*!< UART Abort Complete Callback          */
+    void (* AbortTransmitCpltCallback)(struct __UART_HandleTypeDef *huart); /*!< UART Abort Transmit Complete Callback */
+    void (* AbortReceiveCpltCallback)(struct __UART_HandleTypeDef *huart);  /*!< UART Abort Receive Complete Callback  */
+    void (* WakeupCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Wakeup Callback                  */
+
+    void (* MspInitCallback)(struct __UART_HandleTypeDef *huart);           /*!< UART Msp Init callback                */
+    void (* MspDeInitCallback)(struct __UART_HandleTypeDef *huart);         /*!< UART Msp DeInit callback              */
+  #endif  /* USE_HAL_UART_REGISTER_CALLBACKS */
+
+  } UART_HandleTypeDef;
+
+  typedef struct
+  {
+    __IO uint32_t SR;         /*!< USART Status register,                   Address offset: 0x00 */
+    __IO uint32_t DR;         /*!< USART Data register,                     Address offset: 0x04 */
+    __IO uint32_t BRR;        /*!< USART Baud rate register,                Address offset: 0x08 */
+    __IO uint32_t CR1;        /*!< USART Control register 1,                Address offset: 0x0C */
+    __IO uint32_t CR2;        /*!< USART Control register 2,                Address offset: 0x10 */
+    __IO uint32_t CR3;        /*!< USART Control register 3,                Address offset: 0x14 */
+    __IO uint32_t GTPR;       /*!< USART Guard time and prescaler register, Address offset: 0x18 */
+  } USART_TypeDef;
+
+  typedef struct
+  {
+    uint32_t BaudRate;                  /*!< This member configures the UART communication baud rate.
+                                             The baud rate is computed using the following formula:
+                                             - IntegerDivider = ((PCLKx) / (16 * (huart->Init.BaudRate)))
+                                             - FractionalDivider = ((IntegerDivider - ((uint32_t) IntegerDivider)) * 16) + 0.5 */
+
+    uint32_t WordLength;                /*!< Specifies the number of data bits transmitted or received in a frame.
+                                             This parameter can be a value of @ref UART_Word_Length */
+
+    uint32_t StopBits;                  /*!< Specifies the number of stop bits transmitted.
+                                             This parameter can be a value of @ref UART_Stop_Bits */
+
+    uint32_t Parity;                    /*!< Specifies the parity mode.
+                                             This parameter can be a value of @ref UART_Parity
+                                             @note When parity is enabled, the computed parity is inserted
+                                                   at the MSB position of the transmitted data (9th bit when
+                                                   the word length is set to 9 data bits; 8th bit when the
+                                                   word length is set to 8 data bits). */
+
+    uint32_t Mode;                      /*!< Specifies whether the Receive or Transmit mode is enabled or disabled.
+                                             This parameter can be a value of @ref UART_Mode */
+
+    uint32_t HwFlowCtl;                 /*!< Specifies whether the hardware flow control mode is enabled or disabled.
+                                             This parameter can be a value of @ref UART_Hardware_Flow_Control */
+
+    uint32_t OverSampling;              /*!< Specifies whether the Over sampling 8 is enabled or disabled, to achieve higher speed (up to fPCLK/8).
+                                             This parameter can be a value of @ref UART_Over_Sampling. This feature is only available
+                                             on STM32F100xx family, so OverSampling parameter should always be set to 16. */
+  } UART_InitTypeDef;
+#+end_src
+** DMA_HandleTypeDef
+该结构本位于stm32f1xx_hal_dma.h文件中
+#+begin_src c
+  typedef struct __DMA_HandleTypeDef
+  {
+    // 寄存器的地址
+    DMA_Channel_TypeDef   *Instance;                       /*!< Register base address                  */
+
+    DMA_InitTypeDef       Init;                            /*!< DMA communication parameters           */
+
+    HAL_LockTypeDef       Lock;                            /*!< DMA locking object                     */
+
+    HAL_DMA_StateTypeDef  State;                           /*!< DMA transfer state                     */
+
+    void                  *Parent;                                                      /*!< Parent object state                    */
+
+    void                  (* XferCpltCallback)( struct __DMA_HandleTypeDef * hdma);     /*!< DMA transfer complete callback         */
+
+    void                  (* XferHalfCpltCallback)( struct __DMA_HandleTypeDef * hdma); /*!< DMA Half transfer complete callback    */
+
+    void                  (* XferErrorCallback)( struct __DMA_HandleTypeDef * hdma);    /*!< DMA transfer error callback            */
+
+    void                  (* XferAbortCallback)( struct __DMA_HandleTypeDef * hdma);    /*!< DMA transfer abort callback            */
+
+    __IO uint32_t         ErrorCode;                                                    /*!< DMA Error code                         */
+
+    DMA_TypeDef            *DmaBaseAddress;                                             /*!< DMA Channel Base Address               */
+
+    uint32_t               ChannelIndex;                                                /*!< DMA Channel Index                      */
+
+  } DMA_HandleTypeDef;
+
+  typedef struct
+  {
+    /*
+      CCR (DMA Channel Configuration Register)
+      作用：配置 DMA 通道的工作模式和行为。
+      主要配置字段：
+      EN：通道使能位（Enable）。
+      TCIE：传输完成中断使能（Transfer Complete Interrupt Enable）。
+      HTIE：半传输中断使能（Half Transfer Interrupt Enable）。
+      TEIE：传输错误中断使能（Transfer Error Interrupt Enable）。
+      DIR：数据传输方向（Direction），例如内存到外设或外设到内存。
+      CIRC：循环模式使能（Circular Mode）。
+      PINC：外设地址递增使能（Peripheral Increment Mode）。
+      MINC：内存地址递增使能（Memory Increment Mode）。
+      PSIZE：外设数据宽度（Peripheral Size），例如字节、半字或字。
+      MSIZE：内存数据宽度（Memory Size），例如字节、半字或字。
+      PL：优先级级别（Priority Level），例如低、中、高、非常高。
+    ,*/
+    __IO uint32_t CCR;
+    /*
+      CNDTR (DMA Channel Number of Data Register)
+      作用：设置 DMA 传输的数据数量（Number of Data）。
+      说明：
+      每次 DMA 传输后，该寄存器的值会自动递减。
+      当值减到 0 时，表示传输完成。
+      在循环模式下，传输完成后会自动重新加载初始值。
+    ,*/
+    __IO uint32_t CNDTR;
+    /*
+      CPAR (DMA Channel Peripheral Address Register)
+      作用：设置外设地址（Peripheral Address）。
+      说明：
+      该寄存器存储外设数据寄存器的地址。
+      如果启用了外设地址递增模式（PINC），每次传输后地址会自动递增。
+    ,*/
+    __IO uint32_t CPAR;
+    /*
+      CMAR (DMA Channel Memory Address Register)
+      作用：设置内存地址（Memory Address）。
+      说明：
+      该寄存器存储内存中数据缓冲区的起始地址。
+      如果启用了内存地址递增模式（MINC），每次传输后地址会自动递增。
+    ,*/
+    __IO uint32_t CMAR;
+  } DMA_Channel_TypeDef;
+
+  typedef struct
+  {
+    uint32_t Direction;                 /*!< Specifies if the data will be transferred from memory to peripheral,
+                                             from memory to memory or from peripheral to memory.
+                                             This parameter can be a value of @ref DMA_Data_transfer_direction */
+
+    uint32_t PeriphInc;                 /*!< Specifies whether the Peripheral address register should be incremented or not.
+                                             This parameter can be a value of @ref DMA_Peripheral_incremented_mode */
+
+    uint32_t MemInc;                    /*!< Specifies whether the memory address register should be incremented or not.
+                                             This parameter can be a value of @ref DMA_Memory_incremented_mode */
+
+    uint32_t PeriphDataAlignment;       /*!< Specifies the Peripheral data width.
+                                             This parameter can be a value of @ref DMA_Peripheral_data_size */
+
+    uint32_t MemDataAlignment;          /*!< Specifies the Memory data width.
+                                             This parameter can be a value of @ref DMA_Memory_data_size */
+
+    uint32_t Mode;                      /*!< Specifies the operation mode of the DMAy Channelx.
+                                             This parameter can be a value of @ref DMA_mode
+                                             @note The circular buffer mode cannot be used if the memory-to-memory
+                                                   data transfer is configured on the selected Channel */
+
+    uint32_t Priority;                  /*!< Specifies the software priority for the DMAy Channelx.
+                                             This parameter can be a value of @ref DMA_Priority_level */
+  } DMA_InitTypeDef;
+
+  typedef enum
+  {
+    HAL_UNLOCKED = 0x00U,
+    HAL_LOCKED   = 0x01U
+  } HAL_LockTypeDef;
+
+  typedef enum
+  {
+    HAL_DMA_STATE_RESET             = 0x00U,  /*!< DMA not yet initialized or disabled    */
+    HAL_DMA_STATE_READY             = 0x01U,  /*!< DMA initialized and ready for use      */
+    HAL_DMA_STATE_BUSY              = 0x02U,  /*!< DMA process is ongoing                 */
+    HAL_DMA_STATE_TIMEOUT           = 0x03U   /*!< DMA timeout state                      */
+  }HAL_DMA_StateTypeDef;
+
+  typedef struct
+  {
+    /*
+      ISR (Interrupt Status Register)
+      作用：用于指示 DMA 通道的中断状态。
+      主要字段：
+        GIFx：全局中断标志（Global Interrupt Flag），表示通道 x 的传输完成、半传输完成或传输错误。
+        TCIFx：传输完成中断标志（Transfer Complete Interrupt Flag），表示通道 x 的传输已完成。
+        HTIFx：半传输中断标志（Half Transfer Interrupt Flag），表示通道 x 的传输已完成一半。
+        TEIFx：传输错误中断标志（Transfer Error Interrupt Flag），表示通道 x 的传输发生错误。
+      说明：
+        每个通道的中断状态占用 4 位（例如，通道 1 的状态在 ISR[3:0]，通道 2 的状态在 ISR[7:4]，依此类推）。
+        通过读取 ISR 寄存器，可以判断 DMA 通道的中断状态。
+     ,*/
+    __IO uint32_t ISR;
+    /*
+      IFCR (Interrupt Flag Clear Register)
+      作用：用于清除 DMA 通道的中断标志。
+      主要字段：
+        CGIFx：清除全局中断标志（Clear Global Interrupt Flag）。
+        CTCIFx：清除传输完成中断标志（Clear Transfer Complete Interrupt Flag）。
+        CHTIFx：清除半传输中断标志（Clear Half Transfer Interrupt Flag）。
+        CTEIFx：清除传输错误中断标志（Clear Transfer Error Interrupt Flag）。
+      说明：
+        每个通道的中断清除标志占用 4 位（例如，通道 1 的清除标志在 IFCR[3:0]，通道 2 的清除标志在 IFCR[7:4]，依此类推）。
+        通过写入 IFCR 寄存器，可以清除 DMA 通道的中断标志。
+     ,*/
+    __IO uint32_t IFCR;
+  } DMA_TypeDef;
+#+end_src
+** 实例代码
+
+#+CAPTION: uart.h
+#+begin_src c :results silent :noweb yes
+  #ifndef __UART_H
+  #define __UART_H
+
+  void U1_Init(uint32_t baudrate);
+  extern UART_HandleTypeDef uart1;
+
+  extern DMA_HandleTypeDef dmatx, dmarx;
+
+  extern uint8_t rxbuff[64];
+  extern uint8_t rxstate;
+
+  void U1_Init_IDLE(void);
+  void U1_Init_DMA1(void);
+  void U1_Init_DMA_TX(void);
+  void U1_Init_DMA_RX(void);
+
+  #endif
+
+#+end_src
+
+
+#+CAPTION: uart.c
+#+begin_src c :results silent :noweb yes
+  #include "string.h"
+  #include "stm32f1xx_hal.h"
+  #include "uart.h"
+
+  UART_HandleTypeDef uart1;
+
+  DMA_HandleTypeDef dmatx, dmarx;
+
+  uint8_t rxbuff[64];
+  uint8_t rxstate;
+
+
+  void U1_Init(uint32_t baudrate) {
+    // stm32f103c8t6 一共有三个串口，USART1，USART2，USART3
+    uart1.Instance = USART1;
+    uart1.Init.BaudRate = baudrate;
+    uart1.Init.WordLength = UART_WORDLENGTH_8B;
+    uart1.Init.StopBits = UART_STOPBITS_1;
+    uart1.Init.Parity = UART_PARITY_NONE;
+    uart1.Init.Mode = UART_MODE_TX_RX;
+    uart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    // 该函数中，HAL_UART_MspInit函数会被调用
+    HAL_UART_Init(&uart1);
+    U1_Init_DMA1();
+    U1_Init_IDLE();
+  }
+
+  void U1_Init_IDLE(void) {
+    // 使能 UART_IT_IDLE 中断
+    __HAL_UART_ENABLE_IT(&uart1, UART_IT_IDLE);
+  }
+
+  void U1_Init_DMA1(void) {
+    // 使能DMA1的时钟
+    __HAL_RCC_DMA1_CLK_ENABLE();
+    U1_Init_DMA_TX();
+    U1_Init_DMA_RX();
+    // uart1.Instance.pRxBufferPtr会指向rxbuff
+    // uart1.Instance.RxXferSize值被设置为20
+    HAL_UART_Receive_DMA(&uart1, rxbuff, 20);
+  }
+
+  void U1_Init_DMA_TX(void) {
+    // 使用Channel4
+    // 这里用的是串1，具体使用哪个通道需要查看手册
+    dmatx.Instance = DMA1_Channel4;
+    // 内存到外设
+    dmatx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    // 外设地址递增（PINC_ENABLE）：
+    // 适用于外设有多个数据寄存器的情况。例如，从内存向 SPI 数据寄存器传输多个数据时，SPI 数据寄存器的地址需要递增。
+    // 也适用于从外设的多个寄存器读取数据到内存的场景。
+    // 外设地址不变（PINC_DISABLE）：
+    // 适用于外设只有一个数据寄存器的情况。例如，UART 的数据寄存器（TDR/RDR）在传输过程中地址不变，每次传输都指向同一个寄存器。
+    dmatx.Init.PeriphInc = DMA_PINC_DISABLE;
+    // 内存地址递增（MINC_ENABLE）：
+    // 适用于需要从内存的连续地址读取或写入数据的场景。例如，将数组中的数据通过 DMA 传输到外设，或者将外设接收到的数据存储到数组。
+    // 内存地址不变（MINC_DISABLE）：
+    // 适用于内存地址固定的场景。例如，将外设的数据写入内存的某个固定地址，或者从内存的固定地址读取数据到外设。
+    dmatx.Init.MemInc = DMA_MINC_ENABLE;
+    // 外设数据宽度
+    // DMA_PDATAALIGN_BYTE
+    // DMA_PDATAALIGN_HALFWORD
+    // DMA_PDATAALIGN_WORD
+    dmatx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    // 内存数据的宽度
+    // DMA_MDATAALIGN_BYTE 一字节
+    // DMA_MDATAALIGN_HALFWORD 半个字
+    // DMA_MDATAALIGN_WORD 一个字
+    dmatx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    // DMA_NORMAL, DMA_CIRCULAR
+    // 当 DMA_CIRCULAR 被启用时，DMA 控制器会在传输完成后自动重置传输计数器（Counter）和
+    // 地址指针（Address Pointer），并重新开始传输。
+    // 这种模式适用于需要 连续数据传输 的场景，例如音频流、数据采集（ADC）、通信协议（如 SPI、I2C）等。
+    dmatx.Init.Mode = DMA_NORMAL;
+    // DMA_PRIORITY_LOW
+    // DMA_PRIORITY_MEDIUM
+    // DMA_PRIORITY_HIGH
+    // DMA_PRIORITY_VERY_HIGH 适用于对实时性要求非常高的 DMA 传输任务。例如：
+    //   高速数据采集（如 ADC 采样）。实时音频处理。高速通信协议（如 SPI、I2C、UART 等）。
+    dmatx.Init.Priority = DMA_PRIORITY_MEDIUM;
+    __HAL_LINKDMA(&uart1, hdmatx, dmatx);
+    HAL_DMA_Init(&dmatx);
+    HAL_NVIC_SetPriority(DMA1_Channel4_IRQn,3,0);
+    HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+  }
+
+  void U1_Init_DMA_RX(void) {
+    dmarx.Instance = DMA1_Channel5;
+    dmarx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    dmarx.Init.PeriphInc = DMA_PINC_DISABLE;
+    dmarx.Init.MemInc = DMA_MINC_ENABLE;
+    dmarx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    dmarx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    dmarx.Init.Mode = DMA_NORMAL;
+    dmarx.Init.Priority = DMA_PRIORITY_MEDIUM;
+    __HAL_LINKDMA(&uart1, hdmarx, dmarx);
+    HAL_DMA_Init(&dmarx);
+    HAL_NVIC_SetPriority(DMA1_Channel5_IRQn,3,0);
+    HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  }
+
+  void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
+
+    GPIO_InitTypeDef GPIO_InitType;
+    // 设置uart1的相妆参数以及中断
+    if (huart->Instance == USART1) {
+      // 使能 GPIOA 时钟
+      __HAL_RCC_GPIOA_CLK_ENABLE();
+      // 使能 串口1的时钟
+      __HAL_RCC_USART1_CLK_ENABLE();
+
+      GPIO_InitType.Pin = GPIO_PIN_9;
+      GPIO_InitType.Mode = GPIO_MODE_AF_PP;
+      GPIO_InitType.Speed = GPIO_SPEED_FREQ_MEDIUM;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+
+      GPIO_InitType.Pin = GPIO_PIN_10;
+      GPIO_InitType.Mode = GPIO_MODE_AF_INPUT;
+      GPIO_InitType.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+
+      HAL_NVIC_SetPriority(USART1_IRQn, 3, 0);
+      HAL_NVIC_EnableIRQ(USART1_IRQn);
+    }
+  }
+
+  void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    if(huart->Instance == USART1){
+      // 重新开启DMA中断
+      HAL_UART_Receive_DMA(&uart1, rxbuff, 20);
+    }
+  }
+
+  void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+      rxstate = 1;
+    }
+  }
+#+end_src
+
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "rcc.h"
+  #include "uart.h"
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    while (1) {
+      if(rxstate == 1){
+        rxstate = 0;
+        // 将rxbuffer关联到 pTxBuferPtr
+        // 然后调用 HAL_DMA_Start_IT，SrcAddress为rxbuff，目的地址为 usart1->Instance->DR寄存器
+        // 也就是把内存中的数据写入到寄存器中
+        HAL_UART_Transmit_DMA(&uart1, rxbuff, 20);
+      }
+    }
+  }
+#+end_src
+
+#+CAPTION: it.c
+#+begin_src c :results silent :noweb yes
+  #include "uart.h"
+
+  void DMA1_Channel4_IRQHandler(void)
+  {
+    // DMA1_Channel4_IRQn 的入口函数，此函数调用之前，数据已经复制到了 uart->Instance->pRxBuffPtr上了
+    HAL_DMA_IRQHandler(&dmatx);
+  }
+  void DMA1_Channel5_IRQHandler(void)
+  {
+    HAL_DMA_IRQHandler(&dmarx);
+  }
+#+end_src
