@@ -26,11 +26,495 @@
 * Error: Flash Downloaad failed - "Cortex-M3" 解决
 uVision 魔法棒 -> Debug -> Settings(选择Debugger的地方) -> Debug(Connect & Reset Options) -> Connect 选择 *under Reset*
 
-* DMA
-** 基本原理
-DMA (Direct Memory Access) 直接内存访问，是一种用于在外设和内存之间交换数据的机制。
+* 串口通信
+#+CAPTION: 结构体
+#+begin_src c :results silent :noweb yes
+  typedef struct __UART_HandleTypeDef
+  {
+    // 串口对象基地址
+    USART_TypeDef                 *Instance;
+    // 基本配置
+    UART_InitTypeDef              Init;
+    // Tx 的数据空间
+    uint8_t                       *pTxBuffPtr;
+    // 发数据的大小
+    uint16_t                      TxXferSize;
+    // 发消息的数量，从TxXrefSize开始递减(不同hal库版本有可能不同)
+    __IO uint16_t                 TxXferCount;
+    // Rx 的数据空间
+    uint8_t                       *pRxBuffPtr;
+    // 数据大小
+    uint16_t                      RxXferSize;
+    // 发送数据量
+    __IO uint16_t                 RxXferCount;
+    // DMA方式发数据的对象
+    DMA_HandleTypeDef             *hdmatx;
+    // DMA方式收数据的对象
+    DMA_HandleTypeDef             *hdmarx;
+    // 状态锁
+    HAL_LockTypeDef               Lock;
+    __IO HAL_UART_StateTypeDef    gState;
+    __IO HAL_UART_StateTypeDef    RxState;
+    __IO uint32_t                 ErrorCode;
+
+  #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
+    void (* TxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* TxCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* RxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* RxCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* ErrorCallback)(struct __UART_HandleTypeDef *huart);
+    void (* AbortCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* AbortTransmitCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* AbortReceiveCpltCallback)(struct __UART_HandleTypeDef *huart);
+    void (* WakeupCallback)(struct __UART_HandleTypeDef *huart);
+    void (* MspInitCallback)(struct __UART_HandleTypeDef *huart);
+    void (* MspDeInitCallback)(struct __UART_HandleTypeDef *huart);
+  #endif
+
+  } UART_HandleTypeDef;
+
+  // UART_HandleTypeDef.Instance关联的寄存器
+  typedef struct
+  {
+    __IO uint32_t SR;
+    __IO uint32_t DR;
+    __IO uint32_t BRR;
+    __IO uint32_t CR1;
+    __IO uint32_t CR2;
+    __IO uint32_t CR3;
+    __IO uint32_t GTPR;
+  } USART_TypeDef;
+
+  typedef struct
+  {
+    // 波特率
+    uint32_t BaudRate;
+    // 数据位长度
+    // UART_WORDLENGTH_8B: 常规模式，8个数据位
+    // UART_WORDLENGTH_9B: 扩展模式，9个数据位
+    uint32_t WordLength;
+    // 停止位
+    // UART_STOPBITS_1: 1个停止位
+    // UART_STOPBITS_2: 2个
+    uint32_t StopBits;
+    // 校验位
+    // UART_PARITY_NONE: 无
+    // UART_PARITY_EVEN: 偶校验位
+    // UART_PARITY_ODD: 奇校验位
+    uint32_t Parity;
+    // 传输模式
+    // UART_MODE_TX: 仅发
+    // UART_MODE_RX: 仅收
+    // UART_MODE_TX_RX: 收发
+    uint32_t Mode;
+    // 硬件流控制
+    // UART_HWCONTROL_NONE: 不使能
+    // UART_HWCONTROL_RTS: 仅使能 RTS
+    // UART_HWCONTROL_CTS:
+    // UART_HWCONTROL_RTS_CTS
+    uint32_t HwFlowCtl;
+    // 使能过采样
+    uint32_t OverSampling;
+  } UART_InitTypeDef;
+
+  typedef enum
+  {
+    HAL_UNLOCKED = 0x00U,
+    HAL_LOCKED   = 0x01U
+  } HAL_LockTypeDef;
+
+  typedef enum
+  {
+    HAL_UART_STATE_RESET             = 0x00U,
+    HAL_UART_STATE_READY             = 0x20U,
+    HAL_UART_STATE_BUSY              = 0x24U,
+    HAL_UART_STATE_BUSY_TX           = 0x21U,
+    HAL_UART_STATE_BUSY_RX           = 0x22U,
+    HAL_UART_STATE_BUSY_TX_RX        = 0x23U,
+    HAL_UART_STATE_TIMEOUT           = 0xA0U,
+    HAL_UART_STATE_ERROR             = 0xE0U
+  } HAL_UART_StateTypeDef;
+#+end_src
+
+** 轮询
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "rcc.h"
+  #include "uart.h"
+
+  #define RX_SIZE 200
+  #define TIMEOUT 200
+
+  uint8_t buff[256];
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    while (1) {
+      switch(HAL_UART_Receive(&uart1, buff, RX_SIZE, TIMEOUT)) {
+      case HAL_OK:
+        HAL_UART_Transmit(&uart1, buff, RX_SIZE, TIMEOUT);
+        break;
+      case HAL_ERROR:
+        break;
+      case HAL_BUSY:
+        break;
+      case HAL_TIMEOUT:
+        if (uart1.RxXferCount != RX_SIZE - 1) {
+          HAL_UART_Transmit(&uart1, buff, RX_SIZE - 1 - uart1.RxXferCount, TIMEOUT);
+        }
+        break;
+      }
+    }
+  }
+#+end_src
+
+#+CAPTION: HAL_UART_Receive
+#+begin_src c :results silent :noweb yes
+  HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout) {
+
+    /*
+
+      接收数据的函数
+
+    ,*/
+
+    uint16_t *tmp;
+    uint32_t tickstart = 0U;
+
+    if (huart->RxState == HAL_UART_STATE_READY) {
+      if ((pData == NULL) || (Size == 0U)) {
+        return  HAL_ERROR;
+      }
+
+      __HAL_LOCK(huart);
+
+      huart->ErrorCode = HAL_UART_ERROR_NONE;
+      huart->RxState = HAL_UART_STATE_BUSY_RX;
+
+      tickstart = HAL_GetTick();
+
+      // 要接收的数据和已接收的数据都设置为Size
+      huart->RxXferSize = Size;
+      huart->RxXferCount = Size;
+
+      // 已接收的数据值为0表示已接收完成
+      while (huart->RxXferCount > 0U) {
+        huart->RxXferCount--;
+        if (huart->Init.WordLength == UART_WORDLENGTH_9B) {
+          if (UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_RXNE, RESET, tickstart, Timeout) != HAL_OK) {
+            return HAL_TIMEOUT;
+          }
+          tmp = (uint16_t *) pData;
+          if (huart->Init.Parity == UART_PARITY_NONE) {
+            // 读取9位全是数据
+            ,*tmp = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
+            pData += 2U;
+          } else {
+            // 读取8位全是数据
+            ,*tmp = (uint16_t)(huart->Instance->DR & (uint16_t)0x00FF);
+            pData += 1U;
+          }
+        } else {
+          // huart->Init.WordLength == UART_WORDLENGTH_8B
+          if (UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_RXNE, RESET, tickstart, Timeout) != HAL_OK) {
+            return HAL_TIMEOUT;
+          }
+          // 从寄存器中将数据读出来
+          if (huart->Init.Parity == UART_PARITY_NONE) {
+            // 读取8个数据位
+            ,*pData++ = (uint8_t)(huart->Instance->DR & (uint8_t)0x00FF);
+          } else {
+            // 读取7个数据位
+            ,*pData++ = (uint8_t)(huart->Instance->DR & (uint8_t)0x007F);
+          }
+        }
+      }
+      huart->RxState = HAL_UART_STATE_READY;
+      __HAL_UNLOCK(huart);
+
+      return HAL_OK;
+    } else {
+      return HAL_BUSY;
+    }
+  }
+
+
+  static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_t Flag, FlagStatus Status, uint32_t Tickstart, uint32_t Timeout) {
+
+    /*
+      轮询等待到超时或者有数据到达
+    ,*/
+
+    while ((__HAL_UART_GET_FLAG(huart, Flag) ? SET : RESET) == Status) {
+      if (Timeout != HAL_MAX_DELAY) {
+        if ((Timeout == 0U) || ((HAL_GetTick() - Tickstart) > Timeout)) {
+          CLEAR_BIT(huart->Instance->CR1, (USART_CR1_RXNEIE | USART_CR1_PEIE | USART_CR1_TXEIE));
+          CLEAR_BIT(huart->Instance->CR3, USART_CR3_EIE);
+          huart->gState  = HAL_UART_STATE_READY;
+          huart->RxState = HAL_UART_STATE_READY;
+          __HAL_UNLOCK(huart);
+          return HAL_TIMEOUT;
+        }
+      }
+    }
+    return HAL_OK;
+  }
+#+end_src
+
+#+CAPTION: uart.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "uart.h"
+
+  UART_HandleTypeDef uart1;
+
+  void HAL_UART_MspInit_USART1(void);
+
+  void U1_Init(uint32_t baudrate) {
+    uart1.Instance = USART1;
+    uart1.Init.BaudRate = baudrate;
+    uart1.Init.WordLength = UART_WORDLENGTH_8B;
+    uart1.Init.StopBits = UART_STOPBITS_1;
+    uart1.Init.Parity = UART_PARITY_NONE;
+    uart1.Init.Mode = UART_MODE_TX_RX;
+    uart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    HAL_UART_Init(&uart1);
+  }
+
+  void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+      HAL_UART_MspInit_USART1();
+    }
+  }
+
+  void HAL_UART_MspInit_USART1() {
+    GPIO_InitTypeDef GPIO_InitType;
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_USART1_CLK_ENABLE();
+
+    GPIO_InitType.Pin = GPIO_PIN_9;
+    GPIO_InitType.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitType.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+
+    GPIO_InitType.Pin = GPIO_PIN_10;
+    GPIO_InitType.Mode = GPIO_MODE_AF_INPUT;
+    GPIO_InitType.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+  }
+
+#+end_src
+
+#+CAPTION: uart.h
+#+begin_src c :results silent :noweb yes
+  #ifndef __UART_H
+  #define __UART_H
+
+  void U1_Init(uint32_t baudrate);
+  extern UART_HandleTypeDef uart1;
+
+  #endif
+
+#+end_src
+
+** 中断
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "rcc.h"
+  #include "uart.h"
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    u1_printf("Program Start...");
+    while (1) {
+      if(rxstate == 1){
+        rxstate = 0;
+        HAL_UART_Transmit_IT(&uart1, txbuff, strlen((char *)txbuff));
+      }
+    }
+  }
+
+#+end_src
+
+#+CAPTION: HAL_UART_Receive_IT
+#+begin_src c :results silent :noweb yes
+  HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size) {
+    /* Check that a Rx process is not already ongoing */
+    if (huart->RxState == HAL_UART_STATE_READY) {
+      if ((pData == NULL) || (Size == 0U)) {
+        return HAL_ERROR;
+      }
+
+      /* Process Locked */
+      __HAL_LOCK(huart);
+
+      huart->pRxBuffPtr = pData;
+      huart->RxXferSize = Size;
+      huart->RxXferCount = Size;
+
+      huart->ErrorCode = HAL_UART_ERROR_NONE;
+      huart->RxState = HAL_UART_STATE_BUSY_RX;
+
+      /* Process Unlocked */
+      __HAL_UNLOCK(huart);
+
+      /* Enable the UART Parity Error Interrupt */
+      __HAL_UART_ENABLE_IT(huart, UART_IT_PE);
+
+      /* Enable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+      __HAL_UART_ENABLE_IT(huart, UART_IT_ERR);
+
+      /* Enable the UART Data Register not empty Interrupt */
+      __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
+
+      return HAL_OK;
+    } else {
+      return HAL_BUSY;
+    }
+  }
+#+end_src
+
+#+CAPTION: uart.c
+#+begin_src c :results silent :noweb yes
+  #include "string.h"
+  #include "stm32f1xx_hal.h"
+  #include "uart.h"
+
+  UART_HandleTypeDef uart1;
+
+  uint8_t  txbuff[U1_RX_MAX], rxbuff[U1_RX_MAX];
+  uint8_t  rxstate;
+
+  void U1_Init(uint32_t baudrate) {
+    uart1.Instance = USART1;
+    uart1.Init.BaudRate = baudrate;
+    uart1.Init.WordLength = UART_WORDLENGTH_8B;
+    uart1.Init.StopBits = UART_STOPBITS_1;
+    uart1.Init.Parity = UART_PARITY_NONE;
+    uart1.Init.Mode = UART_MODE_TX_RX;
+    uart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    HAL_UART_Init(&uart1);
+    U1_Init_IDLE();
+  }
+
+  void U1_Init_IDLE(void) {
+    __HAL_UART_ENABLE_IT(&uart1, UART_IT_IDLE);
+    // HAL_UART_Receive_IT函数中，uart1->pRxBufPtr = rxbuff
+    // 也就是串口发送的数据会保存到rxbuff中
+    HAL_UART_Receive_IT(&uart1, rxbuff, U1_RX_MAX);
+  }
+
+  void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
+
+    GPIO_InitTypeDef GPIO_InitType;
+
+    if (huart->Instance == USART1) {
+      __HAL_RCC_GPIOA_CLK_ENABLE();
+      __HAL_RCC_USART1_CLK_ENABLE();
+
+      GPIO_InitType.Pin = GPIO_PIN_9;
+      GPIO_InitType.Mode = GPIO_MODE_AF_PP;
+      GPIO_InitType.Speed = GPIO_SPEED_FREQ_MEDIUM;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+
+      GPIO_InitType.Pin = GPIO_PIN_10;
+      GPIO_InitType.Mode = GPIO_MODE_AF_INPUT;
+      GPIO_InitType.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+
+      HAL_NVIC_SetPriority(USART1_IRQn, 3, 0);
+      HAL_NVIC_EnableIRQ(USART1_IRQn);
+    }
+  }
+
+  void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    if(huart->Instance == USART1){
+      memcpy(txbuff, rxbuff, U1_RX_MAX);
+      rxstate = 1;
+      HAL_UART_Receive_IT(&uart1, rxbuff, U1_RX_MAX);
+    }
+  }
+
+  void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+      memcpy(txbuff, rxbuff, U1_RX_MAX);
+      rxstate = 1;
+      HAL_UART_Receive_IT(&uart1, rxbuff, U1_RX_MAX);
+    }
+  }
+
+  void u1_printf(char *fmt, ...) {
+    uint8_t tempbuff[1024];
+    uint16_t i;
+    va_list ap;
+    va_start(ap, fmt);
+    vsprintf((char *)tempbuff, fmt, ap);
+    va_end(ap);
+    for (i = 0; i < strlen((char *)tempbuff); i++) {
+      while(!__HAL_UART_GET_FLAG(&uart1, UART_FLAG_TXE));
+      uart1.Instance->DR = tempbuff[i];
+    }
+    while(!__HAL_UART_GET_FLAG(&uart1, UART_FLAG_TC));
+  }
+#+end_src
+
+#+CAPTION: uart.h
+#+begin_src c :results silent :noweb yes
+  #ifndef __UART_H
+  #define __UART_H
+
+  #include "stdint.h"
+  #include "string.h"
+  #include "stdarg.h"
+  #include "stdio.h"
+
+  #define U1_RX_MAX 256
+
+  void U1_Init(uint32_t baudrate);
+  extern UART_HandleTypeDef uart1;
+
+  extern uint8_t txbuff[U1_RX_MAX], rxbuff[U1_RX_MAX];
+  extern uint8_t rxstate;
+
+  void U1_Init_IDLE(void);
+
+  void u1_printf(char *fmt, ...);
+
+  #endif
+#+end_src
+
+#+begin_verse
+USART1_IRQn中断发生时，此函数被调用
+#+end_verse
+#+CAPTION: stm32f1xx_it.c
+#+begin_src c :results silent :noweb yes
+  void USART1_IRQHandler(void) {
+    // HAL_UART_IRQHandler -> UART_Receive_IT -> huart->RxCpltCallback
+    // huart->RxCpltCallback 指向的是一个weak定义的 HAL_UART_RxCpltCallback
+    //   所以我们需要重新实现这个函数(此处我们在uart.c中实现了)
+    // 同时它也会对uart1的状态做修改
+    // 我们可以不调用这个函数，直接处理业务逻辑，那样的话，就需要自行处理状态了
+    HAL_UART_IRQHandler(&uart1);
+
+    if(__HAL_UART_GET_FLAG(&uart1, UART_FLAG_IDLE)){
+      __HAL_UART_CLEAR_IDLEFLAG(&uart1);
+      HAL_UART_AbortReceive_IT(&uart1);
+    }
+  }
+
+#+end_src
+
+** DMA
+*** 基本原理
+DMA (Direct Memory Access) 直接内存访问，在不占用cpu的情况下，在外设和内存之间交换数据的机制。
 配置数据传输的方向，可以由 外设到内存，内存到外设，内存到内存。
-** 关键函数
+
 HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData用于存放数据，在该函数中会将 huart->pRxBufferPtr 指向 pData
 该函数会调用 HAL_DMA_Start_IT函数，参数中的SrcAddress就是pRxBufferPtr, DstAddress就是pData(huart->pRxBufferPtr)
 然后调用 DMA_SetConfig池数，将 CPAR寄存器与SrcAddress(huart->Instance->DR) 绑定，CMAR寄存器与DstAddress(pRxBufferPtr)绑定。
@@ -40,169 +524,24 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
   HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
   static void DMA_SetConfig(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength)
 #+end_verse
-** UART_InitTypeDef
-
-#+begin_src c
-  typedef struct
-  {
-    uint32_t BaudRate;                  /*!< This member configures the UART communication baud rate.
-                                             The baud rate is computed using the following formula:
-                                             - IntegerDivider = ((PCLKx) / (16 * (huart->Init.BaudRate)))
-                                             - FractionalDivider = ((IntegerDivider - ((uint32_t) IntegerDivider)) * 16) + 0.5 */
-
-    uint32_t WordLength;                /*!< Specifies the number of data bits transmitted or received in a frame.
-                                             This parameter can be a value of @ref UART_Word_Length */
-
-    uint32_t StopBits;                  /*!< Specifies the number of stop bits transmitted.
-                                             This parameter can be a value of @ref UART_Stop_Bits */
-
-    uint32_t Parity;                    /*!< Specifies the parity mode.
-                                             This parameter can be a value of @ref UART_Parity
-                                             @note When parity is enabled, the computed parity is inserted
-                                                   at the MSB position of the transmitted data (9th bit when
-                                                   the word length is set to 9 data bits; 8th bit when the
-                                                   word length is set to 8 data bits). */
-
-    uint32_t Mode;                      /*!< Specifies whether the Receive or Transmit mode is enabled or disabled.
-                                             This parameter can be a value of @ref UART_Mode */
-
-    uint32_t HwFlowCtl;                 /*!< Specifies whether the hardware flow control mode is enabled or disabled.
-                                             This parameter can be a value of @ref UART_Hardware_Flow_Control */
-
-    uint32_t OverSampling;              /*!< Specifies whether the Over sampling 8 is enabled or disabled, to achieve higher speed (up to fPCLK/8).
-                                             This parameter can be a value of @ref UART_Over_Sampling. This feature is only available
-                                             on STM32F100xx family, so OverSampling parameter should always be set to 16. */
-  } UART_InitTypeDef;
-
-  #define DMA_PERIPH_TO_MEMORY         0x00000000U                 /*!< Peripheral to memory direction */
-  #define DMA_MEMORY_TO_PERIPH         ((uint32_t)DMA_CCR_DIR)     /*!< Memory to peripheral direction */
-  #define DMA_MEMORY_TO_MEMORY         ((uint32_t)DMA_CCR_MEM2MEM) /*!< Memory to memory direction     */
-#+end_src
-** UART_HandleTypeDef
-该结构体位于stm32f1xx_hal_uart.h文件中
-#+begin_src c
-  typedef struct __UART_HandleTypeDef
-  {
-    USART_TypeDef                 *Instance;        /*!< UART registers base address        */
-
-    UART_InitTypeDef              Init;             /*!< UART communication parameters      */
-
-    // 接收数据的指针
-    uint8_t                       *pTxBuffPtr;      /*!< Pointer to UART Tx transfer Buffer */
-    // 接收数据大小的上限
-    uint16_t                      TxXferSize;       /*!< UART Tx Transfer size              */
-    // 已经接收了多少数据
-    __IO uint16_t                 TxXferCount;      /*!< UART Tx Transfer Counter           */
-    // 发送数据的指针
-    uint8_t                       *pRxBuffPtr;      /*!< Pointer to UART Rx transfer Buffer */
-
-    uint16_t                      RxXferSize;       /*!< UART Rx Transfer size              */
-
-    __IO uint16_t                 RxXferCount;      /*!< UART Rx Transfer Counter           */
-    // 发送数据的dma
-    DMA_HandleTypeDef             *hdmatx;          /*!< UART Tx DMA Handle parameters      */
-    // 接收数据的dma
-    DMA_HandleTypeDef             *hdmarx;          /*!< UART Rx DMA Handle parameters      */
-
-    HAL_LockTypeDef               Lock;             /*!< Locking object                     */
-
-    __IO HAL_UART_StateTypeDef    gState;           /*!< UART state information related to global Handle management
-                                                         and also related to Tx operations.
-                                                         This parameter can be a value of @ref HAL_UART_StateTypeDef */
-
-    __IO HAL_UART_StateTypeDef    RxState;          /*!< UART state information related to Rx operations.
-                                                         This parameter can be a value of @ref HAL_UART_StateTypeDef */
-
-    __IO uint32_t                 ErrorCode;        /*!< UART Error code                    */
-  // 这些都是与中断有关的回调函数
-  #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
-    void (* TxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);        /*!< UART Tx Half Complete Callback        */
-    void (* TxCpltCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Tx Complete Callback             */
-    void (* RxHalfCpltCallback)(struct __UART_HandleTypeDef *huart);        /*!< UART Rx Half Complete Callback        */
-    void (* RxCpltCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Rx Complete Callback             */
-    void (* ErrorCallback)(struct __UART_HandleTypeDef *huart);             /*!< UART Error Callback                   */
-    void (* AbortCpltCallback)(struct __UART_HandleTypeDef *huart);         /*!< UART Abort Complete Callback          */
-    void (* AbortTransmitCpltCallback)(struct __UART_HandleTypeDef *huart); /*!< UART Abort Transmit Complete Callback */
-    void (* AbortReceiveCpltCallback)(struct __UART_HandleTypeDef *huart);  /*!< UART Abort Receive Complete Callback  */
-    void (* WakeupCallback)(struct __UART_HandleTypeDef *huart);            /*!< UART Wakeup Callback                  */
-
-    void (* MspInitCallback)(struct __UART_HandleTypeDef *huart);           /*!< UART Msp Init callback                */
-    void (* MspDeInitCallback)(struct __UART_HandleTypeDef *huart);         /*!< UART Msp DeInit callback              */
-  #endif  /* USE_HAL_UART_REGISTER_CALLBACKS */
-
-  } UART_HandleTypeDef;
-
-  typedef struct
-  {
-    __IO uint32_t SR;         /*!< USART Status register,                   Address offset: 0x00 */
-    __IO uint32_t DR;         /*!< USART Data register,                     Address offset: 0x04 */
-    __IO uint32_t BRR;        /*!< USART Baud rate register,                Address offset: 0x08 */
-    __IO uint32_t CR1;        /*!< USART Control register 1,                Address offset: 0x0C */
-    __IO uint32_t CR2;        /*!< USART Control register 2,                Address offset: 0x10 */
-    __IO uint32_t CR3;        /*!< USART Control register 3,                Address offset: 0x14 */
-    __IO uint32_t GTPR;       /*!< USART Guard time and prescaler register, Address offset: 0x18 */
-  } USART_TypeDef;
-
-  typedef struct
-  {
-    uint32_t BaudRate;                  /*!< This member configures the UART communication baud rate.
-                                             The baud rate is computed using the following formula:
-                                             - IntegerDivider = ((PCLKx) / (16 * (huart->Init.BaudRate)))
-                                             - FractionalDivider = ((IntegerDivider - ((uint32_t) IntegerDivider)) * 16) + 0.5 */
-
-    uint32_t WordLength;                /*!< Specifies the number of data bits transmitted or received in a frame.
-                                             This parameter can be a value of @ref UART_Word_Length */
-
-    uint32_t StopBits;                  /*!< Specifies the number of stop bits transmitted.
-                                             This parameter can be a value of @ref UART_Stop_Bits */
-
-    uint32_t Parity;                    /*!< Specifies the parity mode.
-                                             This parameter can be a value of @ref UART_Parity
-                                             @note When parity is enabled, the computed parity is inserted
-                                                   at the MSB position of the transmitted data (9th bit when
-                                                   the word length is set to 9 data bits; 8th bit when the
-                                                   word length is set to 8 data bits). */
-
-    uint32_t Mode;                      /*!< Specifies whether the Receive or Transmit mode is enabled or disabled.
-                                             This parameter can be a value of @ref UART_Mode */
-
-    uint32_t HwFlowCtl;                 /*!< Specifies whether the hardware flow control mode is enabled or disabled.
-                                             This parameter can be a value of @ref UART_Hardware_Flow_Control */
-
-    uint32_t OverSampling;              /*!< Specifies whether the Over sampling 8 is enabled or disabled, to achieve higher speed (up to fPCLK/8).
-                                             This parameter can be a value of @ref UART_Over_Sampling. This feature is only available
-                                             on STM32F100xx family, so OverSampling parameter should always be set to 16. */
-  } UART_InitTypeDef;
-#+end_src
-** DMA_HandleTypeDef
+*** DMA_HandleTypeDef
 该结构本位于stm32f1xx_hal_dma.h文件中
 #+begin_src c
   typedef struct __DMA_HandleTypeDef
   {
     // 寄存器的地址
-    DMA_Channel_TypeDef   *Instance;                       /*!< Register base address                  */
-
-    DMA_InitTypeDef       Init;                            /*!< DMA communication parameters           */
-
-    HAL_LockTypeDef       Lock;                            /*!< DMA locking object                     */
-
-    HAL_DMA_StateTypeDef  State;                           /*!< DMA transfer state                     */
-
-    void                  *Parent;                                                      /*!< Parent object state                    */
-
-    void                  (* XferCpltCallback)( struct __DMA_HandleTypeDef * hdma);     /*!< DMA transfer complete callback         */
-
-    void                  (* XferHalfCpltCallback)( struct __DMA_HandleTypeDef * hdma); /*!< DMA Half transfer complete callback    */
-
-    void                  (* XferErrorCallback)( struct __DMA_HandleTypeDef * hdma);    /*!< DMA transfer error callback            */
-
-    void                  (* XferAbortCallback)( struct __DMA_HandleTypeDef * hdma);    /*!< DMA transfer abort callback            */
-
-    __IO uint32_t         ErrorCode;                                                    /*!< DMA Error code                         */
-
-    DMA_TypeDef            *DmaBaseAddress;                                             /*!< DMA Channel Base Address               */
-
-    uint32_t               ChannelIndex;                                                /*!< DMA Channel Index                      */
+    DMA_Channel_TypeDef   *Instance;
+    DMA_InitTypeDef       Init;
+    HAL_LockTypeDef       Lock;
+    HAL_DMA_StateTypeDef  State;
+    void                  *Parent;
+    void                  (* XferCpltCallback)( struct __DMA_HandleTypeDef * hdma);
+    void                  (* XferHalfCpltCallback)( struct __DMA_HandleTypeDef * hdma);
+    void                  (* XferErrorCallback)( struct __DMA_HandleTypeDef * hdma);
+    void                  (* XferAbortCallback)( struct __DMA_HandleTypeDef * hdma);
+    __IO uint32_t         ErrorCode;
+    DMA_TypeDef            *DmaBaseAddress;
+    uint32_t               ChannelIndex;
 
   } DMA_HandleTypeDef;
 
@@ -252,45 +591,45 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     __IO uint32_t CMAR;
   } DMA_Channel_TypeDef;
 
+  // 外设到内存
+  #define DMA_PERIPH_TO_MEMORY         0x00000000U
+  // 内存到外设
+  #define DMA_MEMORY_TO_PERIPH         ((uint32_t)DMA_CCR_DIR)
+  // 内存到内存
+  #define DMA_MEMORY_TO_MEMORY         ((uint32_t)DMA_CCR_MEM2MEM)
+
   typedef struct
   {
-    uint32_t Direction;                 /*!< Specifies if the data will be transferred from memory to peripheral,
-                                             from memory to memory or from peripheral to memory.
-                                             This parameter can be a value of @ref DMA_Data_transfer_direction */
-
-    uint32_t PeriphInc;                 /*!< Specifies whether the Peripheral address register should be incremented or not.
-                                             This parameter can be a value of @ref DMA_Peripheral_incremented_mode */
-
-    uint32_t MemInc;                    /*!< Specifies whether the memory address register should be incremented or not.
-                                             This parameter can be a value of @ref DMA_Memory_incremented_mode */
-
-    uint32_t PeriphDataAlignment;       /*!< Specifies the Peripheral data width.
-                                             This parameter can be a value of @ref DMA_Peripheral_data_size */
-
-    uint32_t MemDataAlignment;          /*!< Specifies the Memory data width.
-                                             This parameter can be a value of @ref DMA_Memory_data_size */
-
-    uint32_t Mode;                      /*!< Specifies the operation mode of the DMAy Channelx.
-                                             This parameter can be a value of @ref DMA_mode
-                                             @note The circular buffer mode cannot be used if the memory-to-memory
-                                                   data transfer is configured on the selected Channel */
-
-    uint32_t Priority;                  /*!< Specifies the software priority for the DMAy Channelx.
-                                             This parameter can be a value of @ref DMA_Priority_level */
+    uint32_t Direction;
+    // 外设地址是否自动递增
+    // DMA_PINC_ENABLE 或 DMA_PINC_DISABLE
+    uint32_t PeriphInc;
+    // 内存地址是否自动递增
+    // DMA_MINC_ENABLE 或 DMA_MINC_DISABLE
+    uint32_t MemInc;
+    // 外设数据宽度
+    // DMA_PDATAALIGN_BYTE 字节对齐
+    // DMA_PDATAALIGN_HALFWORD 半字(16位)
+    // DMA_PDATAALIGN_WORD（字，32位）
+    uint32_t PeriphDataAlignment;
+    // 内存数据宽度，同上
+    uint32_t MemDataAlignment;
+    // DMA模式
+    // DMA_NORMAL(普通模式)
+    // DMA_CIRCULAR(循环模式)
+    uint32_t Mode;
+    // DMA通道优先级
+    // DMA_PRIORITY_LOW、DMA_PRIORITY_MEDIUM
+    // DMA_PRIORITY_HIGH、DMA_PRIORITY_VERY_HIGH
+    uint32_t Priority;
   } DMA_InitTypeDef;
 
   typedef enum
   {
-    HAL_UNLOCKED = 0x00U,
-    HAL_LOCKED   = 0x01U
-  } HAL_LockTypeDef;
-
-  typedef enum
-  {
-    HAL_DMA_STATE_RESET             = 0x00U,  /*!< DMA not yet initialized or disabled    */
-    HAL_DMA_STATE_READY             = 0x01U,  /*!< DMA initialized and ready for use      */
-    HAL_DMA_STATE_BUSY              = 0x02U,  /*!< DMA process is ongoing                 */
-    HAL_DMA_STATE_TIMEOUT           = 0x03U   /*!< DMA timeout state                      */
+    HAL_DMA_STATE_RESET             = 0x00U,
+    HAL_DMA_STATE_READY             = 0x01U,
+    HAL_DMA_STATE_BUSY              = 0x02U,
+    HAL_DMA_STATE_TIMEOUT           = 0x03U
   }HAL_DMA_StateTypeDef;
 
   typedef struct
@@ -323,7 +662,26 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     __IO uint32_t IFCR;
   } DMA_TypeDef;
 #+end_src
-** 实例代码
+
+*** 实例代码
+
+
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "rcc.h"
+  #include "uart.h"
+  #include "util.h"
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    u1_printf("Program start: %d\n", 10);
+    while (1) {}
+  }
+#+end_src
+
 
 #+CAPTION: uart.h
 #+begin_src c :results silent :noweb yes
@@ -344,15 +702,14 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
   void U1_Init_DMA_RX(void);
 
   #endif
-
 #+end_src
-
 
 #+CAPTION: uart.c
 #+begin_src c :results silent :noweb yes
   #include "string.h"
   #include "stm32f1xx_hal.h"
   #include "uart.h"
+  #include "util.h"
 
   UART_HandleTypeDef uart1;
 
@@ -363,7 +720,6 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
 
 
   void U1_Init(uint32_t baudrate) {
-    // stm32f103c8t6 一共有三个串口，USART1，USART2，USART3
     uart1.Instance = USART1;
     uart1.Init.BaudRate = baudrate;
     uart1.Init.WordLength = UART_WORDLENGTH_8B;
@@ -371,64 +727,25 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     uart1.Init.Parity = UART_PARITY_NONE;
     uart1.Init.Mode = UART_MODE_TX_RX;
     uart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    // 该函数中，HAL_UART_MspInit函数会被调用
     HAL_UART_Init(&uart1);
     U1_Init_DMA1();
-    U1_Init_IDLE();
-  }
-
-  void U1_Init_IDLE(void) {
-    // 使能 UART_IT_IDLE 中断
-    __HAL_UART_ENABLE_IT(&uart1, UART_IT_IDLE);
   }
 
   void U1_Init_DMA1(void) {
-    // 使能DMA1的时钟
     __HAL_RCC_DMA1_CLK_ENABLE();
     U1_Init_DMA_TX();
     U1_Init_DMA_RX();
-    // uart1.Instance.pRxBufferPtr会指向rxbuff
-    // uart1.Instance.RxXferSize值被设置为20
     HAL_UART_Receive_DMA(&uart1, rxbuff, 20);
   }
 
   void U1_Init_DMA_TX(void) {
-    // 使用Channel4
-    // 这里用的是串1，具体使用哪个通道需要查看手册
     dmatx.Instance = DMA1_Channel4;
-    // 内存到外设
     dmatx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-    // 外设地址递增（PINC_ENABLE）：
-    // 适用于外设有多个数据寄存器的情况。例如，从内存向 SPI 数据寄存器传输多个数据时，SPI 数据寄存器的地址需要递增。
-    // 也适用于从外设的多个寄存器读取数据到内存的场景。
-    // 外设地址不变（PINC_DISABLE）：
-    // 适用于外设只有一个数据寄存器的情况。例如，UART 的数据寄存器（TDR/RDR）在传输过程中地址不变，每次传输都指向同一个寄存器。
     dmatx.Init.PeriphInc = DMA_PINC_DISABLE;
-    // 内存地址递增（MINC_ENABLE）：
-    // 适用于需要从内存的连续地址读取或写入数据的场景。例如，将数组中的数据通过 DMA 传输到外设，或者将外设接收到的数据存储到数组。
-    // 内存地址不变（MINC_DISABLE）：
-    // 适用于内存地址固定的场景。例如，将外设的数据写入内存的某个固定地址，或者从内存的固定地址读取数据到外设。
     dmatx.Init.MemInc = DMA_MINC_ENABLE;
-    // 外设数据宽度
-    // DMA_PDATAALIGN_BYTE
-    // DMA_PDATAALIGN_HALFWORD
-    // DMA_PDATAALIGN_WORD
     dmatx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    // 内存数据的宽度
-    // DMA_MDATAALIGN_BYTE 一字节
-    // DMA_MDATAALIGN_HALFWORD 半个字
-    // DMA_MDATAALIGN_WORD 一个字
     dmatx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    // DMA_NORMAL, DMA_CIRCULAR
-    // 当 DMA_CIRCULAR 被启用时，DMA 控制器会在传输完成后自动重置传输计数器（Counter）和
-    // 地址指针（Address Pointer），并重新开始传输。
-    // 这种模式适用于需要 连续数据传输 的场景，例如音频流、数据采集（ADC）、通信协议（如 SPI、I2C）等。
     dmatx.Init.Mode = DMA_NORMAL;
-    // DMA_PRIORITY_LOW
-    // DMA_PRIORITY_MEDIUM
-    // DMA_PRIORITY_HIGH
-    // DMA_PRIORITY_VERY_HIGH 适用于对实时性要求非常高的 DMA 传输任务。例如：
-    //   高速数据采集（如 ADC 采样）。实时音频处理。高速通信协议（如 SPI、I2C、UART 等）。
     dmatx.Init.Priority = DMA_PRIORITY_MEDIUM;
     __HAL_LINKDMA(&uart1, hdmatx, dmatx);
     HAL_DMA_Init(&dmatx);
@@ -454,11 +771,9 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
   void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 
     GPIO_InitTypeDef GPIO_InitType;
-    // 设置uart1的相妆参数以及中断
+
     if (huart->Instance == USART1) {
-      // 使能 GPIOA 时钟
       __HAL_RCC_GPIOA_CLK_ENABLE();
-      // 使能 串口1的时钟
       __HAL_RCC_USART1_CLK_ENABLE();
 
       GPIO_InitType.Pin = GPIO_PIN_9;
@@ -478,41 +793,29 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
 
   void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if(huart->Instance == USART1){
-      // 重新开启DMA中断
+      u1_printf("HAL_UART_TxCpltCallback\n");
       HAL_UART_Receive_DMA(&uart1, rxbuff, 20);
     }
   }
 
-  void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART1) {
-      rxstate = 1;
+  void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    if(huart->Instance == USART1){
+      u1_printf("HAL_UART_RxCpltCallback\n");
+      HAL_UART_Transmit_DMA(&uart1, rxbuff, strlen((char *)rxbuff));
     }
   }
+
+  /* void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart) { */
+  /*   if (huart->Instance == USART1) { */
+  /*     // u1_printf("HAL_UART_RxHalfCpltCallback: %s\n", rxbuff); */
+  /*     if (huart->gState == HAL_UART_STATE_READY) { */
+  /*       HAL_UART_Transmit_DMA(&uart1, rxbuff, strlen((char *)rxbuff) / 2); */
+  /*     } */
+  /*   } */
+  /* } */
 #+end_src
 
-#+CAPTION: main.c
-#+begin_src c :results silent :noweb yes
-  #include "stm32f1xx_hal.h"
-  #include "rcc.h"
-  #include "uart.h"
-
-  int main(void) {
-    HAL_Init();
-    RccClock_Init();
-    U1_Init(921600);
-    while (1) {
-      if(rxstate == 1){
-        rxstate = 0;
-        // 将rxbuffer关联到 pTxBuferPtr
-        // 然后调用 HAL_DMA_Start_IT，SrcAddress为rxbuff，目的地址为 usart1->Instance->DR寄存器
-        // 也就是把内存中的数据写入到寄存器中
-        HAL_UART_Transmit_DMA(&uart1, rxbuff, 20);
-      }
-    }
-  }
-#+end_src
-
-#+CAPTION: it.c
+#+CAPTION: stm32f1xx_it.c
 #+begin_src c :results silent :noweb yes
   #include "uart.h"
 
@@ -528,6 +831,7 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
 #+end_src
 
 * 定时器
+** 轮询
 总控结构体
 #+CAPTION: stm32f1xx_hal_tim.h
 #+begin_src c :results silent :noweb yes
@@ -662,5 +966,234 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
         }
       }
     }
+  }
+#+end_src
+
+** 中断
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "stm32f1xx_hal_tim.h"
+  #include "rcc.h"
+  #include "uart.h"
+  #include "util.h"
+  #include "timer.h"
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    u1_printf("Program start: %d\n", 10);
+    Timer1_Init(3999, 35999, 0);
+    while (1) {
+
+    }
+  }
+#+end_src
+
+#+CAPTION: timer.h
+#+begin_src c :results silent :noweb yes
+  #ifndef TIMER_H
+  #define TIMER_H
+
+  #include "stm32f1xx_hal_tim.h"
+
+  extern TIM_HandleTypeDef timer1;
+  void Timer1_Init(uint16_t arr, uint16_t psc, uint8_t rep);
+
+  #endif /* TIMER_H */
+
+#+end_src
+
+#+CAPTION: timer.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "timer.h"
+  #include "util.h"
+
+  TIM_HandleTypeDef timer1;
+  uint32_t counter = 0;
+
+  void Timer1_Init(uint16_t arr, uint16_t psc, uint8_t rep) {
+    timer1.Instance = TIM1;
+    timer1.Init.Prescaler = psc;
+    timer1.Init.CounterMode = TIM_COUNTERMODE_UP;
+    timer1.Init.Period = arr;
+    timer1.Init.RepetitionCounter = rep;
+    timer1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    HAL_TIM_Base_Init(&timer1);
+    // 因为上断的时候会hal库会自动做一次软中断
+    // 所以需要 清除 更新中断标志
+    __HAL_TIM_CLEAR_FLAG(&timer1, TIM_FLAG_UPDATE);
+    HAL_TIM_Base_Start_IT(&timer1);
+  }
+
+  void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM1) {
+      // 使能定时器时钟
+      __HAL_RCC_TIM1_CLK_ENABLE();
+      // 设置定时器1的更新中断优先级为3
+      HAL_NVIC_SetPriority(TIM1_UP_IRQn, 3, 0);
+      // 使能定时器1的更新中断
+      HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
+    }
+  }
+
+  void HAL_TIM_BaseMspDeInit(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM1) {
+      __HAL_RCC_TIM1_CLK_DISABLE();
+      HAL_NVIC_DisableIRQ(TIM1_UP_IRQn);
+    }
+  }
+
+  /*
+
+    在HAL_TIM_IRQHandler函数中有一段代码
+
+      if (__HAL_TIM_GET_FLAG(htim, TIM_FLAG_UPDATE) != RESET) {
+        if (__HAL_TIM_GET_IT_SOURCE(htim, TIM_IT_UPDATE) != RESET) {
+          __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
+  #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1)
+          htim->PeriodElapsedCallback(htim);
+  #else
+          HAL_TIM_PeriodElapsedCallback(htim);
+  #endif
+        }
+      }
+
+      表示当更新中断发生时 HAL_TIM_PeriodElapsedCallback会被调用。
+      这个函数在 HAL 库中以 weak 方式声明的。所以我们需要自己实现这个函数。
+      这样中断发生时就会进入我们自己的处理逻辑了。
+   ,*/
+  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM1) {
+      u1_printf("Timer1 alarmed... %d\n", counter++);
+      if (counter >= 10) {
+        HAL_TIM_Base_Stop(&timer1);
+        HAL_TIM_Base_DeInit(&timer1);
+        u1_printf("Timer1 stopped...");
+      }
+    }
+  }
+
+#+end_src
+
+#+CAPTION: stm32f1xx_it.c
+#+begin_src c :results silent :noweb yes
+  #include "timer.h"
+  void TIM1_UP_IRQHandler(void) {
+    // 当中断发生时，该函数会被调用
+    // HAL_TIM_IRQHandler函数会根据中断发生情况调用 TIM_HandleTypeDef 结构体中的回调函数
+    HAL_TIM_IRQHandler(&timer1);
+  }
+#+end_src
+** DMA
+#+CAPTION: timer.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "timer.h"
+  #include "uart.h"
+
+  TIM_HandleTypeDef timer1;
+  DMA_HandleTypeDef timer1_dmaup;
+  uint16_t timer1_dmabuff[4] = {3999, 5999, 7999, 9999};
+  uint32_t counter = 0;
+
+  void Timer1_Init(uint16_t arr, uint16_t psc, uint8_t rep) {
+    timer1.Instance = TIM1;
+    timer1.Init.Prescaler = psc;
+    timer1.Init.CounterMode = TIM_COUNTERMODE_UP;
+    timer1.Init.Period = arr;
+    timer1.Init.RepetitionCounter = rep;
+    timer1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    HAL_TIM_Base_Init(&timer1);
+    __HAL_TIM_CLEAR_FLAG(&timer1, TIM_FLAG_UPDATE);
+    __HAL_TIM_ENABLE_IT(&timer1, TIM_IT_UPDATE);
+    HAL_TIM_Base_Start_DMA(&timer1, (uint32_t *)timer1_dmabuff, 4);
+  }
+
+  void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM1) {
+      __HAL_RCC_TIM1_CLK_ENABLE();
+      __HAL_RCC_DMA1_CLK_ENABLE();
+
+      HAL_NVIC_SetPriority(TIM1_UP_IRQn,3,0);
+      HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
+
+      timer1_dmaup.Instance = DMA1_Channel5;
+      timer1_dmaup.Init.Direction = DMA_MEMORY_TO_PERIPH;
+      timer1_dmaup.Init.PeriphInc = DMA_PINC_DISABLE;
+      timer1_dmaup.Init.MemInc = DMA_MINC_ENABLE;
+      timer1_dmaup.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+      timer1_dmaup.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+      timer1_dmaup.Init.Mode = DMA_NORMAL;
+      timer1_dmaup.Init.Priority = DMA_PRIORITY_MEDIUM;
+      __HAL_LINKDMA(&timer1, hdma[TIM_DMA_ID_UPDATE], timer1_dmaup);
+      HAL_DMA_Init(&timer1_dmaup);
+
+      HAL_NVIC_SetPriority(DMA1_Channel5_IRQn,3,0);
+      HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+    }
+  }
+
+  void HAL_TIM_BaseMspDeInit(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM1) {
+      __HAL_RCC_TIM1_CLK_DISABLE();
+      HAL_NVIC_DisableIRQ(TIM1_UP_IRQn);
+    }
+  }
+
+  void HAL_TIM_PeriodElapsedHalfCpltCallback(TIM_HandleTypeDef *htim) {
+    // 半完成中断。timer1_dmabuff 一个有4个数，第二个数传输完成之后，此函数被调用
+    if (htim->Instance == TIM1) {
+      u1_printf("Hal cplt... %d\n", counter++);
+    }
+  }
+
+  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    // DMA完成回调
+    // 中断完成回调是同一个函数
+    if (htim->Instance == TIM1) {
+      u1_printf("Value of arr, %d\n", htim->Instance->ARR);
+      if (htim->hdma[TIM_DMA_ID_UPDATE]->State == HAL_DMA_STATE_READY) {
+        u1_printf("Timer1 alarmed by dma... %d\n", counter++);
+        HAL_DMA_DeInit(htim->hdma[TIM_DMA_ID_UPDATE]);
+      } else {
+        u1_printf("Timer1 alarmed by it... %d\n", counter++);
+      }
+    }
+  }
+
+#+end_src
+#+CAPTION: main.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "stm32f1xx_hal_tim.h"
+  #include "rcc.h"
+  #include "uart.h"
+  #include "util.h"
+  #include "timer.h"
+
+  int main(void) {
+    HAL_Init();
+    RccClock_Init();
+    U1_Init(921600);
+    u1_printf("Program start: %d\n", 10);
+    Timer1_Init(1999, 35999, 0);
+    while (1) {}
+  }
+
+#+end_src
+
+#+CAPTION: stm32f1xx_it.c
+#+begin_src c :results silent :noweb yes
+  void DMA1_Channel5_IRQHandler(void)
+  {
+    HAL_DMA_IRQHandler(&timer1_dmaup);
+  }
+
+  void TIM1_UP_IRQHandler(void)
+  {
+    HAL_TIM_IRQHandler(&timer1);
   }
 #+end_src
