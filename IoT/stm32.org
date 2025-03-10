@@ -831,53 +831,52 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
 #+end_src
 
 * 定时器
-** 轮询
 总控结构体
 #+CAPTION: stm32f1xx_hal_tim.h
 #+begin_src c :results silent :noweb yes
   typedef struct
-  #endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
+  #endif
   {
     // Instance主要是关联的寄存器
-    TIM_TypeDef                 *Instance;     /*!< Register base address             */
+    TIM_TypeDef                 *Instance;
     // 基本参数
-    TIM_Base_InitTypeDef        Init;          /*!< TIM Time Base required parameters */
-    HAL_TIM_ActiveChannel       Channel;       /*!< Active channel                    */
+    TIM_Base_InitTypeDef        Init;
+    HAL_TIM_ActiveChannel       Channel;
     // DMA有关的
-    DMA_HandleTypeDef           *hdma[7];      /*!< DMA Handlers array
-                                                    This array is accessed by a @ref DMA_Handle_index */
-    HAL_LockTypeDef             Lock;          /*!< Locking object                    */
-    __IO HAL_TIM_StateTypeDef   State;         /*!< TIM operation state               */
+    DMA_HandleTypeDef           *hdma[7];
+
+    HAL_LockTypeDef             Lock;
+    __IO HAL_TIM_StateTypeDef   State;
 
   #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1)
-    void (* Base_MspInitCallback)(struct __TIM_HandleTypeDef *htim);              /*!< TIM Base Msp Init Callback                              */
-    void (* Base_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);            /*!< TIM Base Msp DeInit Callback                            */
-    void (* IC_MspInitCallback)(struct __TIM_HandleTypeDef *htim);                /*!< TIM IC Msp Init Callback                                */
-    void (* IC_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);              /*!< TIM IC Msp DeInit Callback                              */
-    void (* OC_MspInitCallback)(struct __TIM_HandleTypeDef *htim);                /*!< TIM OC Msp Init Callback                                */
-    void (* OC_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);              /*!< TIM OC Msp DeInit Callback                              */
-    void (* PWM_MspInitCallback)(struct __TIM_HandleTypeDef *htim);               /*!< TIM PWM Msp Init Callback                               */
-    void (* PWM_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);             /*!< TIM PWM Msp DeInit Callback                             */
-    void (* OnePulse_MspInitCallback)(struct __TIM_HandleTypeDef *htim);          /*!< TIM One Pulse Msp Init Callback                         */
-    void (* OnePulse_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);        /*!< TIM One Pulse Msp DeInit Callback                       */
-    void (* Encoder_MspInitCallback)(struct __TIM_HandleTypeDef *htim);           /*!< TIM Encoder Msp Init Callback                           */
-    void (* Encoder_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);         /*!< TIM Encoder Msp DeInit Callback                         */
-    void (* HallSensor_MspInitCallback)(struct __TIM_HandleTypeDef *htim);        /*!< TIM Hall Sensor Msp Init Callback                       */
-    void (* HallSensor_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);      /*!< TIM Hall Sensor Msp DeInit Callback                     */
-    void (* PeriodElapsedCallback)(struct __TIM_HandleTypeDef *htim);             /*!< TIM Period Elapsed Callback                             */
-    void (* PeriodElapsedHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);     /*!< TIM Period Elapsed half complete Callback               */
-    void (* TriggerCallback)(struct __TIM_HandleTypeDef *htim);                   /*!< TIM Trigger Callback                                    */
-    void (* TriggerHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);           /*!< TIM Trigger half complete Callback                      */
-    void (* IC_CaptureCallback)(struct __TIM_HandleTypeDef *htim);                /*!< TIM Input Capture Callback                              */
-    void (* IC_CaptureHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);        /*!< TIM Input Capture half complete Callback                */
-    void (* OC_DelayElapsedCallback)(struct __TIM_HandleTypeDef *htim);           /*!< TIM Output Compare Delay Elapsed Callback               */
-    void (* PWM_PulseFinishedCallback)(struct __TIM_HandleTypeDef *htim);         /*!< TIM PWM Pulse Finished Callback                         */
-    void (* PWM_PulseFinishedHalfCpltCallback)(struct __TIM_HandleTypeDef *htim); /*!< TIM PWM Pulse Finished half complete Callback           */
-    void (* ErrorCallback)(struct __TIM_HandleTypeDef *htim);                     /*!< TIM Error Callback                                      */
-    void (* CommutationCallback)(struct __TIM_HandleTypeDef *htim);               /*!< TIM Commutation Callback                                */
-    void (* CommutationHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);       /*!< TIM Commutation half complete Callback                  */
-    void (* BreakCallback)(struct __TIM_HandleTypeDef *htim);                     /*!< TIM Break Callback                                      */
-  #endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
+    void (* Base_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* Base_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* IC_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* IC_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* OC_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* OC_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PWM_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PWM_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* OnePulse_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* OnePulse_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* Encoder_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* Encoder_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* HallSensor_MspInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* HallSensor_MspDeInitCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PeriodElapsedCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PeriodElapsedHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* TriggerCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* TriggerHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* IC_CaptureCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* IC_CaptureHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* OC_DelayElapsedCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PWM_PulseFinishedCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* PWM_PulseFinishedHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* ErrorCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* CommutationCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* CommutationHalfCpltCallback)(struct __TIM_HandleTypeDef *htim);
+    void (* BreakCallback)(struct __TIM_HandleTypeDef *htim);
+  #endif
   } TIM_HandleTypeDef;
 
   typedef struct
@@ -886,13 +885,21 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     // 定时器的频率 = 主频率 / (psc + 1)
     uint32_t Prescaler;
     // 计数模式 向下/向上/中心对齐
+    // #define TIM_COUNTERMODE_UP                 0x00000000U
+    // #define TIM_COUNTERMODE_DOWN               TIM_CR1_DIR
+    // #define TIM_COUNTERMODE_CENTERALIGNED1     TIM_CR1_CMS_0
+    // #define TIM_COUNTERMODE_CENTERALIGNED2     TIM_CR1_CMS_1
+    // #define TIM_COUNTERMODE_CENTERALIGNED3     TIM_CR1_CMS
     uint32_t CounterMode;
     // 装载值(计时次数)，实际值为 value + 1
     // 设置到TIMx_ARR寄存器里
     uint32_t Period;
-    // 分频因子
+    // 时钟分频因子
+    // #define TIM_CLOCKDIVISION_DIV1             0x00000000U
+    // #define TIM_CLOCKDIVISION_DIV2             TIM_CR1_CKD_0
+    // #define TIM_CLOCKDIVISION_DIV4             TIM_CR1_CKD_1
     uint32_t ClockDivision;
-    // 复制次数.高级定时器才有
+    // 重复次数.高级定时器才有
     uint32_t RepetitionCounter;
     // 当 TIMx_ARR 的值被修改时，是否立即更新
     // 如一开始是100,当计时到80时，将其修改为150，
@@ -900,8 +907,43 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     // TIM_AUTORELOAD_PRELOAD_DISABLE, TIM_AUTORELOAD_PRELOAD_ENABLE
     uint32_t AutoReloadPreload;
   } TIM_Base_InitTypeDef;
+
+  typedef struct
+  {
+    __IO uint32_t CR1;             /*!< TIM control register 1,                      Address offset: 0x00 */
+    __IO uint32_t CR2;             /*!< TIM control register 2,                      Address offset: 0x04 */
+    __IO uint32_t SMCR;            /*!< TIM slave Mode Control register,             Address offset: 0x08 */
+    __IO uint32_t DIER;            /*!< TIM DMA/interrupt enable register,           Address offset: 0x0C */
+    __IO uint32_t SR;              /*!< TIM status register,                         Address offset: 0x10 */
+    __IO uint32_t EGR;             /*!< TIM event generation register,               Address offset: 0x14 */
+    __IO uint32_t CCMR1;           /*!< TIM  capture/compare mode register 1,        Address offset: 0x18 */
+    __IO uint32_t CCMR2;           /*!< TIM  capture/compare mode register 2,        Address offset: 0x1C */
+    __IO uint32_t CCER;            /*!< TIM capture/compare enable register,         Address offset: 0x20 */
+    __IO uint32_t CNT;             /*!< TIM counter register,                        Address offset: 0x24 */
+    __IO uint32_t PSC;             /*!< TIM prescaler register,                      Address offset: 0x28 */
+    __IO uint32_t ARR;             /*!< TIM auto-reload register,                    Address offset: 0x2C */
+    __IO uint32_t RCR;             /*!< TIM  repetition counter register,            Address offset: 0x30 */
+    __IO uint32_t CCR1;            /*!< TIM capture/compare register 1,              Address offset: 0x34 */
+    __IO uint32_t CCR2;            /*!< TIM capture/compare register 2,              Address offset: 0x38 */
+    __IO uint32_t CCR3;            /*!< TIM capture/compare register 3,              Address offset: 0x3C */
+    __IO uint32_t CCR4;            /*!< TIM capture/compare register 4,              Address offset: 0x40 */
+    __IO uint32_t BDTR;            /*!< TIM break and dead-time register,            Address offset: 0x44 */
+    __IO uint32_t DCR;             /*!< TIM DMA control register,                    Address offset: 0x48 */
+    __IO uint32_t DMAR;            /*!< TIM DMA address for full transfer register,  Address offset: 0x4C */
+    __IO uint32_t OR;              /*!< TIM option register,                         Address offset: 0x50 */
+  }TIM_TypeDef;
+
+  typedef enum
+  {
+    HAL_TIM_ACTIVE_CHANNEL_1        = 0x01U,    /*!< The active channel is 1     */
+    HAL_TIM_ACTIVE_CHANNEL_2        = 0x02U,    /*!< The active channel is 2     */
+    HAL_TIM_ACTIVE_CHANNEL_3        = 0x04U,    /*!< The active channel is 3     */
+    HAL_TIM_ACTIVE_CHANNEL_4        = 0x08U,    /*!< The active channel is 4     */
+    HAL_TIM_ACTIVE_CHANNEL_CLEARED  = 0x00U     /*!< All active channels cleared */
+  } HAL_TIM_ActiveChannel;
 #+end_src
 
+** 轮询
 #+CAPTION: timer.c
 #+begin_src c :results silent :noweb yes
   #include "stm32f1xx_hal.h"
@@ -1107,8 +1149,6 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     timer1.Init.RepetitionCounter = rep;
     timer1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     HAL_TIM_Base_Init(&timer1);
-    __HAL_TIM_CLEAR_FLAG(&timer1, TIM_FLAG_UPDATE);
-    __HAL_TIM_ENABLE_IT(&timer1, TIM_IT_UPDATE);
     HAL_TIM_Base_Start_DMA(&timer1, (uint32_t *)timer1_dmabuff, 4);
   }
 
@@ -1116,9 +1156,6 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
     if (htim->Instance == TIM1) {
       __HAL_RCC_TIM1_CLK_ENABLE();
       __HAL_RCC_DMA1_CLK_ENABLE();
-
-      HAL_NVIC_SetPriority(TIM1_UP_IRQn,3,0);
-      HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
 
       timer1_dmaup.Instance = DMA1_Channel5;
       timer1_dmaup.Init.Direction = DMA_MEMORY_TO_PERIPH;
@@ -1144,15 +1181,14 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
   }
 
   void HAL_TIM_PeriodElapsedHalfCpltCallback(TIM_HandleTypeDef *htim) {
-    // 半完成中断。timer1_dmabuff 一个有4个数，第二个数传输完成之后，此函数被调用
+    // DMA 数组传输完成一半时此函数被调用
     if (htim->Instance == TIM1) {
       u1_printf("Hal cplt... %d\n", counter++);
     }
   }
 
   void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    // DMA完成回调
-    // 中断完成回调是同一个函数
+    // DMA 传输完成时此函数被调用
     if (htim->Instance == TIM1) {
       u1_printf("Value of arr, %d\n", htim->Instance->ARR);
       if (htim->hdma[TIM_DMA_ID_UPDATE]->State == HAL_DMA_STATE_READY) {
@@ -1163,8 +1199,8 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
       }
     }
   }
-
 #+end_src
+
 #+CAPTION: main.c
 #+begin_src c :results silent :noweb yes
   #include "stm32f1xx_hal.h"
@@ -1190,10 +1226,5 @@ HAL_UART_Receive_DMA函数用于设定将一个缓存地址与DMA绑定，pData�
   void DMA1_Channel5_IRQHandler(void)
   {
     HAL_DMA_IRQHandler(&timer1_dmaup);
-  }
-
-  void TIM1_UP_IRQHandler(void)
-  {
-    HAL_TIM_IRQHandler(&timer1);
   }
 #+end_src
