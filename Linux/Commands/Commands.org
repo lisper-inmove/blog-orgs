@@ -36,3 +36,9 @@ find /path/to/directory: 查找指定目录下的文件。
 -print0: 输出文件路径，并以 null 字符 (\0) 作为分隔符，确保文件名中有空格或特殊字符时不会出错。
 xargs -0: 使用 null 字符作为分隔符，确保能够正确处理包含空格或特殊字符的文件名。
 chmod -x: 去掉文件的执行权限。
+
+* sed
+** 匹配行并在其下复制一行
+#+begin_src shell
+  sed -i '/^[[:space:]]*logger.info/ p' xxx.txt
+#+end_src
