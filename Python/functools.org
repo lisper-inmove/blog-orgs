@@ -111,6 +111,30 @@
 
 #+end_src
 
+* singledispatchmethod
+#+CAPTION: singledispatchmethod
+#+begin_src python :results silent :noweb yes
+  from functools import singledispatchmethod
+
+  class Adder:
+      @singledispatchmethod
+      def add(self, other):
+          raise NotImplementedError(f"不能处理 {type(other)} 类型的加法")
+
+      @add.register(int)
+      def _(self, other):
+          return f"整数相加: {other} + {other} = {other + other}"
+
+      @add.register(str)
+      def _(self, other):
+          return f"字符串相加: {other} + {other} = {other + other}"
+
+  # 使用示例
+  adder = Adder()
+  print(adder.add(10))    # 整数相加: 10 + 10 = 20
+  print(adder.add("Hi"))  # 字符串相加: Hi + Hi = HiHi
+#+end_src
+
 * cached_property
 #+CAPTION: cached_property
 #+begin_src python :results silent :noweb yes
