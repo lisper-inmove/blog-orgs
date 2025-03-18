@@ -1,10 +1,10 @@
-#+TITLE: 在Kubernetes中安装NFS
+#+TITLE: Install NFS in Kubernetes
 #+DATE: 2023-09-28 15:46:01
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes NFS
+#+KEYWORDS: NFS
 #+CATEGORIES: Kubernetes
 
 * 使用yaml文件安装NFS

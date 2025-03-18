@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes PV PVC SC
+#+KEYWORDS: PV PVC SC
 #+CATEGORIES: Kubernetes
 
 * EmptyDir

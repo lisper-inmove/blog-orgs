@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes Deployment
+#+KEYWORDS: Deployment
 #+CATEGORIES: Kubernetes
 
 * 什么是Deployment

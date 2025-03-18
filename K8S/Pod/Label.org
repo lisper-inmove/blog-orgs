@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes label
+#+KEYWORDS: label
 #+CATEGORIES: Kubernetes
 
 

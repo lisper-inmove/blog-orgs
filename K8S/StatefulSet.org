@@ -1,10 +1,10 @@
-#+TITLE: 有状态应用
+#+TITLE: StatefulSet
 #+DATE: 2023-09-28 15:23:55
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes StatefulSet
+#+KEYWORDS: StatefulSet
 #+CATEGORIES: Kubernetes
 
 * 有状态应用

@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes Service
+#+KEYWORDS: Service
 #+CATEGORIES: Kubernetes
 
 * 什么是Service

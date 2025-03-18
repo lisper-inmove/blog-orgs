@@ -1,10 +1,10 @@
-#+TITLE: Job 与 CronJob
+#+TITLE: Job And CronJob
 #+DATE: 2023-09-28 15:25:26
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes Job CronJob
+#+KEYWORDS: Job CronJob
 #+CATEGORIES: Kubernetes
 
 * Job
