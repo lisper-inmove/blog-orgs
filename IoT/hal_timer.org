@@ -81,7 +81,7 @@
     uint32_t RepetitionCounter;
     // 当 TIMx_ARR 的值被修改时，是否立即更新
     // 如一开始是100,当计时到80时，将其修改为150，
-    // 设置为enable时，这个150是在本次生效，否则下次才生效
+    // 设置为disable时，这个150是在本次生效，否则下次才生效
     // TIM_AUTORELOAD_PRELOAD_DISABLE, TIM_AUTORELOAD_PRELOAD_ENABLE
     uint32_t AutoReloadPreload;
   } TIM_Base_InitTypeDef;
