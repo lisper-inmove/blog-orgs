@@ -1,6 +1,6 @@
 #+TITLE: Something We must know in Python
 #+DATE: 2019-02-28 17:26:13
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

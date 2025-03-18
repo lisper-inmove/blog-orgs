@@ -1,6 +1,6 @@
 #+TITLE: 在Python中使用默认参数
 #+DATE: 2024-05-02 15:22:00
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

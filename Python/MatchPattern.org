@@ -1,6 +1,6 @@
 #+TITLE: 模式匹配
 #+DATE: 2024-05-02 20:44:02
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

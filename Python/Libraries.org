@@ -1,6 +1,6 @@
 #+TITLE: Libraries
 #+DATE: 2024-02-29 20:54:57
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

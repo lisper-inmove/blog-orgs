@@ -1,6 +1,6 @@
 #+TITLE: How Metaclass Work
 #+DATE: 2021-10-3 17:39:24
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: Dataclasses
 #+DATE: 2024-03-01 00:04:32
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

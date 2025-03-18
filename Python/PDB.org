@@ -1,6 +1,6 @@
 #+TITLE: 使用 PDB 调试
 #+DATE: 2024-05-03 13:50:33
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

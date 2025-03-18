@@ -1,6 +1,6 @@
 #+TITLE: 并发编程
 #+DATE: 2024-05-02 21:57:31
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

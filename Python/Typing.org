@@ -1,6 +1,6 @@
 #+TITLE: Typing
 #+DATE: 2021-01-29 21:21:59
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: 推导式
 #+DATE: 2024-05-02 20:40:42
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: Concurrent Programming
 #+DATE: 2023-10-02 13:00:12
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
@@ -330,3 +330,26 @@ Then =next(gen)= put gen.frame to the top of stack, when encounter another yield
   if __name__ == '__main__':
       asyncio.run(main())
 #+end_src
+
+* Cancel task
+#+CAPTION: cancel task
+#+begin_src python :results output :noweb yes
+  import asyncio
+  async def risky_task():
+      try:
+          await asyncio.sleep(10)
+      except asyncio.CancelledError:
+          print("Task was cancelled")
+
+  async def main():
+      task = asyncio.create_task(risky_task())
+      await asyncio.sleep(1)
+      task.cancel()
+      await task
+
+  asyncio.run(main())
+
+#+end_src
+
+#+RESULTS:
+: Task was cancelled

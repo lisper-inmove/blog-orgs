@@ -1,6 +1,6 @@
 #+TITLE: 生成器与迭代器
 #+DATE: 2024-05-02 01:16:40
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
