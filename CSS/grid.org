@@ -1,6 +1,6 @@
 #+TITLE: Grid Layout
 #+DATE: 2024-02-21 09:20:26
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,7 +1,7 @@
 #+TITLE: AVL Tree
 #+SUBTITLE: An AVL tree is a type of binary search tree (BST) that maintains a balance condition to ensure that the tree remains approximately balanced, meaning the depth of the two subtrees of any node differ by no more than one.
 #+DATE: 2023-09-28 00:14:28
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

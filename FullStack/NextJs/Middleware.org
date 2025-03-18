@@ -1,6 +1,6 @@
 #+TITLE: NextJs Middleware
 #+DATE: 2024-03-04 16:00:31
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

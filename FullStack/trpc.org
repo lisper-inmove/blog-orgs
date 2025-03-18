@@ -1,6 +1,6 @@
 #+DATE: 2024-03-03 00:09:42
 #+TITLE: tRPC setup
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

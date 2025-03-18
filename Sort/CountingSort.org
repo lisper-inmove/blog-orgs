@@ -1,6 +1,6 @@
 #+TITLE: Counting Sort
 #+DATE: 2023-09-27 21:49:46
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

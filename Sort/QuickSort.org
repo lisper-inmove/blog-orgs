@@ -1,6 +1,6 @@
 #+TITLE: Quick Sort
 #+DATE: 2023-09-27 21:46:07
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

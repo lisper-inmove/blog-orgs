@@ -1,6 +1,6 @@
 #+TITLE: Generics in typescript
 #+DATE: 2024-03-12 12:22:49
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

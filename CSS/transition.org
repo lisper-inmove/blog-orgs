@@ -1,6 +1,6 @@
 #+TITLE: Transition
 #+DATE: 2024-02-19 06:05:18
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

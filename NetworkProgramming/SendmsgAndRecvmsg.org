@@ -1,6 +1,6 @@
 #+TITLE: 父子进程间套接字传送
 #+DATE: 2023-10-17 01:39:51
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

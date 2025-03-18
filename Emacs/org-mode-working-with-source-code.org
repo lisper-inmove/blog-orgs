@@ -1,6 +1,6 @@
 #+TITLE: Source code in OrgMode
 #+DATE: 2024-03-29 21:19:33
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

@@ -1,6 +1,6 @@
 #+TITLE: 106. 从中序与后序遍历序列构造二叉树
 #+DATE: 2023-10-01 00:29:20
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

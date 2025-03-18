@@ -1,6 +1,6 @@
 #+TITLE: Transform
 #+DATE: 2024-02-22 06:43:01
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

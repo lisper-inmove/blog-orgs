@@ -1,6 +1,6 @@
 #+TITLE: Flexbox
 #+DATE: 2024-02-20 08:30:35
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

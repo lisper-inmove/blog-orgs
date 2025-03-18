@@ -1,6 +1,6 @@
 #+TITLE: Bucket Sort
 #+DATE: 2023-09-27 21:50:09
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

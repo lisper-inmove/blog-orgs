@@ -1,6 +1,6 @@
 #+TITLE: 64. (LCP) 二叉树灯饰
 #+DATE: 2023-10-01 02:18:27
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

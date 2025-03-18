@@ -1,6 +1,6 @@
 #+TITLE: Queue
 #+DATE: 2024-03-10 15:22:21
-#+DISPLAY: nil
+#+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
