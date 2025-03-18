@@ -406,3 +406,95 @@
     HAL_DMA_IRQHandler(&timer1_dmaup);
   }
 #+end_src
+
+* 外触发定时器
+ETR(External Trigger)，指定时器通过外部引脚(ETR输入)接收外部信号来触发定时器的计数或事件控制。这种模式通常用于实现精确的频率测量，外部信号捕获或同步多个定时器的功能。
+
+#+CAPTION: stm321xx_hal_tim.h
+#+begin_src c :results silent :noweb yes
+  typedef struct {
+    // 时钟源选择
+    uint32_t ClockSource;
+    // 时钟极性
+    uint32_t ClockPolarity;
+    // 时钟预分频
+    uint32_t ClockPrescaler;
+    // Min_Data = 0x0 and Max_Data = 0xF
+    // 0表示不滤波
+    // 数字越大滤波越强，信号延迟也越大，越稳定
+    uint32_t ClockFilter;
+  } TIM_ClockConfigTypeDef;
+
+
+  // ClockSource
+  #define TIM_CLOCKSOURCE_ETRMODE2    TIM_SMCR_ETPS_1      /*!< 外部时钟源模式2 (External Trigger input)              */
+  #define TIM_CLOCKSOURCE_INTERNAL    TIM_SMCR_ETPS_0      /*!< 内部时钟源 (定时器默认的APB时钟)                      */
+  #define TIM_CLOCKSOURCE_ITR0        TIM_TS_ITR0          /*!< 内部触发源0 (其它定时器触发源)                        */
+  #define TIM_CLOCKSOURCE_ITR1        TIM_TS_ITR1          /*!< 内部触发源1 (其它定时器触发源)                        */
+  #define TIM_CLOCKSOURCE_ITR2        TIM_TS_ITR2          /*!< 内部触发源2 (其它定时器触发源)                        */
+  #define TIM_CLOCKSOURCE_ITR3        TIM_TS_ITR3          /*!< 内部触发源3 (其它定时器触发源)                        */
+  #define TIM_CLOCKSOURCE_TI1ED       TIM_TS_TI1F_ED       /*!< 通道1的边沿检测输入模式 (CH1带边沿检测的输入)         */
+  #define TIM_CLOCKSOURCE_TI1         TIM_TS_TI1FP1        /*!< 输入捕获通道1 作为时钟输入源                          */
+  #define TIM_CLOCKSOURCE_TI2         TIM_TS_TI2FP2        /*!< 输入捕获通道2 作为时钟输入源                          */
+  #define TIM_CLOCKSOURCE_ETRMODE1    TIM_TS_ETRF          /*!< 外部ETR信号直接驱动计数模式 (External Trigger input)  */
+
+  // ClockPolarity
+  #define TIM_CLOCKPOLARITY_INVERTED           TIM_ETRPOLARITY_INVERTED           /*!< ETR外部时钟源（反相输入）*/
+  #define TIM_CLOCKPOLARITY_NONINVERTED         TIM_ETRPOLARITY_NONINVERTED       /*!< ETR外部时钟源（非反相）*/
+  #define TIM_CLOCKPOLARITY_RISING              TIM_INPUTCHANNELPOLARITY_RISING    /*!< 捕获输入上升沿有效 */
+  #define TIM_CLOCKPOLARITY_INVERTED            TIM_ETRPOLARITY_INVERTED           /*!< 捕获输入下降沿有效 */
+  #define TIM_CLOCKPOLARITY_BOTHEDGE            TIM_INPUTCHANNELPOLARITY_BOTHEDGE  /*!< 捕获输入双边沿有效 */
+
+  // ClockPrescaler
+  #define TIM_CLOCKPRESCALER_DIV1    TIM_ETRPRESCALER_DIV1    /*!< 不分频，捕获每个外部脉冲          */
+  #define TIM_CLOCKPRESCALER_DIV2    TIM_ETRPRESCALER_DIV2    /*!< 外部ETR信号每2个脉冲计数或捕获一次 */
+  #define TIM_CLOCKPRESCALER_DIV4    TIM_ETRPRESCALER_DIV4    /*!< 外部ETR信号每4个脉冲计数或捕获一次 */
+  #define TIM_CLOCKPRESCALER_DIV8    TIM_ETRPRESCALER_DIV8    /*!< 外部ETR信号每8个脉冲计数或捕获一次 */
+#+end_src
+
+#+CAPTION: timer.c
+#+begin_src c :results silent :noweb yes
+  #include "stm32f1xx_hal.h"
+  #include "timer.h"
+  #include "uart.h"
+  #include "util.h"
+
+  TIM_HandleTypeDef timer1;
+  TIM_ClockConfigTypeDef timer1_clock;
+  uint32_t counter = 0;
+
+  void Timer1_Init(uint16_t arr, uint16_t psc, uint8_t rep) {
+    timer1.Instance = TIM1;
+    timer1.Init.Prescaler = psc;
+    timer1.Init.CounterMode = TIM_COUNTERMODE_UP;
+    timer1.Init.Period = arr;
+    timer1.Init.RepetitionCounter = rep;
+    timer1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    timer1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    HAL_TIM_Base_Init(&timer1);
+    __HAL_TIM_CLEAR_FLAG(&timer1, TIM_FLAG_UPDATE);
+
+    timer1_clock.ClockSource = TIM_CLOCKSOURCE_ETRMODE1;
+    timer1_clock.ClockPolarity = TIM_CLOCKPOLARITY_NONINVERTED;
+    timer1_clock.ClockPrescaler = TIM_CLOCKPRESCALER_DIV2;
+    timer1_clock.ClockFilter =  0x03;
+    HAL_TIM_ConfigClockSource(&timer1, &timer1_clock);
+
+    HAL_TIM_Base_Start(&timer1);
+  }
+
+  void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
+    GPIO_InitTypeDef GPIO_InitType;
+    if (htim->Instance == TIM1) {
+      __HAL_RCC_TIM1_CLK_ENABLE();
+      __HAL_RCC_GPIOA_CLK_ENABLE();
+
+      GPIO_InitType.Pin = GPIO_PIN_12;
+      GPIO_InitType.Mode = GPIO_MODE_INPUT;
+      GPIO_InitType.Pull = GPIO_PULLDOWN;
+
+      HAL_GPIO_Init(GPIOA, &GPIO_InitType);
+    }
+  }
+
+#+end_src
