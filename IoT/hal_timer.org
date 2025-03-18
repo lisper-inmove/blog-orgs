@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Timer in Stm32 Using HAL Library
-#+KEYWORDS: Stm32 Timer
+#+KEYWORDS: Timer
 #+CATEGORIES: Stm32
 
 * 结构体

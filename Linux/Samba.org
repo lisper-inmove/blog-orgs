@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Share directory using samba
-#+KEYWORDS: Linux Samba
+#+KEYWORDS: Samba
 #+CATEGORIES: Linux
 
 * 将另一台Linux服务器上的Samba搭载到当前Linux服务器
