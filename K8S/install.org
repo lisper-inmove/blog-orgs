@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes
+#+KEYWORDS: Install
 #+CATEGORIES: Kubernetes
 
 * 版本要求

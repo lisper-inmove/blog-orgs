@@ -4,7 +4,7 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes Namespace
+#+KEYWORDS: Namespace
 #+CATEGORIES: Kubernetes
 
 * Namespace的作用
