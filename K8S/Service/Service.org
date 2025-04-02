@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: Service
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * 什么是Service
 
@@ -13,11 +13,11 @@
 
 Service提供了稳定的网络访问地址，通过Service，可以通过DNS域名的格式来访问服务。Service还提供了负载均衡功能。
 
-自动服务注册: 当你通过YAML文件或命令行创建一个Service时，Kubernetes API Server会接收到这个请求。Kubernetes的内部DNS服务(如CoreDNS)会自动更新，以包含新Service的信息。
+自动服务注册: 当你通过YAML文件或命令行创建一个Service时，Kubernates API Server会接收到这个请求。Kubernates的内部DNS服务(如CoreDNS)会自动更新，以包含新Service的信息。
 
 Pod可以通过FQDN(例如，my-service.default.svc.cluster.local -> (SERVICENAME.CLUSTERNAME.svc.cluster.local))或环境变量来发现这个Service。如果是同一个名称空间的Pod，可以通过SERVIECNAME直接访问该Service。
 
-Pod启动时，Kubernetes会自动为每个可用Service设置一组环境变量。这些变量包括Service的名称和地址，使得在Pod内部的应用程序可以使用这些环境变量进行服务发现。例如，对于名为my-service的Service，Pod内部会有如下环境变量：__MY_SERVICE_SERVICE_HOST__ __MY_SERVICE_SERVICE_PORT__
+Pod启动时，Kubernates会自动为每个可用Service设置一组环境变量。这些变量包括Service的名称和地址，使得在Pod内部的应用程序可以使用这些环境变量进行服务发现。例如，对于名为my-service的Service，Pod内部会有如下环境变量：__MY_SERVICE_SERVICE_HOST__ __MY_SERVICE_SERVICE_PORT__
 
 * An Example
 #+begin_src yaml
@@ -76,8 +76,8 @@ Pod启动时，Kubernetes会自动为每个可用Service设置一组环境变量
     比如上面的例子，可以通过 192.168.0.100:80 访问该Service。
 
     # 除了集群节点自身的 IP 地址之外，externalIPs 字段也可以设置为与集群节点网络接口直接相连的其他网络设备的IP地址。以下是两种可能的场景(没有实际测试过):
-    # 1. 路由器场景：假设您有一个路由器，它连接了您的 Kubernetes 集群和外部网络。这个路由器有一个 IP 地址，比如 192.168.0.1，您可以将这个 IP 地址设置为 Service 的 externalIP。但是，您还需要在路由器上进行相应的配置，以确保到这个 IP 地址的流量被正确地转发到集群中的某个节点。
-    # 2. 负载均衡器场景：如果您有一个硬件或软件负载均衡器，它位于您的 Kubernetes 集群和外部网络之间，您也可以使用它的 IP 地址作为 externalIP。同样，您需要在负载均衡器上进行配置，以确保流量被正确地转发到集群。
+    # 1. 路由器场景：假设您有一个路由器，它连接了您的 Kubernates 集群和外部网络。这个路由器有一个 IP 地址，比如 192.168.0.1，您可以将这个 IP 地址设置为 Service 的 externalIP。但是，您还需要在路由器上进行相应的配置，以确保到这个 IP 地址的流量被正确地转发到集群中的某个节点。
+    # 2. 负载均衡器场景：如果您有一个硬件或软件负载均衡器，它位于您的 Kubernates 集群和外部网络之间，您也可以使用它的 IP 地址作为 externalIP。同样，您需要在负载均衡器上进行配置，以确保流量被正确地转发到集群。
     externalIPs:
       - 192.168.0.100
 

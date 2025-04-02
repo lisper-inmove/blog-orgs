@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: PV PVC SC
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * EmptyDir
 
@@ -28,7 +28,7 @@ Pod里的临时结点。与Pod拥有同样的生命周期。
       volumeMounts:
       - name: my-emptydir
         mountPath: /data
-      command: ["sh", "-c", "echo Hello, Kubernetes! > /data/index.html"]
+      command: ["sh", "-c", "echo Hello, Kubernates! > /data/index.html"]
     volumes:
     - name: my-emptydir
       emptyDir: {}
@@ -58,9 +58,9 @@ Pod里的临时结点。与Pod拥有同样的生命周期。
 
         # 可选：这将确保在路径不存在的情况下创建目录
         # 用于指定期望的宿主机上的文件或目录类型
-        # 1. DirectoryOrCreate: 如果在给定路径上没有找到目录，Kubernetes 将自动创建该目录。
+        # 1. DirectoryOrCreate: 如果在给定路径上没有找到目录，Kubernates 将自动创建该目录。
         # 2. Directory: 一个目录必须存在于给定路径上。
-        # 3. FileOrCreate: 如果在给定路径上没有找到文件，Kubernetes 将自动创建一个空文件。
+        # 3. FileOrCreate: 如果在给定路径上没有找到文件，Kubernates 将自动创建一个空文件。
         # 4. File: 一个文件必须存在于给定路径上。
         # 5. Socket: 一个 Unix 套接字必须存在于给定路径上。
         # 6. CharDevice: 一个字符设备必须存在于给定路径上。

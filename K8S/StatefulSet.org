@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: StatefulSet
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * 有状态应用
 顾名思义，这是一种管理有状态集的资源。与Deployment生成的ReplicaSet不同的是，RS管理无状态的应用服务，SS则多用于管理数据库等有状态的服务。

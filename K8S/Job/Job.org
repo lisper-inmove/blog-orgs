@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: Job CronJob
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * Job
 

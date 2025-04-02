@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: ConfigMap
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * 什么是ConfigMap
 

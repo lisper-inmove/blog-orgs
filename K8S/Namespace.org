@@ -5,16 +5,16 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: Namespace
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * Namespace的作用
 
-Kubernetes（简称 K8s）的 Namespace 是一个用于将集群资源分隔成多个虚拟集群的机制。每个 Namespace 都提供了一个独立的、隔离的环境，使得多个团队或项目可以在同一个物理集群上独立地工作，而不会相互干扰。
-以下是关于 Kubernetes Namespace 的一些详细知识点：
+Kubernates（简称 K8s）的 Namespace 是一个用于将集群资源分隔成多个虚拟集群的机制。每个 Namespace 都提供了一个独立的、隔离的环境，使得多个团队或项目可以在同一个物理集群上独立地工作，而不会相互干扰。
+以下是关于 Kubernates Namespace 的一些详细知识点：
 1. *目的*: Namespace 主要用于多租户环境，例如大型组织中的多个团队或项目，它们需要在同一个集群上运行应用程序，但希望保持资源的隔离。
-2. *默认 Namespace*: 当你首次安装 Kubernetes 时，会有几个默认的 Namespace：
+2. *默认 Namespace*: 当你首次安装 Kubernates 时，会有几个默认的 Namespace：
   - *default*: 如果没有明确指定 Namespace，大多数资源默认都会创建在这里。
-  - *kube-system*: 由 Kubernetes 系统自身使用，用于存放系统组件。
+  - *kube-system*: 由 Kubernates 系统自身使用，用于存放系统组件。
   - *kube-public*: 这是一个特殊的 Namespace，通常用于存放集群范围内的公共资源。
   - *kube-node-lease*: 用于存放与节点心跳相关的租约对象。
 3. *资源隔离*: Namespace 提供了一种将资源（如 Pod、Service 和 Deployment）从其他 Namespace 隔离开来的方法。但需要注意的是，Namespace 本身并不提供网络隔离。要实现网络隔离，通常需要使用网络策略或特定的网络解决方案。
@@ -22,7 +22,7 @@ Kubernetes（简称 K8s）的 Namespace 是一个用于将集群资源分隔成�
 5. *命名限制*: Namespace 的名称必须是唯一的，但资源（如 Pod 或 Service）的名称只需要在其所属的 Namespace 内唯一。
 6. *使用*: 当创建、获取或删除集群资源时，可以使用 `--namespace` 或 `-n` 标志来指定 Namespace，例如,  =kubectl get pods -n my-namespace=
 7. *删除*: 删除一个 Namespace 会删除该 Namespace 下的所有资源。
-8. *限制*: 并非所有的 Kubernetes 资源都受到 Namespace 的限制。有些资源是集群范围的，例如节点（Node）和持久卷（PersistentVolume）。
+8. *限制*: 并非所有的 Kubernates 资源都受到 Namespace 的限制。有些资源是集群范围的，例如节点（Node）和持久卷（PersistentVolume）。
 * 常用的命令
 #+begin_src shell
   k create ns NS-NAME

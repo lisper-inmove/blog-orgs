@@ -4,8 +4,8 @@
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+KEYWORDS: Kubernetes Pod
-#+CATEGORIES: Kubernetes
+#+KEYWORDS: Kubernates Pod
+#+CATEGORIES: Kubernates
 
 * Pod的关键概念
 K8S中，最重要的就是Pod。Pod是最小最基本的单元。它的主要作用就是将一组特定功能的容器进行绑定。一般情况下会是一个主容器，以及多个辅助容器。
@@ -35,7 +35,7 @@ Service使用Endpoints对象来跟踪Pod的IP地址。
 
 主要特点如下:
 1. 顺序执行：Init Containers 是按照在 Pod 配置中定义的顺序依次执行的。
-2. 失败重试：如果某个 Init Container 失败，Kubernetes 会重启 Pod，直到该 Init Container 成功。
+2. 失败重试：如果某个 Init Container 失败，Kubernates 会重启 Pod，直到该 Init Container 成功。
 3. 共享存储卷：Init Containers 可以与应用容器共享数据卷。
 
 以下是一个例子:
@@ -346,7 +346,7 @@ podAffinity又分为两类 **podAffinity** 与 **podAntiAffinity**。
 > 如果两个node，同时有region标签，并且值相同，那么认为它们是在同一个拓扑区域中的，即使它们实际相隔千里
 
 * 静态Pod
-在 Kubernetes 中，静态 Pod(Static Pod)是直接由 kubelet 守护进程在某个特定节点上管理的 Pod，而不是由 API Server 和其他控制平面组件管理。静态 Pod 的定义通常存储在磁盘上的某个特定目录中，kubelet 会周期性地检查这个目录，并自动创建或删除相应的 Pod。
+在 Kubernates 中，静态 Pod(Static Pod)是直接由 kubelet 守护进程在某个特定节点上管理的 Pod，而不是由 API Server 和其他控制平面组件管理。静态 Pod 的定义通常存储在磁盘上的某个特定目录中，kubelet 会周期性地检查这个目录，并自动创建或删除相应的 Pod。
 
 这个特定目录由配置文件 **/var/lib/kubelet/config.yaml** 中的 **staticPodPath** 指定。一般为 /etc/kubernetes/manifests。这个目录会被定期扫描，并根据该目录下的yaml文件创建静态Pod。
 

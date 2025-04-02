@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: DaemonSet
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * 什么是DaemonSet
 DaemonSet是一种特殊的Pod。创建一个DaemonSet时，它会确保每个Node节点都会有这样的一个Pod，新增的节点也会新增这样的一个Pod。

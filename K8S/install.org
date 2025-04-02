@@ -1,11 +1,11 @@
-#+TITLE: Install Kubernetes
+#+TITLE: Install Kubernates
 #+DATE: 2023-09-28 13:52:38
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: Install
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 * 版本要求
 1. Ubuntu 22.04
@@ -103,7 +103,7 @@ https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
 
 初始化之后会得到如下的输出
 #+begin_src shell
-  # Your Kubernetes control-plane has initialized successfully!
+  # Your Kubernates control-plane has initialized successfully!
   # To start using your cluster, you need to run the following as a regular user:
 
   # 下面的命令需要在master结点执行

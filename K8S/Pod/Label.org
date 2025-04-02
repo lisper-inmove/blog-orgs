@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+KEYWORDS: label
-#+CATEGORIES: Kubernetes
+#+CATEGORIES: Kubernates
 
 
 * 什么是标签
