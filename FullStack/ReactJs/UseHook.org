@@ -5,7 +5,7 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Use hook in reactjs
-#+KEYWORDS: useState useReducer useContext useRef useMemo useCallback forwardRef useEffect useTransition useLayoutEffect useDeferred
+#+KEYWORDS: hooks
 #+CATEGORIES: FullStack ReactJs
 
 * useState
@@ -103,8 +103,10 @@ useReducer is used in composite types, so that we can combine all the modify fun
   }
 
   function reducer(state: State, action: Action) {
+    // state 是当前值
     switch (action.type) {
       case "increment":
+        // 返回的是state下一次的值
         return { ...state, count: state.count + 1 };
       case "decrement":
         return { ...state, count: state.count - 1 };
@@ -117,6 +119,9 @@ useReducer is used in composite types, so that we can combine all the modify fun
   }
 
   export default function UseReducerHook() {
+    // useReducer的第一个参数就是使用dispatch时被调用的函数
+    // 第二个参数则是初始值
+    // 后面调用dispatch时只需要传action就行了，根据action对state做对应的操作
     let [state, dispatch] = useReducer(reducer, {
       id: "123",
       name: "inmove",
