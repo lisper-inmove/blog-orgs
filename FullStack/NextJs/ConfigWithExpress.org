@@ -5,8 +5,8 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: NextJs With Express
-#+KEYWORDS: NextJs Express
-#+CATEGORIES: NextJs FullStack
+#+KEYWORDS: Express
+#+CATEGORIES: NextJs
 
 * install dependences
 #+begin_src shell

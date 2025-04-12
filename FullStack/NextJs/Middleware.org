@@ -5,8 +5,8 @@
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
 #+SUBTITLE: Middleware allows your run code before and after a request is complete
-#+KEYWORDS: NextJs Middleware
-#+CATEGORIES: NextJs FullStack
+#+KEYWORDS: Middleware
+#+CATEGORIES: NextJs
 
 * Official document
 
