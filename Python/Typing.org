@@ -70,3 +70,27 @@ typing对mypy更友好
   def execute_function(func: Callable[[int, int], int]) -> None:
       pass
 #+end_src
+
+* Annotated
+#+begin_src python :results file :noweb yes :exports code :file
+  from typing import Annotated
+
+  # Strings to give some hints
+  def func(value: Annotated[int, "positive", "non-zero"]) -> None:
+      print(value)
+
+  def positive(value: int) -> bool:
+      if value <= 0:
+          raise ValueError("Value must be positive")
+      return True
+
+  def non_zero(value: int) -> bool:
+      if value == 0:
+          raise ValueError("Value must not be zero")
+      return True
+
+  # Use function to validate params
+  def func2(value: Annotated[int, positive, non_zero]) -> None:
+      print(f"Value {value} is valid")
+
+#+end_src
