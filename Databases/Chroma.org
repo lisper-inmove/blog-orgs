@@ -104,6 +104,38 @@ client.reset() will empty an completely resets the database.
 
 #+end_src
 
+* Embedding Functions
+
+Chroma uses the *all-MiniLM-L6-v2* as default [[https://www.sbert.net/][Sentence Transformers]]
+
+#+begin_src python
+  from chromadb.utils import embedding_functions
+  default_ef = embedding_functions.DefaultEmbeddingFunction()
+  result = default_ef(["Foo", "Bar"])
+  print(result)
+#+end_src
+
+Pass in an aptional model_name argument, which lets you choose whic Sentence Transformers model to use.
+#+begin_src python
+  from chromadb.utils import embedding_functions
+
+  sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
+      model_name="all-MiniLM-L6-v2"
+  )
+
+#+end_src
+
+Self define Embedding Functions
+#+begin_src python
+  from chromadb import Documents, EmbeddingFunction, Embeddings
+
+  class MyEmbeddingFunction(EmbeddingFunction):
+      def __call__(self, input: Documents) -> Embeddings:
+          # embed the documents somehow
+          return embeddings
+
+#+end_src
+
 * CRUD
 https://docs.trychroma.com/docs/collections/create-get-delete
 https://docs.trychroma.com/docs/querying-collections/query-and-get
