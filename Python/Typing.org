@@ -94,3 +94,65 @@ typing对mypy更友好
       print(f"Value {value} is valid")
 
 #+end_src
+
+* Generic and TpeVar
+python3.9 and above
+#+begin_src python :results output
+  from typing import Generic, TypeVar, Optional
+
+  DataT = TypeVar("DataT")
+
+
+  class Data(Generic[DataT]):
+
+      value: Optional[DataT] = None
+
+      def __init__(self, value):
+          self.value = value
+
+
+  data1 = Data[int](10)
+  print(data1.value)
+
+  data2 = Data[str]("Hello")
+  print(data2.value)
+#+end_src
+
+#+RESULTS:
+: World
+: Hello
+
+python3.12 and above
+#+begin_src python
+  class Response[DataT]:
+      data: DataT
+#+end_src
+
+泛型的继承
+#+begin_src python
+  from typing import Generic, TypeVar
+
+  TypeX = TypeVar("TypeX")
+  TypeY = TypeVar("TypeY")
+  TypeZ = TypeVar("TypeZ")
+
+  class A(Generic[TypeX, TypeY]):
+
+      def __init__(self, x: TypeX, y: TypeY):
+          self.x = x
+          self.y = y
+
+
+  class B(A[int, TypeY], Generic[TypeY, TypeZ]):
+
+      def __init__(self, x: int, y: TypeY, z: TypeZ):
+          super().__init__(x, y)
+          self.z = z
+
+
+  b = B[str, str](1, 2, 3)
+  print(b.x, b.y, b.z)
+#+end_src
+
+#+RESULTS:
+: None
