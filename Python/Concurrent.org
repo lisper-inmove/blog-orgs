@@ -1,20 +1,20 @@
-#+TITLE: 并发编程
+#+TITLE: Concurrent Programming
 #+DATE: 2024-05-02 21:57:31
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+SUBTITLE: 多线程 多进程编程
-#+KEYWORDS: Thread Progress
+#+SUBTITLE: Multithread, Multiprocess
+#+KEYWORDS: Thread Proces
 #+CATEGORIES: Python
 
 * ThreadPoolExecutor
 
 ThreadPoolExecutor(max_workers=None, thread_name_prefix='', initializer=None, initargs=())
 
-max_workers: 最大线程数
-initializer: 一个可调用对象
-initargs: 调用 initializer 时的参数
+max_workers: Max number of thread
+initializer: A callable object
+initargs: Parameters for initializer
 
 #+begin_src python :results output
   from concurrent.futures import ThreadPoolExecutor as Executor, as_completed
@@ -45,9 +45,9 @@ initargs: 调用 initializer 时的参数
 * ProcessPoolExecutor
 
 ProcessPoolExecutor(max_workers=None, mp_context=None, initializer=None, initargs=(), max_tasks_per_child=None)
-ProcessPoolExecutor会使用 multiprocessing 模块。
-mp_context参数可以是一个 multiprocessing 上下文或是None。
-max_tasks_per_child 是指定单个进程在其退出并替换为新工作进程之前可以执行的最大任务数量
+ProcessPoolExecutor is based on multiprocessing
+mp_context: can be a *multiprocessing* context or None
+max_tasks_per_child: A process can execute max tasks before its exit or replaced by another process.
 
 #+begin_src python :results output
   from concurrent.futures import ProcessPoolExecutor as Executor, as_completed
@@ -77,9 +77,9 @@ max_tasks_per_child 是指定单个进程在其退出并替换为新工作进程
 
 * concurrent.futures
 
-FIRST_COMPLETED: 任意可等待对象结束或取消时返回
-FIRST_EXCEPTION: 任意可等待对象引发异常而结束时返回
-ALL_COMPLETED: 全部结束或取消
+FIRST_COMPLETED: Return when any awaitable object exit or cancelled
+FIRST_EXCEPTION: Return when any awaitable raise an exception
+ALL_COMPLETED: All tasks done or cancelled
 
 #+begin_src python :results output
   import time
