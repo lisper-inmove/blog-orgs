@@ -1,16 +1,16 @@
-#+TITLE: 生成器与迭代器
+#+TITLE: Generator And Iterator
 #+DATE: 2024-05-02 01:16:40
 #+DISPLAY: t
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
-#+SUBTITLE: 生成器与迭代器的一般用法与其原理
+#+SUBTITLE: Usage and principles of Generator and Iterator.
 #+KEYWORDS: Generator Iterator
 #+CATEGORIES: Python
 
-* 迭代器
+* Iterator
 
-__iter__ 与 __next__
+__iter__ And __next__
 
 #+begin_src python :results output
   class Fib:
@@ -37,10 +37,11 @@ __iter__ 与 __next__
 #+RESULTS:
 : 1,2,3,5,8,13,21,34,55,89,
 
-* 生成器
+* Generator
 
-有 yield 关键字的函数就是生成器
-生成器是一种更现代的迭代器实现方式。
+Function with *yield* keyword, its return value is a Generator.
+
+[[https://www.inmove.top/blog/Li9wb3N0cy9QeXRob24vQ29yb3V0aW5lLm9yZw][Section 1.2 How yield work]]
 
 #+begin_src python :results output
   def fib_func():
@@ -60,25 +61,10 @@ __iter__ 与 __next__
 #+RESULTS:
 : 1,2,3,5,8,13,21,34,55,89,
 
-* 判断是否可迭代
-#+begin_src python :results output
-  from collections.abc import Iterable
-
-  def fib_func():
-      yield 1
-
-  class Fib:
-      def __iter__(self):
-          return self
-
-      def __next__(self):
-          return 10
-
-  a1 = fib_func()
-  a2 = Fib()
-
-  print(f"{a1} -> {isinstance(a1, Iterable)} --- {a2} -> {isinstance(a2, Iterable)}")
-#+end_src
-
-#+RESULTS:
-: <generator object fib_func at 0x7faeca7a09e0> -> True --- <__main__.Fib object at 0x7faeca685510> -> True
+* Difference between Generators and Iterators
+| Feature     | Iterator                                   | generator                                       |
+| Creation    | Manually implemented class                 | Defined using *yield* in a function             |
+| Memory      | Stores all values in memory                | Generates values on demand                      |
+| State       | Needs to manage its own state              | State is automatically handled by the generator |
+| Reusability | Once exhausted, cannot be reused           | Can be used multiple times.                     |
+| Performance | May have more overhead for large sequences | Optimized for large sequences.                  |
