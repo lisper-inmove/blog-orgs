@@ -63,7 +63,7 @@ Function with *yield* keyword, its return value is a Generator.
 
 * Difference between Generators and Iterators
 | Feature     | Iterator                                   | Generator                                       |
-| Creation    | Manually implemented class                 | Defined using yield in a function               |
+| Creation    | Manually implemented class                 | Defined using *yield* in a function             |
 | Memory      | Stores all values in memory                | Generates values on demand                      |
 | State       | Needs to manage its own state              | State is automatically handled by the generator |
 | Reusability | Once exhausted, cannot be reused           | Can be used multiple times.                     |
