@@ -41,7 +41,7 @@ __iter__ And __next__
 
 Function with *yield* keyword, its return value is a Generator.
 
-[[https://www.inmove.top/blog/Li9wb3N0cy9QeXRob24vQ29yb3V0aW5lLm9yZw][Section 1.2 How yield work]]
+[[https://www.inmove.top/blog/Li9wb3N0cy9QeXRob24vQ29yb3V0aW5lLm9yZw#1.2][Section 1.2 How yield work]]
 
 #+begin_src python :results output
   def fib_func():
