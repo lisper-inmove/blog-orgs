@@ -9,15 +9,19 @@
 
 * What is Pydantic
 
-https://docs.pydantic.dev/latest/
+[[https://docs.pydantic.dev/latest/][Official Document]]
 
-Pydantic 是一个数据验证和设置管理库。主要用于数据验证和解析。它有以下优点。
+Pydantic is a data validation and settings management library.
+It provides a simple and powerful way to validate, parse and serialize data, especially when working with APIs and data inputs.
 
-1. 确保输入的数据符合指定的类型和约束条件
-2. 自动将数据转换成指定类型
-3. 它可以处理Json字典等格式的数据
-4. 结合FastAPI等框架，它可以帮助自动生成API文档
+Key features of Pydantic:
+1. Data Validation: allows you to define Python classes that represent data structures and automatically validates data against these models.
+2. Type Safety: string typing, and they enforce type checks on input data.
+3. Automatic Data Parsing: automatically converts incomming data into the appropriate Python types. It can handle complex data types like lists, dictionaries, nested models, and more.
+4. Serialization: supports serializing data back into various formats (like JSON).
+5. Error Handling: provides detailed, structured error messages, making it easy to debug when the input data doesn't match the expected format.
 
+An example:
 #+begin_src python :results output
   from datetime import datetime
 
