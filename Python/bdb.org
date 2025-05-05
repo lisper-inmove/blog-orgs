@@ -1,0 +1,75 @@
+#+TITLE: bdb
+#+DATE: 2025-05-05 23:26:36
+#+DISPLAY: nil
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: usage of bdb
+#+KEYWORDS: bdb
+#+CATEGORIES: Python
+
+* example
+#+NAME: debugger.py
+#+begin_src python
+  import bdb
+  import linecache
+
+  class CustomDebugger(bdb.Bdb):
+      def user_call(self, frame, argument_list):
+          code = frame.f_code
+          func_name = code.co_name
+          lineno = frame.f_lineno
+          filename = code.co_filename
+          print(f"[CALL] {func_name} at {filename}:{lineno}")
+
+      def user_line(self, frame):
+          code = frame.f_code
+          lineno = frame.f_lineno
+          filename = code.co_filename
+          line = linecache.getline(filename, lineno).strip()
+          print(f"[LINE] {filename}:{lineno} -> {line}")
+          if self.get_all_breaks().get(filename) == [lineno]:
+              input("🔴 Paused at breakpoint. Press Enter to continue...")
+
+          print(f"\n🛑 Paused at {filename}:{lineno}")
+          print(f">>> {line}")
+          input("Press Enter to continue...\n")
+          self.set_quit()  # Stop debugging after one pause
+
+      def user_return(self, frame, return_value):
+          code = frame.f_code
+          func_name = code.co_name
+          print(f"[RETURN] {func_name} returned {return_value}")
+
+      def user_exception(self, frame, exc_info):
+          code = frame.f_code
+          func_name = code.co_name
+          exception_type, exception_value, _ = exc_info
+          print(f"[EXCEPTION] {func_name} raised {exception_type.__name__}: {exception_value}")
+#+end_src
+
+#+NAME: example.py
+#+begin_src python
+  from debugger import CustomDebugger
+  import sys
+
+  def test(x, y):
+      return x + y
+
+  def run():
+      x = 5
+      set_trace()
+      y = x + 1
+      z = y * 2
+      test(y, z)
+      return z
+
+  def set_trace():
+      tracer = CustomDebugger()
+      frame = sys._getframe().f_back  # Get caller's frame
+      tracer.set_step()
+      tracer.trace_dispatch(frame, 'line', None)
+
+  if __name__ == "__main__":
+      print(run())
+#+end_src
