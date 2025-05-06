@@ -17,44 +17,71 @@
 1. image: input image in which to search.
 2. template: smaller image you want to find inside the image parameter.
 3. method: comparison method.
-   1. cv2.TM_CCOEFF
-   2. cv2.TM_CCOEFF_NORMED
-   3. cv2.TM_CCORR
+   1. cv2.TM_CCOEFF: correlation coefficient.
+   2. cv2.TM_CCOEFF_NORMED: Normalized CCOEFF
+   3. cv2.TM_CCORR: cross correlation
    4. cv2.TM_CCORR_NORMED
-   5. cv2.TM_SQDIFF
+   5. cv2.TM_SQDIFF: squared difference
    6. cv2.TM_SQDIFF_NORMED
 4. result: a 2D array of comparison scores.
 
-* Method parameter
+* What is correlation coefficient
+The correlation coefficient is given by \( R = \frac{\sum (T - \bar{T})(I - \bar{I})}{\sqrt{\sum (T - \bar{T})^2 \sum (I - \bar{I})^2}} \)
+
+* What is cross-correlation
+1. Multiply corresponding pixels in the template and image region.
+2. Add them all up.
+3. Store that sum in a result matrix. The sum reflects how similar the region is to the template - *higher values mean more similarity*
+
+* What is squared difference
+
+* Formulas
+Convert this latex source code to pdf, you can see all the formulas for threes kinds of methods.
 #+begin_src latex :results silent :noweb yes
   \documentclass{article}
   \usepackage{amsmath}
   \begin{document}
 
-  \section*{Template Matching Formulas (OpenCV)}
+  \section*{OpenCV Template Matching Formulas}
 
   \subsection*{1. TM\_SQDIFF (Squared Difference)}
   \[
-  R(x, y) = \sum_{i,j} \left( T(i, j) - I(x+i, y+j) \right)^2
+  R(x, y) = \sum_{i,j} \left( T(i,j) - I(x+i, y+j) \right)^2
   \]
 
-  \subsection*{2. TM\_CCORR (Cross-Correlation)}
+  \subsection*{2. TM\_CCORR (Cross Correlation)}
   \[
-  R(x, y) = \sum_{i,j} T(i, j) \cdot I(x+i, y+j)
+  R(x, y) = \sum_{i,j} T(i,j) \cdot I(x+i, y+j)
   \]
 
   \subsection*{3. TM\_CCOEFF (Correlation Coefficient)}
   \[
-  R(x, y) = \sum_{i,j} \left( T(i, j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
+  R(x, y) = \sum_{i,j} \left( T(i,j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
   \]
 
-  Where:
-  \begin{itemize}
-      \item $T(i, j)$ is the pixel value at $(i, j)$ in the template
-      \item $I(x+i, y+j)$ is the pixel value at $(x+i, y+j)$ in the image
-      \item $\bar{T}$ is the mean of the template
-      \item $\bar{I}_{x,y}$ is the mean of the image region under the template
-  \end{itemize}
+  \subsection*{4. TM\_SQDIFF\_NORMED (Normalized Squared Difference)}
+  \[
+  R(x, y) = \frac{ \sum_{i,j} \left( T(i,j) - I(x+i, y+j) \right)^2 }
+  { \sqrt{ \sum_{i,j} T(i,j)^2 \cdot \sum_{i,j} I(x+i, y+j)^2 } }
+  \]
+
+  \subsection*{5. TM\_CCORR\_NORMED (Normalized Cross Correlation)}
+  \[
+  R(x, y) = \frac{ \sum_{i,j} T(i,j) \cdot I(x+i, y+j) }
+  { \sqrt{ \sum_{i,j} T(i,j)^2 \cdot \sum_{i,j} I(x+i, y+j)^2 } }
+  \]
+
+  \subsection*{6. TM\_CCOEFF\_NORMED (Normalized Correlation Coefficient)}
+  \[
+  R(x, y) = \frac{
+  \sum_{i,j} \left( T(i,j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
+  }{
+  \sqrt{
+  \sum_{i,j} \left( T(i,j) - \bar{T} \right)^2 \cdot
+  \sum_{i,j} \left( I(x+i, y+j) - \bar{I}_{x,y} \right)^2
+  }
+  }
+  \]
 
   \end{document}
 #+end_src
