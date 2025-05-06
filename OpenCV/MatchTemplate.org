@@ -1,0 +1,60 @@
+#+TITLE: matchTemplate
+#+DATE: 2025-05-06 20:57:45
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Usage of matchTemplate and its explanation
+#+KEYWORDS: OpenCV
+#+CATEGORIES: MachineVision
+
+* Function Definition
+#+begin_src python
+  import cv2
+  result = cv2.matchTemplate(image, template, method)
+#+end_src
+
+1. image: input image in which to search.
+2. template: smaller image you want to find inside the image parameter.
+3. method: comparison method.
+   1. cv2.TM_CCOEFF
+   2. cv2.TM_CCOEFF_NORMED
+   3. cv2.TM_CCORR
+   4. cv2.TM_CCORR_NORMED
+   5. cv2.TM_SQDIFF
+   6. cv2.TM_SQDIFF_NORMED
+4. result: a 2D array of comparison scores.
+
+* Method parameter
+#+begin_src latex :results silent :noweb yes
+  \documentclass{article}
+  \usepackage{amsmath}
+  \begin{document}
+
+  \section*{Template Matching Formulas (OpenCV)}
+
+  \subsection*{1. TM\_SQDIFF (Squared Difference)}
+  \[
+  R(x, y) = \sum_{i,j} \left( T(i, j) - I(x+i, y+j) \right)^2
+  \]
+
+  \subsection*{2. TM\_CCORR (Cross-Correlation)}
+  \[
+  R(x, y) = \sum_{i,j} T(i, j) \cdot I(x+i, y+j)
+  \]
+
+  \subsection*{3. TM\_CCOEFF (Correlation Coefficient)}
+  \[
+  R(x, y) = \sum_{i,j} \left( T(i, j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
+  \]
+
+  Where:
+  \begin{itemize}
+      \item $T(i, j)$ is the pixel value at $(i, j)$ in the template
+      \item $I(x+i, y+j)$ is the pixel value at $(x+i, y+j)$ in the image
+      \item $\bar{T}$ is the mean of the template
+      \item $\bar{I}_{x,y}$ is the mean of the image region under the template
+  \end{itemize}
+
+  \end{document}
+#+end_src
