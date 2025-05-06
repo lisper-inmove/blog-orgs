@@ -26,14 +26,33 @@
 4. result: a 2D array of comparison scores.
 
 * What is correlation coefficient
-The correlation coefficient is given by \( R = \frac{\sum (T - \bar{T})(I - \bar{I})}{\sqrt{\sum (T - \bar{T})^2 \sum (I - \bar{I})^2}} \)
+The correlation coefficient is given by
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF.png
+#+end_image
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF_NORMED.png
+#+end_image
 
 * What is cross-correlation
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCORR.png
+#+end_image
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCORR_NORMED.png
+#+end_image
+
 1. Multiply corresponding pixels in the template and image region.
 2. Add them all up.
 3. Store that sum in a result matrix. The sum reflects how similar the region is to the template - *higher values mean more similarity*
 
 * What is squared difference
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF.png
+#+end_image
+#+begin_image
+https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF_NORMED.png
+#+end_image
 
 * Formulas
 Convert this latex source code to pdf, you can see all the formulas for threes kinds of methods.
