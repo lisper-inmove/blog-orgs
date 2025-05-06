@@ -25,14 +25,57 @@
    6. cv2.TM_SQDIFF_NORMED
 4. result: a 2D array of comparison scores.
 
+* Signals
+
+The /signals/ are just pixel values from 2D arrays.
+OpenCV slides the template over every (x, y) position of the input image.
+At each position:
+1. extracts a region from the image (same size of the template)
+2. the region is the *input signals* for thet position
+3. the template is the *reference signals*
+
+For example, the template[0][0] is a signal, it's values range from [0, 255],
+0 represent Black,
+255 for white
+Grayscale values in between
+#+begin_src python
+  template = np.array([[100, 150],
+                       [200, 250]])
+
+  image = np.array([[ 90, 140, 110],
+                    [190, 240, 210],
+                    [130, 170, 160]])
+
+  """
+    when  x = 1, y = 1, then input signals are
+       [[240, 210], [170, 160]]
+    The template signals always are:
+       [[110, 150], [200, 250]]
+  """
+#+end_src
+
 * What is correlation coefficient
-The correlation coefficient is given by
+Correlation coefficient is a statistical measure that tells you how *linearly related* two images of values are, ignoring their average brightness.
+
 #+begin_image
 https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF.png
 #+end_image
+cv2.TM_CCOEFF: higher sum, more similarity.
+1. Value of template[i][j] minus average of template
+2. Value of region[i][j] minus average of the region
+3. Calculate the two values
+4. Sum all the products.
+
+Use cv2.TM_CCOEFF when you want to match the structural pattern of a template against an image region, while ignoring differences in brightness (mean intensity).
+
 #+begin_image
 https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF_NORMED.png
 #+end_image
+
+cv2.TM_CCOEFF_NORMED: normalize TM_CCOEFF result to [-1, 1]
+  1. 1.0,perfect positive correlation
+  2. 0.0,no correlation
+  3. -1.0,perfect negative correlation
 
 * What is cross-correlation
 #+begin_image
@@ -46,6 +89,8 @@ https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCORR_NORMED.png
 2. Add them all up.
 3. Store that sum in a result matrix. The sum reflects how similar the region is to the template - *higher values mean more similarity*
 
+This method is biased towards brightness
+
 * What is squared difference
 #+begin_image
 https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF.png
@@ -53,6 +98,13 @@ https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF.png
 #+begin_image
 https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF_NORMED.png
 #+end_image
+
+How defferent two image regions.
+TM_SQDIFF: Sum of Distance of signals, so that lower is better.
+TM_SQDIFF_NORMED: Normalized values to range [-1, 1]
+    1. 1.0, exact opposite
+    2. 0.0: unrelated
+    3. -1.0: perfect match
 
 * Formulas
 Convert this latex source code to pdf, you can see all the formulas for threes kinds of methods.
