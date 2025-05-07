@@ -57,9 +57,12 @@ Grayscale values in between
 * What is correlation coefficient
 Correlation coefficient is a statistical measure that tells you how *linearly related* two images of values are, ignoring their average brightness.
 
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF.png
-#+end_image
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \sum_{i,j} \left( T(i,j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
+  \]
+#+end_src
 cv2.TM_CCOEFF: higher sum, more similarity.
 1. Value of template[i][j] minus average of template
 2. Value of region[i][j] minus average of the region
@@ -68,9 +71,19 @@ cv2.TM_CCOEFF: higher sum, more similarity.
 
 Use cv2.TM_CCOEFF when you want to match the structural pattern of a template against an image region, while ignoring differences in brightness (mean intensity).
 
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCOEFF_NORMED.png
-#+end_image
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \frac{
+    \sum_{i,j} \left( T(i,j) - \bar{T} \right) \cdot \left( I(x+i, y+j) - \bar{I}_{x,y} \right)
+  }{
+    \sqrt{
+      \sum_{i,j} \left( T(i,j) - \bar{T} \right)^2 \cdot
+      \sum_{i,j} \left( I(x+i, y+j) - \bar{I}_{x,y} \right)^2
+    }
+  }
+  \]
+#+end_src
 
 cv2.TM_CCOEFF_NORMED: normalize TM_CCOEFF result to [-1, 1]
   1. 1.0,perfect positive correlation
@@ -78,26 +91,39 @@ cv2.TM_CCOEFF_NORMED: normalize TM_CCOEFF result to [-1, 1]
   3. -1.0,perfect negative correlation
 
 * What is cross-correlation
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCORR.png
-#+end_image
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_CCORR_NORMED.png
-#+end_image
-
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \sum_{i,j} T(i,j) \cdot I(x+i, y+j)
+  \]
+#+end_src
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \frac{ \sum_{i,j} T(i,j) \cdot I(x+i, y+j) }
+  { \sqrt{ \sum_{i,j} T(i,j)^2 \cdot \sum_{i,j} I(x+i, y+j)^2 } }
+  \]
+#+end_src
 1. Multiply corresponding pixels in the template and image region.
 2. Add them all up.
 3. Store that sum in a result matrix. The sum reflects how similar the region is to the template - *higher values mean more similarity*
 
 This method is biased towards brightness
 
-* What is squared difference
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF.png
-#+end_image
-#+begin_image
-https://inmove-blog.oss-cn-hangzhou.aliyuncs.com/images/TM_SQDIFF_NORMED.png
-#+end_image
+* What is squared differencee
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \sum_{i,j} \left( T(i,j) - I(x+i, y+j) \right)^2
+  \]
+#+end_src
+#+attr_formula:
+#+begin_src latex
+  \[
+  R(x, y) = \frac{ \sum_{i,j} \left( T(i,j) - I(x+i, y+j) \right)^2 }
+  { \sqrt{ \sum_{i,j} T(i,j)^2 \cdot \sum_{i,j} I(x+i, y+j)^2 } }
+  \]
+#+end_src
 
 How defferent two image regions.
 TM_SQDIFF: Sum of Distance of signals, so that lower is better.
