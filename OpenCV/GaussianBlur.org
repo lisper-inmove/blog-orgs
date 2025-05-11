@@ -1,0 +1,32 @@
+#+TITLE: Gaussian Blur
+#+DATE: 2025-05-10 17:09:42
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Using Gaussian function to Blur image.
+#+KEYWORDS: Gaussian
+#+CATEGORIES: OpenCV
+
+* Gaussian Function
+
+1D Gaussian function
+#+attr_formula
+#+begin_src latex
+  \[
+  G(x) = \frac{1}{\sqrt{2\pi} \, \sigma} \, e^{ -\frac{x^2}{2\sigma^2} }
+  \]
+#+end_src
+
+2D Gaussian function
+#+attr_formula
+#+begin_src latex
+
+  \[
+  G(x, y) = \frac{1}{2\pi \sigma^2} \, e^{ -\frac{x^2 + y^2}{2\sigma^2} }
+  \]
+
+#+end_src
+
+σ: is standard deviation(标准差), control degree of blur. Bigger σ, Stronger blur.
+x,y: relative position to the center.

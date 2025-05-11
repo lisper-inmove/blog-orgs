@@ -1,0 +1,12 @@
+#+TITLE: numpy
+#+DATE: 2025-05-07 23:37:03
+#+DISPLAY: nil
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Notes for numpy
+#+KEYWORDS: Library
+#+CATEGORIES: Python
+
+* Functions
+** np.itemset((x, y, index), value)

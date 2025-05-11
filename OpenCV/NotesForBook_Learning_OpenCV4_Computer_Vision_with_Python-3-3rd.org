@@ -1,0 +1,145 @@
+#+TITLE: Notes for Learning OpenCV 4 Computer Vision with Python 3 3rd
+#+DATE: 2025-05-07 22:46:22
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE: Reading notes for an OpenCV book
+#+KEYWORDS: ImageConduct
+#+CATEGORIES: OpenCV
+
+* Chapter Two
+
+An image is a multidimensional array, it has columns and rows of pixels, and each pixel has a value.
+For different kinds of image data, the pixel value may be formatted in different ways.
+
+1. grayscale image. Each pixel is represented by a single 8-bit integer. 0 ~ 255, 0 is black, 255 is white, and the in-between values are shades of gray.
+   #+begin_src python :results output
+     import numpy
+     img = numpy.zeros((3, 3), dtype=numpy.uint8)
+     print(img)
+   #+end_src
+
+   #+RESULTS:
+   : [[0 0 0]
+   :  [0 0 0]
+   :  [0 0 0]]
+
+2. blue-green-red: each pixel is represented by a three-element array, B, G and R. HSV will be represented in the same way, albeit with different value ranges.
+   #+begin_src python :results output
+     import numpy
+     import cv2
+     img = numpy.zeros((3, 3), dtype=numpy.uint8)
+     img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+     print(img)
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   [[[0 0 0]
+     [0 0 0]
+     [0 0 0]]
+
+    [[0 0 0]
+     [0 0 0]
+     [0 0 0]]
+
+    [[0 0 0]
+     [0 0 0]
+     [0 0 0]]]
+   #+end_example
+
+3. HSV: Better for tasks like object detection and segmentation in computer vision.
+   1. H(Hue): the type  of color, represented as an angle from 0° to 360°. Red ≈ 0°, Green ≈ 120°, Blue ≈ 240°
+   2. S(Saturation): the intensity or purity of the color, ranging from 0 to 1 (0% to 100%)
+   3. V(Value or Brightness): the brightness of the color, ranging from 0(black) to 1(full brightness)
+
+Image must be a two-dimensional array, when we strip of outermost 2-dimensional of an image
+1. for grayscale image, we get some independent numbers(1 channel), a number is a pixel.
+2. for BGR image, we get some one-dimensional array(3 channel), an array is a pixel.
+
+* Chapter Three
+By default OpenCV uses the *BGR* color model to represent any image.
+
+** HPFs and LPFs
+HPFs(高通滤波) and LPFs(低通滤波)
+
+HPFs is a filter that examines a region of an image and boosts the intensity of certain pixels based on the difference in the intensity of the surrounding pixels.
+#+begin_src python
+  [[0,     -0.25,    0],
+   [-0.25, 1,        -0.25],
+   [0,     -02.5,    0]]
+#+end_src
+Above is a kernel(卷积核). If a pixel stands out from the surrounding pixels, the resulting value will be high. This type of kernel represents a so-called high-boost filter, which is a type of HPF, and it's particularly effective in *edge detection*.
+#+begin_src python
+  import cv2
+  import numpy as np
+  from scipy import ndimage
+
+  kernel_3x3 = np.array([
+      [-1, -1, -1],
+      [-1, 8, -1],
+      [-1, -1, -1],
+  ])
+
+  kernel_5x5 = np.array([
+      [-1, -1, -1, -1, -1],
+      [-1, 1, 2, 1, -1],
+      [-1, 2, 4, 2, -1],
+      [-1, 1, 2, 1, -1],
+      [-1, -1, -1, -1, -1],
+  ])
+  img = cv2.imread(
+      "./Learning-OpenCV-4-Computer-Vision-with-Python-Third-Edition/images/statue_small.jpg",
+      0,
+  )
+
+  k3 = ndimage.convolve(img, kernel_3x3)
+  k5 = ndimage.convolve(img, kernel_5x5)
+
+  # A LPF
+  blurred = cv2.GaussianBlur(img, (17, 17), 0)
+  # origin - LPF = HPF
+  g_hpf = img - blurred
+
+  cv2.imshow("3x3", k3)
+  cv2.imshow("5x5", k5)
+  cv2.imshow("blurred", blurred)
+  cv2.imshow("g_hpf", g_hpf)
+  cv2.waitKey()
+  cv2.destroyAllWindows()
+#+end_src
+
+** Custom kernels - getting convoluted
+*** Convolution matrix
+It is a 2D array with an odd number of rows and columns. The central element corresponds to a pixel of interest, while the other elements correspond to the neighbors of this pixel.
+Each element contains an integer or floating-point value, which is a weight that gets applied to an input pixel's value.
+#+begin_src python
+  [[-1, -1, -1],
+   [-1, 9, -1],
+   [-1, -1, -1]]
+#+end_src
+
+** Edge Detection
+OpenCV provides many edge-finding filters, including *Laplacian* *Sobel* and *Scharr*. This filters are supposed to turn non-edge regions into black and turn edge regions into white or saturated(饱和的) colors.
+However, they are prone to misidentifying noise as edges, this flow can be mitigated by *blurring* an image before trying to find its edges.
+
+* Functions
+** imread
+imread returns an image in the BGR() color format
+
+1. cv2.IMREAD_COLOR: default option, providing a 3-channel BGR image with an 8-bit value for each channel
+2. cv2.IMREAD_GRAYSCALE: 8-bit grayscale image
+3. cv2.IMREAD_ANYCOLOR: 8-bit BGR or 8-bit grayscale image, depending on the metadata in the file.
+4. cv2.IMREAD_UNCHANGED: this reads all of the image data, including the alpha or transparency channel (if there is one) as a fourth channel.
+5. cv2.IMREAD_ANYDEPTH: load an image in grayscale but keep its original bit depth, such as uint16 or uint32.
+6. cv2.IMREAD_ANYDEPTH | cv2.IMREAD_COLOR: loads an image in BGR color at its original bit depth.
+7. cv2.IMREAD_REDUCED_GRAYSCALE_2: loads an image in grayscale at half its original resolution. For example, if the file contains a 640 x 480 image, it is loaded as 320 x 240 image.
+8. cv2.IMREAD_REDUCED_COLOR_2: loads an image in 8-bit-per-channel BGR color at half its original resolution
+9. cv2.IMREAD_REDUCED_GRAYSCALE_4: 1/4
+10. cv2.IMREAD_REDUCED_COLOR_4: 1/4
+11. cv2.IMREAD_REDUCED_GRAYSCALE_8: 1/8
+12. cv2.IMREAD_REDUCED_COLOR_8: 1/8
+
+** filter2D
+Applies any kernel or convolution matrix that we specify
