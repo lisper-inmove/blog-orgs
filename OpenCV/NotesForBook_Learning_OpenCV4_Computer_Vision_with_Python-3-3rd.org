@@ -143,3 +143,78 @@ imread returns an image in the BGR() color format
 
 ** filter2D
 Applies any kernel or convolution matrix that we specify
+#+begin_src python
+  cv2.filter2D(src: numpy.ndarray, ddepth: int, kernel: numpy.ndarray, dst: numpy.ndarray = None, anchor: tuple = (-1, -1), delta: float = 0, borderType: int = cv2.BORDER_CONSTANT)
+#+end_src
+1. src: source image, it can be multi-channel
+2. ddepth: specifies the deta type(depth) of the output image. bit depth(位深度,用于表示单个像素颜色的二进制位数)
+   1. -1: means same as src
+   2. cv2.CV_8U: unsigned 8-bit
+   3. cv2.CV_16S: signed 16-bit
+   4. cv2.CV_32F: float 32-bit
+   5. cv2.CV_64F: float 64-bit
+3. kernel: convolution kernel.
+4. dst: output image of the same size and number of channels as src. if not provided, the result is returned.
+5. anchor: position of the anchor point within the kerner. (-1, -1) means the anchor is at the kernel center.
+6. delta: Adds a constant value to every pixel after convolution, helps in shifting the intensity values up or down.
+7. borderType: specifies how the image borders are handled when the kernel overlaps the edge.
+   1. cv2.BORDER_CONSTANT: pads with a constant value(default is 0)
+   2. cv2.BORDER_REPLICATE: repeats the edge pixels.
+   3. cv2.BORDER_REFLECT: reflects border pixels.
+   4. cv2.BORDER_REFLECT_101: reflects without repeating edge pixels.
+   5. cv2.BORDER_WRAP: wraps around the image
+   6. cv2.BORDER_DEFAULT: same as cv2.BORDER_REFLECT_101
+
+Here is an example.
+#+begin_src python :results output
+  import numpy as np
+  import cv2
+
+  # Create a 5x5 grayscale image (values from 0 to 255)
+  img = np.array([
+      [10, 10, 10, 10, 10],
+      [10, 50, 50, 50, 10],
+      [10, 50,100, 50, 10],
+      [10, 50, 50, 50, 10],
+      [10, 10, 10, 10, 10]
+  ], dtype=np.uint8)
+
+  # Define a Laplacian kernel for edge detection
+  kernel = np.array([
+      [-1, -1, -1],
+      [-1,  8, -1],
+      [-1, -1, -1]
+  ], dtype=np.float32)
+
+  # Apply the filter
+  result = cv2.filter2D(src=img, ddepth=cv2.CV_64F, kernel=kernel)
+
+  # Print results
+  print("Original:\n", img)
+  print("Filtered:\n", result)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Original:
+ [[ 10  10  10  10  10]
+ [ 10  50  50  50  10]
+ [ 10  50 100  50  10]
+ [ 10  50  50  50  10]
+ [ 10  10  10  10  10]]
+Filtered:
+ [[-160. -160. -240. -160. -160.]
+ [-160.  150.   70.  150. -160.]
+ [-240.   70.  400.   70. -240.]
+ [-160.  150.   70.  150. -160.]
+ [-160. -160. -240. -160. -160.]]
+#+end_example
+
+cv2.BORDER_DEFAULT/cv2.BORDER_REFLECT_101:
+#+begin_verse
+将8与原图的第一个10对齐.kernel的第一行,第一列都没有与之对应的元素.
+BORDER_REFLECT_101的扩充方式如下：
+上方扩充: Row -1, 反射为 Row 1, 等于 [10, 50, 50, 50, 10]
+左侧扩充: Column -1, 反射为 Colunm 1, 等于 [10, 50, 50, 50, 10] 垂直方向
+左上角: Row -1, Column -1, 反射为 Row 1, Column 1 等于 50
+#+end_verse
