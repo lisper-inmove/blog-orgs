@@ -170,6 +170,25 @@ ddepth: desired depth of the output image.
   \]
 #+end_src
 It measures how much the value at a point differs from its neighbors, large values typically mean an edge.
+*** Edge detection with Canny
+#+begin_src python
+  cv2.Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]]) → edges
+#+end_src
+1. threshold1: Used edge connect(low threshold)
+2. threshold2: Used edge detect(high threshold)
+3. apertureSize: Sobel operator, default is 3, must be odd number
+4. L2gradient: Use L2 norm to calculate gradient or not, default is false use L1.
+
+Five Step process:
+1. Denoise the image with Gaussian filter
+2. Calculate the gradients
+3. Apply NMS on the edges
+4. Apply a double threshed to all the detected edges to eliminate any false positives.
+5. Analyze all the edges and their connection to each other to keep the real edges and discard the weak ones.
+
+It is based on *Canny Edge Detection Algorithm*, it can detect intensity gradient in image, always used to *Extract Sketch of Object*.
+
+** Contour Detection
 
 * Functions
 ** imread
@@ -274,6 +293,16 @@ BORDER_REFLECT_101的扩充方式如下：
 左上角: Row -1, Column -1, 反射为 Row 1, Column 1 等于 50
 #+end_verse
 
+** split and merge
+split: If your image is (H, W, 3), you will get three images of (H, W)
+#+begin_src python
+  cv2.split(src)
+#+end_src
+
+merge: If you have three grayscale images, you can merge them one for blue, one for green and one for red.
+#+begin_src python
+  cv2.merge([b, g, r])
+#+end_src
 ** Blur
 *** medianBlur(中值滤波)
 #+begin_src python
