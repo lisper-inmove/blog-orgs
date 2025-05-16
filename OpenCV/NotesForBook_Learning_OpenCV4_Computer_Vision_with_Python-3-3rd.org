@@ -156,6 +156,8 @@ However, they are prone to misidentifying noise as edges, this flow can be mitig
 The cv2.Laplacian() function in OpenCV performs Laplacian edge detection, which is based on the second-order derivatives of the image intensity.
 It highlights regions of rapid intensity change, which typically correspond to edges.
 
+The Laplacian is sensitive to noise. It’s recommended to apply a Gaussian blur before using it.
+
 #+begin_src python
   Laplacian(src, ddepth[, dst[, ksize[, scale[, delta[, borderType]]]]]) -> dst
 #+end_src
@@ -167,6 +169,7 @@ ddepth: desired depth of the output image.
   \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
   \]
 #+end_src
+It measures how much the value at a point differs from its neighbors, large values typically mean an edge.
 
 * Functions
 ** imread

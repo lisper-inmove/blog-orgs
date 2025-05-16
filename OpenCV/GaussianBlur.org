@@ -11,7 +11,7 @@
 * Gaussian Function
 
 1D Gaussian function
-#+attr_formula
+#+attr_formula:
 #+begin_src latex
   \[
   G(x) = \frac{1}{\sqrt{2\pi} \, \sigma} \, e^{ -\frac{x^2}{2\sigma^2} }
@@ -19,7 +19,7 @@
 #+end_src
 
 2D Gaussian function
-#+attr_formula
+#+attr_formula:
 #+begin_src latex
 
   \[
