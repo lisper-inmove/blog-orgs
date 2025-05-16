@@ -124,6 +124,50 @@ Each element contains an integer or floating-point value, which is a weight that
 OpenCV provides many edge-finding filters, including *Laplacian* *Sobel* and *Scharr*. This filters are supposed to turn non-edge regions into black and turn edge regions into white or saturated(饱和的) colors.
 However, they are prone to misidentifying noise as edges, this flow can be mitigated by *blurring* an image before trying to find its edges.
 
+#+begin_src python
+  import cv2
+
+
+  def strokeEdges(src, dst, blurKsize=7, edgeKsize=5):
+      if blurKsize >= 3:
+          blurredSrc = cv2.medianBlur(src, blurKsize)
+          graySrc = cv2.cvtColor(blurredSrc, cv2.COLOR_BGR2GRAY)
+      else:
+          graySrc = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+
+      # laplacian edge detect, brighten edge, darken none edge
+      # set result back to graySrc
+      cv2.Laplacian(graySrc, cv2.CV_8U, graySrc, ksize=edgeKsize)
+      # 255 - graySrc: reverse edge detect image. brighten none edge, darken edge.
+      # (1.0 / 255) * value: normalize reverse edge detect image as transparency value
+      normalizedInverseAlpha = (1.0 / 255) * (255 - graySrc)
+
+      # if image is (H, W, 3)
+      # every channel will be (H, W)
+      channels = cv2.split(src)
+      for channel in channels:
+          channel[:] = channel * normalizedInverseAlpha
+
+      cv2.merge(channels, dst)
+
+#+end_src
+
+*** laplacian
+The cv2.Laplacian() function in OpenCV performs Laplacian edge detection, which is based on the second-order derivatives of the image intensity.
+It highlights regions of rapid intensity change, which typically correspond to edges.
+
+#+begin_src python
+  Laplacian(src, ddepth[, dst[, ksize[, scale[, delta[, borderType]]]]]) -> dst
+#+end_src
+ddepth: desired depth of the output image.
+
+#+attr_formula:
+#+begin_src latex
+  \[
+  \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
+  \]
+#+end_src
+
 * Functions
 ** imread
 imread returns an image in the BGR() color format
@@ -144,7 +188,15 @@ imread returns an image in the BGR() color format
 ** filter2D
 Applies any kernel or convolution matrix that we specify
 #+begin_src python
-  cv2.filter2D(src: numpy.ndarray, ddepth: int, kernel: numpy.ndarray, dst: numpy.ndarray = None, anchor: tuple = (-1, -1), delta: float = 0, borderType: int = cv2.BORDER_CONSTANT)
+  cv2.filter2D(
+      src: numpy.ndarray,
+      ddepth: int,
+      kernel: numpy.ndarray,
+      dst: numpy.ndarray = None,
+      anchor: tuple = (-1, -1),
+      delta: float = 0,
+      borderType: int = cv2.BORDER_CONSTANT
+  )
 #+end_src
 1. src: source image, it can be multi-channel
 2. ddepth: specifies the deta type(depth) of the output image. bit depth(位深度,用于表示单个像素颜色的二进制位数)
@@ -218,3 +270,58 @@ BORDER_REFLECT_101的扩充方式如下：
 左侧扩充: Column -1, 反射为 Colunm 1, 等于 [10, 50, 50, 50, 10] 垂直方向
 左上角: Row -1, Column -1, 反射为 Row 1, Column 1 等于 50
 #+end_verse
+
+** Blur
+*** medianBlur(中值滤波)
+#+begin_src python
+  cv2.medianBlur(src, ksize) -> dst
+#+end_src
+ksize: size of kernel, must be an odd number and bigger than 1
+dst: output image, its types is same with src
+
+Principle:
+1. Sampling from neighborhood for every pixel
+2. Sort all neighborhoods
+3. Use the middle value to replace the pixel
+
+Used to remove noise, good effective for salt-and-pepper(椒盐噪声,black spots and white spots) noise especially.
+
+*** meanBlur(均值滤波)
+#+begin_src python
+  cv2.blur(src, ksize) -> dst
+#+end_src
+
+Piinciple:
+1. Define a window for every pixel, window size is ksize x ksize.
+2. Calculate average value
+3. Use the average value to replace the center pixel
+
+Used to remove noise, good effective for light noise, it is not sensitive for extreme value, details and egde will be vague(模糊).
+
+*** GaussianBlur
+#+begin_src python
+  cv2.GaussianBlur(src, ksize, sigmaX[, dst[, sigmaY, [borderType]]])
+#+end_src
+ksize: sizeof kernel, must be odd
+sigmaX: standard deviation(标准差) for x axis, always set to 0, OpenCV will calculate it using ksize.
+sigmaY: standard deviation for y axis, in most cases same as sigmaX
+borderType: fill type for border
+
+Principle:
+Use a weight matrix(kernel) to cover every pixel one by one, calculate weighing average value.
+
+#+attr_formula:
+#+begin_src latex
+  \[
+  G(x, y) = \frac{1}{2\pi\sigma^2} \exp\left( -\frac{x^2 + y^2}{2\sigma^2} \right)
+  \]
+#+end_src
+σ: standard deviation, degree of vague, *bigger σ more vague*.
+exp: exponent function
+x,y: relative distance to center pixel.
+
+*** compare three blur methods
+| Name         | Remove Noise | Keep edge | Blur level |
+| medianBlur   |            4 |         4 |          1 |
+| meanBlur     |            2 |         1 |          4 |
+| GaussianBlur |            2 |         2 |          3 |
