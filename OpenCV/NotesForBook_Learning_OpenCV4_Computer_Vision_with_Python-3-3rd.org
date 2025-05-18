@@ -189,11 +189,40 @@ Five Step process:
 It is based on *Canny Edge Detection Algorithm*, it can detect intensity gradient in image, always used to *Extract Sketch of Object*.
 
 ** Contour Detection
+#+begin_src python
+  import cv2
+  import numpy as np
+
+  img = np.zeros((200, 200), dtype=np.uint8)
+  img[50:150, 50:150] = 255
+  # 将大于阈值(127)的全部设置为255，小于等于全部设置为0
+  ret, thresh = cv2.threshold(img, 127, 255, 0)
+  # 找出所有的轮廓,hierarchy为轮廓的层级关系
+  contours, hierarchy = cv2.findContours(
+      thresh,
+      cv2.RETR_TREE,  # 建立完整的轮廓层级
+      cv2.CHAIN_APPROX_SIMPLE,  # 压缩 水平，垂直和对角线 的轮廓点，仅保留端点
+  )
+
+  # 将灰阶图转在BGR格式
+  color = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+  # 将轮廓以绿色画在BGR图上
+  img = cv2.drawContours(color, contours, -1, (0, 255, 0), 2)
+  cv2.imshow("ontours", color)
+  cv2.waitKey()
+  cv2.destroyAllWindows()
+#+end_src
+
+#+RESULTS:
+: None
 
 * Functions
 ** imread
-imread returns an image in the BGR() color format
+#+begin_src python
+  imread(filepath, flags)
+#+end_src
 
+flags's value as follows:
 1. cv2.IMREAD_COLOR: default option, providing a 3-channel BGR image with an 8-bit value for each channel
 2. cv2.IMREAD_GRAYSCALE: 8-bit grayscale image
 3. cv2.IMREAD_ANYCOLOR: 8-bit BGR or 8-bit grayscale image, depending on the metadata in the file.
@@ -206,6 +235,12 @@ imread returns an image in the BGR() color format
 10. cv2.IMREAD_REDUCED_COLOR_4: 1/4
 11. cv2.IMREAD_REDUCED_GRAYSCALE_8: 1/8
 12. cv2.IMREAD_REDUCED_COLOR_8: 1/8
+
+** imwrite
+#+begin_src python
+  imwrite(savepath, src)
+#+end_src
+filetype is decided by savepath's suffix.
 
 ** filter2D
 Applies any kernel or convolution matrix that we specify
@@ -357,3 +392,33 @@ x,y: relative distance to center pixel.
 | medianBlur   |            4 |         4 |          1 |
 | meanBlur     |            2 |         1 |          4 |
 | GaussianBlur |            2 |         2 |          3 |
+** threshold
+#+begin_src python
+  retval, dst = cv2.threshold(src, thresh, maxval, type)
+#+end_src
+src: input grayscale image, must be sigle-channel 8-bit or 32-bit
+thresh: the threshold value to classify pixel values
+maxval: the value to assign if pixel value is more than the threshold depending on the type
+type:
+    cv2.THRESH_BINARY: pixel > thresh ? maxval : 0
+    cv2.THRESH_BINARY_INV: inverse binary
+    cv2.THRESH_TRUNC: pixel > thresh ? thresh : keep
+    cv2.THRESH_TOZERO: pixel > thresh ? keep : 0
+    cv2.THRESH_TOZERO_INV
+    cv2.THRESH_OTSU: Otsu's method, automatically determines optimal threshold. When type is OTSU, parameter thresh is ignored.
+** findContours
+#+begin_src python
+  contours, hierarchy = cv2.findContours(image, mode, method)
+#+end_src
+image: binary image, usually from cv2.threshold or cv2.Canny
+mode:
+    cv2.RETR_EXTERNAL: retrieves only the extreme outer contours
+    cv2.RETR_LIST: retrieves all contours without any hierarchy
+    cv2.RETR_TREE: retrieves all contours with full hierarchy of nested contours
+    cv2.RETR_CCOMP: retrieves all contours and organizes them into a 2-level hierarchy.
+method:
+    cv2.CHAIN_APPROX_NONE: stores all points of the contour
+    cv2.CHAIN_APPROX_SIMPLE: removes all redundant points and compresses the contours, saving memory.
+returns:
+    contours: A list of contour points, Each contour is an array of (x, y)
+    hierarchy: Describes the parent-child relationships between contours.
