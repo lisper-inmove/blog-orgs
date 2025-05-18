@@ -446,9 +446,6 @@ returns:
   )
 
 
-  import pdb
-
-  pdb.set_trace()
   for c in contours:
       # vertical bounding rect
       x, y, w, h = cv2.boundingRect(c)
