@@ -8,6 +8,11 @@
 #+KEYWORDS: ImageConduct
 #+CATEGORIES: OpenCV
 
+* Codes in Book
+[[github.com:PacktPublishing/Learning-OpenCV-4-Computer-Vision-with-Python-Third-Edition.git][Codes]]
+
+Images in this note are under image folder of the repo.
+
 * Chapter Two
 
 An image is a multidimensional array, it has columns and rows of pixels, and each pixel has a value.
@@ -241,7 +246,6 @@ flags's value as follows:
   imwrite(savepath, src)
 #+end_src
 filetype is decided by savepath's suffix.
-
 ** filter2D
 Applies any kernel or convolution matrix that we specify
 #+begin_src python
@@ -422,3 +426,124 @@ method:
 returns:
     contours: A list of contour points, Each contour is an array of (x, y)
     hierarchy: Describes the parent-child relationships between contours.
+
+#+begin_src python
+  import cv2
+  import numpy as np
+
+  img = cv2.pyrDown(cv2.imread("./images/hammer.jpg", cv2.IMREAD_UNCHANGED))
+  ret, thresh = cv2.threshold(
+      cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+      127,
+      255,
+      cv2.THRESH_BINARY,
+  )
+
+  contours, hier = cv2.findContours(
+      thresh,
+      cv2.RETR_EXTERNAL,
+      cv2.CHAIN_APPROX_SIMPLE,
+  )
+
+
+  import pdb
+
+  pdb.set_trace()
+  for c in contours:
+      # vertical bounding rect
+      x, y, w, h = cv2.boundingRect(c)
+      cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+      # min area rect
+      rect = cv2.minAreaRect(c)
+      box = cv2.boxPoints(rect)
+      box = np.int0(box)
+      cv2.drawContours(img, [box], 0, (0, 0, 255), 3)
+
+      # bounding circle
+      (x, y), radius = cv2.minEnclosingCircle(c)
+      center = (int(x), int(y))
+      radius = int(radius)
+      img = cv2.circle(img, center, radius, (0, 255, 0), 2)
+
+  cv2.drawContours(img, contours, -1, (255, 0, 0), 1)
+  cv2.imshow("contours", img)
+
+  cv2.waitKey()
+  cv2.destroyAllWindows()
+#+end_src
+
+** pyrDown
+Used to reduce/increase the size of an image by half in both width and height, using *Gaussing pyramid downsampling*, this method is smoother and less aliasing-prone than simple resizing.
+
+#+begin_src python
+  dst = cv2.pyrDown(src[, dstize[, borderType]])
+  dst = cv2.pyrUp(src[, dstize[, borderType]])
+#+end_src
+dstsize: default is src.shape / 2
+
+** boundingRect
+Calculate the smallest upright(axis-aligned) rectangle that fully contains a contour in image
+#+begin_src python
+  x, y, w, h = cv2.boundingRect(contour)
+#+end_src
+** minAreaRect
+Minimal rectangle that fully contains a contour in the image
+#+begin_src python
+  ((cx, cy), (w, h), angle) = cv2.minAreaRect(contour)
+#+end_src
+** boxPoints
+Get four points from a rect
+#+begin_src python
+  box = cv2.boxPoints(rect)
+#+end_src
+** drawContours
+Draw contours found by cv2.findContours
+#+begin_src python
+  cv2.drawContours(image, contours, contourIdx, color, thickness)
+#+end_src
+contourIdx: draw a specific contour, based on 0. -1 to draw all contours.
+** minEncolsingCircle
+Find the smallest circle that completely encloses a given contour or set of 2D points.
+#+begin_src python
+  (x, y), radius = cv2.minEnclosingCircle(points)
+#+end_src
+points: A contour or a list of 2D points.
+** draw shapes
+*** cv2.line
+#+begin_src python
+  cv2.line(src, pt1, pt2, color, thickness)
+#+end_src
+*** cv2.rectangle
+#+begin_src python
+  cv2.rectangle(src, pt1, pt2, color, thiness)
+#+end_src
+*** cv2.circle
+#+begin_src python
+  cv2.circle(src, center, radius, color, thickness)
+#+end_src
+*** cv2.ellipse
+#+begin_src python
+  cv2.ellipse(src, center, axes, angle, startAngle, endAngle, color, thickenss, lineType=cv2.LINE_AA, shift)
+#+end_src
+axes: (a, b), length of major and minor axes (half-widths)
+angle: rotation angle of the ellipse in degress
+startAngle: starting angle of the arc in degress
+endAngle: ending angle of the arc
+lineType:
+    LINE_4: 4-connected line (uses 4-neighbor pixels, fast but lower quality)
+    LINE_8: 8-connected line
+    LINE_AA: Anti-aliased line(smooth edges, best quality, slower)
+
+*** cv2.polylines
+#+begin_src python
+  cv2.polylines(src, [pts], isClosed, color, thickness)
+#+end_src
+*** cv2.fillPoly
+#+begin_src python
+  cv2.fillPoly(img, [pts], color)
+#+end_src
+*** cv2.putText
+#+begin_src python
+  cv2.putText(img, "text", org, font, scale, color, thickness)
+#+end_src
