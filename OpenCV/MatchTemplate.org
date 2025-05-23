@@ -8,9 +8,8 @@
 #+KEYWORDS: OpenCV
 #+CATEGORIES: MachineVision
 
-* Function Definition
-#+begin_src python
   import cv2
+begin_src python
   result = cv2.matchTemplate(image, template, method)
 #+end_src
 
@@ -181,4 +180,27 @@ Convert this latex source code to pdf, you can see all the formulas for threes k
   \]
 
   \end{document}
+#+end_src
+
+* Examples
+#+begin_src python
+  import cv2
+
+  image = "/home/inmove/Desktop/img20250319121444287104temp.png"
+  image = cv2.imread(image)
+  template = cv2.imread("/home/inmove/Desktop/template.png")
+
+  image1 = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+  template1 = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+  result = cv2.matchTemplate(image1, template1, cv2.TM_CCOEFF_NORMED)
+  (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(result)
+  start_x, start_y = maxLoc
+  end_x = start_x + template.shape[1]
+  end_y = start_y + template.shape[0]
+  cv2.rectangle(image, (start_x, start_y), (end_x, end_y), (255, 0, 0), 3)
+  image = cv2.resize(image, (1024, 1024))
+  cv2.imshow("image", image)
+  cv2.waitKey()
+  cv2.destroyAllWindows()
 #+end_src
