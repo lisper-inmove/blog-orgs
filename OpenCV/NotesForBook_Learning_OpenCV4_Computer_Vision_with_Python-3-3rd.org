@@ -1,6 +1,6 @@
 #+TITLE: Notes for Learning OpenCV 4 Computer Vision with Python 3 3rd
 #+DATE: 2025-05-07 22:46:22
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
@@ -260,6 +260,44 @@ It is based on *Canny Edge Detection Algorithm*, it can detect intensity gradien
   cv2.waitKey()
   cv2.destroyAllWindows()
 #+end_src
+** Convex Contours and the Douglas-Peucker algorithm
+#+begin_src python
+  import cv2
+  import numpy as np
+
+  img = cv2.pyrDown(cv2.imread("./images/hammer.jpg", cv2.IMREAD_UNCHANGED))
+  ret, thresh = cv2.threshold(
+      cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+      127,
+      255,
+      cv2.THRESH_BINARY,
+  )
+
+  contours, hier = cv2.findContours(
+      thresh,
+      cv2.RETR_EXTERNAL,
+      cv2.CHAIN_APPROX_SIMPLE,
+  )
+
+  black = np.zeros_like(img)
+
+  for c in contours:
+      epsilon = 0.01 * cv2.arcLength(c, True)
+      approx = cv2.approxPolyDP(c, epsilon, True)
+      hull = cv2.convexHull(c)
+      # outmost
+      cv2.drawContours(black, [hull], -1, (0, 255, 0), 2)
+      cv2.drawContours(black, [approx], -1, (0, 255, 255), 2)
+      # inner most
+      cv2.drawContours(black, [c], -1, (255, 255, 0), 2)
+
+  cv2.imshow("contours", black)
+  cv2.waitKey()
+  cv2.destroyAllWindows()
+
+#+end_src
+** Detecting Lines, circles and other shapes
+*** Hough Transform
 
 * Functions
 ** imread
@@ -541,3 +579,21 @@ lineType:
 #+begin_src python
   cv2.putText(img, "text", org, font, scale, color, thickness)
 #+end_src
+** approxPolyDP
+This function is used to approximate a contour shape to another shape with fewer vertices.
+Return a list of points forming the new polygon.
+#+begin_src python
+  # A method to get the epsilon
+  epsilon = 0.01 * cv2.arcLength(contour, True)
+  cv2.approxPolyDP(contour, espilon, closed)
+#+end_src
+espilon: maximum distance between the approximated polygon's perimeter and the original contour's perimeter. smaller espilon more similar.
+closed: boolen, if True, the approximated curve shold be closed.
+
+** convexHull
+Convex Hull, is the smallest convex shape that fully encloses the contour points.
+#+begin_src python
+  cv2.convexHull(contour, hull=None, clockwise=None, returnPoints=True)
+#+end_src
+hull: output array, usually ignored
+returnPoints: if True, return the coordinates of the hull points, else return the indices of the contour points that make up the hull.
