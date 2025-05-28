@@ -1,0 +1,13 @@
+#+TITLE: 数学公式
+#+DATE: 2025-05-28 09:09:35
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: Math
+
+* log
+#+attr_axis:
+#+begin_src latex
+y = log(x)
+#+end_src

@@ -1,0 +1,274 @@
+#+TITLE: 灰度变换
+#+DATE: 2025-05-25 15:07:35
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* 灰度变换的作用
+1. 改善图片的质量，使图像能够显示更多的细节，提高图像的对比度
+2. 有选择地突出图像感兴趣的特征或者抑制图像中不需要的特征
+3. 可以有效地改变图像的直方图，使像素分布更均匀
+
+* 图像的灰度化
+1. 可以用IMREAD_GRAYSCALE来以灰度的方式打开图片
+2. 也可以以一定的比例将 G, B, R 图片转成灰度图片
+#+begin_src cpp
+  #include <iostream>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  void grayImageShow(Mat& input, Mat& output) {
+      for (int i = 0; i < input.rows; i++) {
+          for (int j = 0; j < input.cols; j++) {
+              Vec3b v = input.at<Vec3b>(i, j);
+              output.at<uchar>(i, j) =
+                  saturate_cast<uchar>(0.114 * v[0] + 0.587 * v[1] + 0.2989 * v[2]);
+          }
+      }
+      imshow("Image", output);
+  }
+
+  bool grayImageShowV2(unsigned char* src, unsigned char* dst, int width, int height) {
+      int r, g, b;
+      for (int i = 0; i < width * height; i++) {
+          r = *src++;
+          g = *src++;
+          b = *src++;
+          ,*dst++ = (r * 76 + g * 150 + b * 30) >> 8;
+      }
+      return true;
+  }
+
+  int main() {
+      Mat src, gray, dst;
+      String filename = "/home/inmove/Desktop/test-images/Lena.jpg";
+      gray = imread(filename, IMREAD_GRAYSCALE);
+      src = imread(filename);
+      dst.create(src.rows, src.cols, CV_8UC1);
+
+      imshow("src", src);
+      imshow("gray", gray);
+      // grayImageShowV2(src, dst);
+      grayImageShowV2(src.data, dst.data, src.cols, src.rows);
+      imshow("dst", dst);
+
+      waitKey(0);
+      destroyAllWindows();
+      return 0;
+  }
+#+end_src
+
+* 对比度
+对比度就是图像的明亮部分和阴暗部分的比值
+对比度越高，被照物体的轮廓就越分明，图像越清晰。
+
+* 线性变换
+线必变换就是用一个一元一次方程将原来的值变成另一个值
+y = k * x + b
+x就是原像素
+1. k > 1: 对比度增加
+2. k < 1: 对比变减少
+3. k = 1, b != 0: 灰度值平移，变亮或变暗
+4. k = 1, b = 0: 不变
+5. k = -1, b = 255: 灰度反转
+6. k < 0, b > 0: 暗区变亮，亮区变暗
+#+begin_src cpp
+  #include <iostream>
+  #include <opencv4/opencv2/core/mat.hpp>
+  #include <opencv4/opencv2/imgcodecs.hpp>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  Mat linearTransform(Mat srcImage, float a, int b) {
+      if (srcImage.empty()) {
+          cout << "No Data" << endl;
+      }
+      const int nRows = srcImage.rows;
+      const int nCols = srcImage.cols;
+      Mat resultImage = Mat::zeros(srcImage.size(), srcImage.type());
+      for (int i = 0; i < nRows; i++) {
+          for (int j = 0; j < nCols; j++) {
+              for (int c = 0; c < 3; c++) {
+                  // y = x * a + b
+                  resultImage.at<Vec3b>(i, j)[c] =
+                      saturate_cast<uchar>((a * srcImage.at<Vec3b>(i, j)[c]) + b);
+              }
+          }
+      }
+      return resultImage;
+  }
+
+  int main() {
+      Mat src, gray, dst;
+      String filename = "/home/inmove/Desktop/test-images/lakeWater.jpg";
+
+      Mat srcImage = imread(filename);
+      imshow("Src", srcImage);
+      float a = 1.2;
+      int b = 50;
+      Mat newImage = linearTransform(srcImage, a, b);
+      imshow("Linear Transform", newImage);
+      waitKey(0);
+      destroyAllWindows();
+      return 0;
+  }
+#+end_src
+
+* 分段线性变换
+分段线性变换其实就是多个一元一次方程的组合使用
+#+begin_src cpp
+  #include <iostream>
+  #include <opencv4/opencv2/core/mat.hpp>
+  #include <opencv4/opencv2/highgui.hpp>
+  #include <opencv4/opencv2/imgcodecs.hpp>
+  #include <vector>
+
+  using namespace std;
+  using namespace cv;
+
+  void dividedLinearStrength(Mat& input, Mat& output, float xInStart, float xInEnd, float xOutStart,
+                             float xOutEnd) {
+      /**
+         分段线性变换
+         y
+         ↑
+         |
+         │___________ (xInEnd, xOutEnd)
+         │          /
+         │         /
+         │        /
+         │       /
+         │      /
+         │_____/
+         │     (xInStart, xOutStart)
+         └─────────────────→ x
+         0
+
+         一共分为三段:
+         0 ~ xInStart: y = kx + b, 由(0, 0) 和 (xInStart, xOutStart)计算出k, b
+         xInStart ~ xInEnd: y = kx + b, 由(xInStart, xOutStart), (xInEnd, xOutEnd) 计算出k, b
+         xInEnd ~ 255: y = kx + b, 由(xInEnd, xOutEnd) (255, 255) 计算出k, b
+       ,*/
+
+      float fk1 = xOutStart / xInStart;
+      float fk2 = (xOutEnd - xOutStart) / (xInEnd - xInStart);
+      float fc2 = xOutStart - fk2 * xInStart;
+      float fk3 = (255.0f - xOutEnd) / (255.0f - xInEnd);
+      float fc3 = 255.0f - fk3 * 255.0f;
+
+      vector<unsigned char> loolUpTable(256);
+      for (size_t m = 0; m < 256; m++) {
+          if (m < xInStart) {
+              loolUpTable[m] = static_cast<unsigned char>(m * fk1);
+          } else if (m > xInEnd) {
+              loolUpTable[m] = static_cast<unsigned char>(m * fk3 + fc3);
+          } else {
+              loolUpTable[m] = static_cast<unsigned char>(m * fk2 + fc2);
+          }
+      }
+      output = Mat::zeros(input.rows, input.cols, input.type());
+      for (size_t r = 0; r < input.rows; r++) {
+          unsigned char* pinput = input.data + r * input.step[0];
+          unsigned char* poutput = output.data + r * output.step[0];
+          for (size_t c = 0; c < input.cols; c++) {
+              poutput[c] = loolUpTable[pinput[c]];
+          }
+      }
+  }
+
+  int main() {
+      Mat src, matDLS;
+      String filename = "/home/inmove/Desktop/test-images/img.jpg";
+
+      src = imread(filename, IMREAD_GRAYSCALE);
+      dividedLinearStrength(src, matDLS, 72, 200, 5, 240);
+      imshow("1", src);
+      imshow("2", matDLS);
+      waitKey(0);
+      destroyAllWindows();
+      return 0;
+  }
+#+end_src
+
+* 对数变换和反对数变换
+** 对数变换
+
+#+attr_formula:
+#+begin_src latex
+  \[
+  I_{\text{out}}(x, y) = c \cdot \log\left(1 + I_{\text{in}}(x, y)\right)
+  \]
+#+end_src
+
+#+attr_axis:
+#+begin_src latex
+y = log(x)
+#+end_src
+
+对数函数的x越小，斜率越大，所以在较暗的区域，做了对数变换之后，其对比度将得到提升。
+
+#+begin_src cpp
+  #include <opencv4/opencv2/core/hal/interface.h>
+
+  #include <iostream>
+  #include <opencv4/opencv2/core.hpp>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/mat.hpp>
+  #include <opencv4/opencv2/core/utility.hpp>
+  #include <opencv4/opencv2/highgui.hpp>
+  #include <opencv4/opencv2/imgcodecs.hpp>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace cv;
+  using namespace std;
+
+  Mat logTransform(Mat srcImage, int c) {
+      if (srcImage.empty()) {
+          cout << "No data!" << endl;
+      }
+      Mat resultImage = Mat::zeros(srcImage.size(), srcImage.type());
+      // 每个像素增加1，为了避免像素为0的情况
+      cv::add(srcImage, cv::Scalar(1.0), srcImage);
+      // 转成浮点数
+      srcImage.convertTo(srcImage, CV_32F);
+      // 对数变换
+      cv::log(srcImage, resultImage);
+      // 乘以亮度系数
+      resultImage = c * resultImage;
+      // 归一化，使像素在0~255
+      cv::normalize(resultImage, resultImage, 0, 255, cv::NORM_MINMAX);
+      // 转换成8-bit
+      cv::convertScaleAbs(resultImage, resultImage);
+      return resultImage;
+  }
+
+  int main() {
+      Mat srcImage = cv::imread("/home/inmove/Desktop/test-images/lakeWater.jpg");
+      cv::imshow("SrcImage", srcImage);
+      float c = 1.2;
+      Mat resultImage;
+      double tTime;
+      tTime = (double)getTickCount();
+      const int nTimes = 10;
+      for (int i = 0; i < nTimes; i++) {
+          resultImage = logTransform(srcImage, c);
+      }
+      tTime = 1000 * ((double)getTickCount() - tTime) / getTickFrequency();
+      tTime /= nTimes;
+      cout << "耗时: " << tTime << "秒" << endl;
+      cv::imshow("Result", resultImage);
+      cv::waitKey(0);
+      cv::destroyAllWindows();
+      return 0;
+  }
+
+#+end_src
