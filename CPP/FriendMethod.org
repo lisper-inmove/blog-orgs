@@ -1,0 +1,86 @@
+#+TITLE: 友元函数
+#+DATE: 2025-06-02 15:59:12
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+SUBTITLE:
+#+KEYWORDS:
+#+CATEGORIES: CPP
+#+CARDIMAGE:
+
+* 什么是友元函数
+
+用friend关键字修饰的函数被称为友元函数。它可以访问 类的 private 和 protected 成员
+
+主要用途有以下两个：
+1. 操作符重载: 如例子中的 operator<<
+2. 数据共享: 例子中的 display
+
+* 例子
+#+NAME: point.h
+#+begin_src cpp
+  #ifndef __POINT_H__
+  #define __POINT_H__
+
+  #include <iostream>
+
+  class Point;
+  class Point3D;
+
+  class Point {
+     private:
+      double x_, y_;
+
+     public:
+      Point(double x, double y);
+      friend Point operator*(const Point &a, const Point &b);
+      friend std::ostream &operator<<(std::ostream &os, const Point &p);
+      void show() const;
+      friend void display(const Point &p, const Point3D &p3d);
+  };
+
+  class Point3D {
+     private:
+      double x_, y_, z_;
+
+     public:
+      Point3D(double x, double y, double z);
+      friend void display(const Point &p, const Point3D &p3d);
+  };
+
+  #endif
+#+end_src
+
+#+NAME: point.cpp
+#+begin_src cpp
+  #include <iostream>
+  #include "include/point.h"
+
+  Point::Point(double x, double y) : x_(x), y_(y) {}
+
+  Point operator*(const Point &a, const Point &b)
+  {
+      return Point(a.x_, b.y_);
+  }
+
+  std::ostream &operator<<(std::ostream &os, const Point &p)
+  {
+      os << "(" << p.x_ << " ," << p.y_ << ")";
+      return os;
+  }
+
+  void Point::show() const
+  {
+      std::cout << "(" << x_ << ", " << y_ << ")" << std::endl;
+  }
+
+  Point3D::Point3D(double x, double y, double z) : x_(x), y_(y), z_(z) {}
+
+  void display(const Point &p, const Point3D &p3d)
+  {
+      std::cout << "Point(" << p.x_ << "," << p.y_ << ")" << std::endl
+                << "Point 3D(" << p3d.x_ << "," << p3d.y_ << "," << p3d.z_ << ")" << std::endl;
+  }
+
+#+end_src
