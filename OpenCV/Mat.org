@@ -1,0 +1,266 @@
+#+TITLE: Mat
+#+DATE: 2025-06-07 23:39:53
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* Mat
+#+begin_src cpp
+  #include <opencv4/opencv2/core/cvdef.h>
+  #include <opencv4/opencv2/core.hpp>
+  #include <opencv4/opencv2/core/matx.hpp>
+  #include <opencv4/opencv2/core/hal/interface.h>
+  #include <iostream>
+  #include <opencv4/opencv2/imgproc.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+  #include <string>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/highgui.hpp"
+  #include "opencv2/imgcodecs.hpp"
+  using namespace std;
+  using namespace cv;
+
+  /**
+
+     Mat关键成员
+     1. uchar *data: 原始数据
+     2. int rows, cols: 行数和列数(像素数)
+     3. size_t step: 每行字节数(带通道)
+       cv::Mat img(3, 4, CV_8UC3);  // 3 行，4 列，3 通道，8-bit 无符号整数
+       step就等于12(因为对齐的原因，也有可能大于12)
+     4. int flags: 包含类型信息，连续性等信息
+     5. int *refcount: 引用计数
+     6. uchar *datastart: 数据开始地址,通常与data相同，但是当ROI被选定时可能不同
+     7. uchar *dateend: 数据结束地址
+     8. uchar* datalimit 数据极限地址,多用于UMat类型边界保护
+     9. MatAllocator *allocator 分配器指针，指定内存分配/释放方式
+
+     Mat有两部分关键的数据
+     1. 矩阵头
+     2. 数据(data)
+
+     矩阵头保存了尺寸，存储方法，地址，引用次数等
+
+     Mat实现了类似智能指针的功能，自动分配地址以及释放内存
+
+     Mat的构造函数
+     1. Mat::Mat(): 默认构造函数
+     2. Mat::Mat(int rows, int cols, int type)
+     3. Mat::Mat(Size size, int type)
+     4. Mat::Mat(int rows, int cols, int type, const Scalar &s): 所有元素值初始化为s
+     5. Mat::Mat(Size size, int type, Scalar &s)
+     6. Mat::Mat(const Mat &m): 复制构造函数，新的mat和m共享数据区，如下例中的b
+     7. Mat::Mat(int rows, int cols, int type, void *data, size_t step=AUTO_STEP)
+     8. Mat::Mat(const Mat &m, const Range &rowRange, const Range &colRange):
+     创建新图像为m的一部分.新图像与m共享data
+     9. Mat::Mat(const Mat &m, const Rect &roi): 创建新图像为m的一部分.新图像与m共享data
+     10. Mat::Mat(int ndims, const int *size, int type, const Scalar &s):
+     创建维数为ndims，类型为type的矩阵，初始值设置为s，每一维数的数据由size给出
+     11. Mat::Mat(int rows, int cols, int type, void *data, size_t step=AUTO_STEP)
+
+     Size: cv::Size(int width, int height) 或者 cv::Size_<T>
+     Range: cv::Range(int start, int end);
+     Scalar: cv::Scalar(double val0, double val1=0, double val2=0, double
+     val3=0),每个val表示一个通道的值
+
+     type: CV_位数 类型 C 通道数, 如CV_8UC3表示 单字节，3通道，通道可省略，默认为1
+                                 CV_64FC2 8字节，2通道
+           位数/8 表示一个通道使用几个字节
+
+     特殊矩阵
+       全0矩阵
+         static MatExpr zeros(int rows, int cols, int type);
+         static MatExpr zeros(Size size, int type);
+         static MatExpr zeros(int ndims, const int *sz, int type);
+       第一通道全为1的矩阵
+         static MatExpr ones (int rows, int cols, int type); // 也有三个，和zeros参数一样
+       对角线为1的矩阵
+         static MatExpr eye (int rows, int cols, int type);
+         static MatExpr eye (Size size, int type);
+
+     提取矩阵中的部分数据
+       row(int y): 第y行的数据
+       col(int x): 第x列的数据
+       rowRange(int x, int y): [x, y) 行的数据
+       colRange(int x, int y): [x, y) 列的数据
+
+     clone 和 copyTo
+       mat.clone: 复制图像
+       input.copyTo(output, mask): 将a复制到b, mask为可选，如果传了mask，mask的大小必须和output一致
+                                             mask[i]如果为0，就从input[i]复制到output[i]，否则置0
+
+     检测内存是否连续:
+       isContinuous，图像通常是连续存储的，但是有些情况下，如ROI，裁剪，子矩阵等，行与行之间存在一定的间隔
+
+     设置值:
+       input.setTo(InputArray value, InputArray mask=noArray());
+       mask的大小与输入矩阵一致。将input中，mask处不为0的点位的值设置为value。mask不传时，表示全部不为0。返回为一个Mat的引用
+
+     元素总个数:
+       size_t Mat::total();
+
+     寻找最大最小值
+       void minMaxLoc(InputArray src, double *minVal, double *maxVal = 0, Point *minLoc = 0, Point
+     ,*maxLoc = 0, InputArray mask = noArray());
+
+   ,*/
+
+  void traverse()
+  {
+      /**
+
+         Mat 的遍历
+         将Mat看成是一个一维数组，每隔step，就是一行
+         每行元素个数为cols * channels
+       ,*/
+
+      // 2行3列3通道
+      Mat r        = Mat::ones(Size(3, 2), CV_8UC3);
+      uchar *pdata = (uchar *)r.data;
+      int channels = r.channels();
+
+      cout << "Traverse by pointer " << endl;
+      for (int i = 0; i < r.rows; i++) {
+          for (int j = 0; j < r.cols * channels; j++) {
+              cout << (int)pdata[i * r.step + j] << "    ";
+          }
+          cout << endl;
+      }
+
+      cout << "Traverse by r.ptr " << endl;
+      for (int i = 0; i < r.rows; i++) {
+          uchar *pdata = r.ptr<uchar>(i);
+          for (int j = 0; j < r.cols * channels; j++) {
+              cout << (int)pdata[j];
+              if (j != 0 && j % channels == channels - 1 && j != r.cols * channels - 1) {
+                  cout << ",";
+              }
+              cout << "    ";
+          }
+          cout << endl;
+      }
+
+      cout << "Traverse by r.at(uchar) " << endl;
+      for (int i = 0; i < r.rows; i++) {
+          for (int j = 0; j < r.cols * channels; j++) {
+              cout << (int)r.at<uchar>(i, j) << "    ";
+          }
+          cout << endl;
+      }
+
+      cout << "Traverse by r.at(Vec3b) " << endl;
+      for (int i = 0; i < r.rows; i++) {
+          for (int j = 0; j < r.cols; j++) {
+              cout << (int)r.at<Vec3b>(i, j)[0] << "    ";
+              cout << (int)r.at<Vec3b>(i, j)[1] << "    ";
+              cout << (int)r.at<Vec3b>(i, j)[2] << "    ";
+          }
+          cout << endl;
+      }
+
+      cout << "Traverse by one line" << endl;
+      if (r.isContinuous()) {
+          for (int i = 0; i < r.rows * r.cols * channels; i++) {
+              cout << (int)r.data[i] << "    ";
+          }
+          cout << endl;
+      }
+
+      cout << "Traverse by Iterator" << endl;
+      MatConstIterator_<Vec3b> start = r.begin<Vec3b>();
+      MatConstIterator_<Vec3b> end   = r.end<Vec3b>();
+      while (start != end) {
+          uchar B = (*start)[0];
+          uchar G = (*start)[1];
+          uchar R = (*start)[2];
+          cout << int(B) << "    " << int(G) << "    " << int(R) << "    ";
+          start++;
+      }
+      cout << endl;
+  }
+
+  void rect()
+  {
+      /**
+
+         typedef Rect2i cv::Rect
+         typedef Rect_<int> cv::Rect2i
+
+       ,*/
+
+      Rect2i rect1(10, 10, 200, 200);
+      Rect2i rect2(20, 20, 100, 100);
+      Rect2i intersection_rect = rect1 & rect2;
+      Rect2i union_rect        = rect1 | rect2;
+      bool is_inside           = rect2 == intersection_rect;
+      cout << "Rect Information: " << endl;
+      cout << "Area: " << rect1.area() << endl;
+      cout << "Size: " << rect1.size() << endl;
+      cout << "Top-Left: " << rect1.tl() << endl;
+      cout << "Bottom-Right: " << rect1.br() << endl;
+      cout << "Width: " << rect1.width << endl;
+      cout << "Height: " << rect1.height << endl;
+      cout << "Contains(Point): " << rect1.contains(Point2i(30, 30)) << endl;
+      cout << "Intersection rect1 & rect2: " << intersection_rect << endl;
+      cout << "Union rect1 | rect2: " << union_rect << endl;
+      cout << "Is insite rect2 == (rect1 & rect2): " << is_inside << endl;
+  }
+
+  int main()
+  {
+      cv::Mat image = imread("/home/inmove/Desktop/template.png");
+
+      // image,a,b共享data成员
+      // refcount++
+      Mat a = image;
+      // refcount++
+      Mat b(image);
+
+      // c和d是深拷贝
+      Mat c = image.clone();
+      Mat d;
+      image.copyTo(d);
+      int type     = image.type();  // flags & TYPE_MASK
+      int depth    = CV_MAT_DEPTH(type);
+      int channels = CV_MAT_CN(type);
+
+      cout << "Image refcount " << image.u->refcount << endl;
+      cout << "Has element? " << image.empty() << endl;
+      cout << "Continuous? " << image.isContinuous() << endl;
+      cout << "type " << type << endl;
+      cout << "depth " << depth << endl;
+      cout << "channels " << channels << " image.channels() " << image.channels() << endl;
+      cout << image.rows << " rows," << image.cols << " cols," << image.dims << " dims" << endl;
+
+      // 将图片转换成单通道
+      cvtColor(image, image, COLOR_BGR2GRAY);
+      double minVal, maxVal;
+      Point minLoc, maxLoc;
+      // 寻找图片中的最大值与最小值
+      minMaxLoc(image, &minVal, &maxVal, &minLoc, &maxLoc);
+      cout << "MinValue: " << minVal << " MaxValue: " << maxVal << endl;
+      cout << "MinLoc: " << minLoc << " MaxLoc: " << maxLoc << endl;
+
+      // 直接赋值(重载了 << 自动符)
+      Mat r1 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+      cout << r1 << endl;
+
+      // 用成员函数create
+      Mat r2;
+      r2.create(4, 4, CV_8UC1);
+      cout << r2 << endl;
+
+      Mat r3 = image.rowRange(10, 400);
+      imshow("Demo", r3);
+
+      traverse();
+      rect();
+
+      waitKey(0);
+      destroyAllWindows();
+      return 0;
+  }
+
+#+end_src
