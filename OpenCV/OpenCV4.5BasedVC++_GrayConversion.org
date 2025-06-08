@@ -67,6 +67,7 @@
 对比度就是图像的明亮部分和阴暗部分的比值
 对比度越高，被照物体的轮廓就越分明，图像越清晰。
 
+
 * 线性变换
 线必变换就是用一个一元一次方程将原来的值变成另一个值
 y = k * x + b
@@ -198,7 +199,7 @@ x就是原像素
   }
 #+end_src
 
-* 对数变换和反对数变换
+* 非线性变换
 ** 对数变换
 
 #+attr_formula:
@@ -206,11 +207,6 @@ x就是原像素
   \[
   I_{\text{out}}(x, y) = c \cdot \log\left(1 + I_{\text{in}}(x, y)\right)
   \]
-#+end_src
-
-#+attr_axis:
-#+begin_src latex
-y = log(x)
 #+end_src
 
 对数函数的x越小，斜率越大，所以在较暗的区域，做了对数变换之后，其对比度将得到提升。
@@ -222,6 +218,8 @@ y = log(x)
   #include <opencv4/opencv2/core.hpp>
   #include <opencv4/opencv2/core/base.hpp>
   #include <opencv4/opencv2/core/mat.hpp>
+  #include <opencv4/opencv2/core/matx.hpp>
+  #include <opencv4/opencv2/core/saturate.hpp>
   #include <opencv4/opencv2/core/utility.hpp>
   #include <opencv4/opencv2/highgui.hpp>
   #include <opencv4/opencv2/imgcodecs.hpp>
@@ -231,7 +229,7 @@ y = log(x)
   using namespace cv;
   using namespace std;
 
-  Mat logTransform(Mat srcImage, int c) {
+  Mat logTransform1(Mat srcImage, int c) {
       if (srcImage.empty()) {
           cout << "No data!" << endl;
       }
@@ -251,21 +249,150 @@ y = log(x)
       return resultImage;
   }
 
+  Mat logTransform2(Mat srcImage, float c) {
+      /**
+         单个像素的log运算
+       ,*/
+      Mat resultImage = Mat::zeros(srcImage.size(), srcImage.type());
+      double gray = 0;
+      for (int i = 0; i < srcImage.rows; i++) {
+          for (int j = 0; j < srcImage.cols; j++) {
+              for (int ch = 0; ch < 3; ch++) {
+                  double val = static_cast<double>(srcImage.at<Vec3b>(i, j)[ch]);
+                  val = c * log(1.0 + val);
+                  resultImage.at<Vec3b>(i, j)[ch] = saturate_cast<uchar>(val);
+              }
+          }
+      }
+      cv::normalize(resultImage, resultImage, 0, 255, cv::NORM_MINMAX);
+      cv::convertScaleAbs(resultImage, resultImage);
+      return resultImage;
+  }
+
   int main() {
       Mat srcImage = cv::imread("/home/inmove/Desktop/test-images/lakeWater.jpg");
       cv::imshow("SrcImage", srcImage);
       float c = 1.2;
-      Mat resultImage;
-      double tTime;
-      tTime = (double)getTickCount();
-      const int nTimes = 10;
-      for (int i = 0; i < nTimes; i++) {
-          resultImage = logTransform(srcImage, c);
+      Mat resultImage1, resultImage2;
+      resultImage1 = logTransform1(srcImage, c);
+      cv::imshow("Result1", resultImage1);
+
+      resultImage2 = logTransform2(srcImage, c);
+      cv::imshow("Result2", resultImage2);
+
+      cv::waitKey(0);
+      cv::destroyAllWindows();
+      return 0;
+  }
+#+end_src
+
+** 反对数变换
+该变换属于非线性变换，目的是增强图像中 低灰度值区域 的对比度，适用于暗区域细节增强。
+#+begin_src cpp
+  #include <opencv4/opencv2/core/hal/interface.h>
+
+  #include <iostream>
+  #include <opencv4/opencv2/core.hpp>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/mat.hpp>
+  #include <opencv4/opencv2/core/matx.hpp>
+  #include <opencv4/opencv2/core/saturate.hpp>
+  #include <opencv4/opencv2/core/utility.hpp>
+  #include <opencv4/opencv2/highgui.hpp>
+  #include <opencv4/opencv2/imgcodecs.hpp>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace cv;
+  using namespace std;
+
+  Mat Normalize(vector<double> data, int grayscale, int rows, int cols, int type) {
+      double max = 0.0;
+      double min = 0.0;
+      for (int i = 0; i < data.size(); i++) {
+          if (data[i] > max) {
+              max = data[i];
+          }
+          if (data[i] < min) {
+              min = data[i];
+          }
       }
-      tTime = 1000 * ((double)getTickCount() - tTime) / getTickFrequency();
-      tTime /= nTimes;
-      cout << "耗时: " << tTime << "秒" << endl;
-      cv::imshow("Result", resultImage);
+      Mat dst;
+      dst.create(rows, cols, type);
+      int index = 0;
+      for (int r = 0; r < dst.rows; r++) {
+          uchar* dstRowData = dst.ptr<uchar>(r);
+          for (int c = 0; c < dst.cols; c++) {
+              dstRowData[c] = (uchar)(grayscale * ((data[index++] - min) * 1.0 / (max - min)));
+          }
+      }
+      return dst;
+  }
+
+  Mat antiLogTransform(Mat srcImage, double parameter) {
+      vector<double> value;
+      for (int r = 0; r < srcImage.rows; r++) {
+          uchar* srcRowData = srcImage.ptr<uchar>(r);
+          for (int c = 0; c < srcImage.cols; c++) {
+              value.push_back((pow(parameter + 1, srcRowData[c]) - 1) / parameter);
+          }
+      }
+      return Normalize(value, 255, srcImage.rows, srcImage.cols, srcImage.type());
+  }
+
+  int main() {
+      Mat srcImage = cv::imread("/home/inmove/Desktop/test-images/gza.jpg", 0);
+      cv::imshow("SrcImage", srcImage);
+      Mat resultImage1;
+      resultImage1 = antiLogTransform(srcImage, 3);
+      cv::imshow("Result1", resultImage1);
+
+      cv::waitKey(0);
+      cv::destroyAllWindows();
+      return 0;
+  }
+
+#+end_src
+
+** 幂律变换
+#+attr_formula:
+#+begin_src latex
+  s = c \cdot r^{\gamma}
+#+end_src
+s: 输出图像的像素值
+r: 输入图像的像素值（通常归一化到 [0,1]）
+c: 常数（用于控制整体亮度，常取c=1）
+γ: 幂指数，决定图像对比度的变化
+
+γ<1：增强图像暗区域（适用于图像太暗的情况）
+γ>1：增强图像亮区域（适用于图像太亮的情况）
+γ=1：无变化（线性变换）
+
+主要用于图像校正，对漂白的图片或者过黑的图片进行修正
+#+begin_src cpp
+  #include <iostream>
+  #include <opencv4/opencv2/core.hpp>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/highgui.hpp>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace cv;
+  using namespace std;
+
+  int main() {
+      Mat srcImage = cv::imread("/home/inmove/Desktop/test-images/ball.jpg", IMREAD_GRAYSCALE);
+      cv::imshow("SrcImage", srcImage);
+      Mat resultImage1;
+      resultImage1.create(srcImage.size(), srcImage.type());
+      for (int i = 0; i < srcImage.rows; i++) {
+          for (int j = 0; j < srcImage.cols; j++) {
+              int gray = srcImage.at<uchar>(i, j);
+              resultImage1.at<uchar>(i, j) = pow(gray, 0.5);
+          }
+      }
+      normalize(resultImage1, resultImage1, 0, 255, NORM_MINMAX);
+      cv::imshow("Result", resultImage1);
       cv::waitKey(0);
       cv::destroyAllWindows();
       return 0;
