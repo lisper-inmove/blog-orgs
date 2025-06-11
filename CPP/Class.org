@@ -1,0 +1,65 @@
+#+TITLE: 类
+#+DATE: 2025-06-04 21:56:34
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: CPP
+
+* 虚基类实现多重继承
+虚基类
+#+begin_src cpp
+  #include <iostream>
+  #include <string>
+  using namespace std;
+
+  class Person {
+     protected:
+      string name;
+
+     public:
+      Person(const string &n)
+      {
+          cout << "Constructing Person: " << n << endl;
+          name = n;
+      }
+  };
+
+  class Student : virtual public Person {
+     public:
+      Student(const string &n) : Person(n)
+      {
+          cout << "Constructing Student\n";
+      }
+  };
+
+  class Teacher : virtual public Person {
+     public:
+      Teacher(const string &n) : Person(n) { cout << "Constructing Teacher\n"; }
+  };
+
+  class TA : public Student, public Teacher {
+     public:
+      TA(const string &n) : Person(n), Student(n), Teacher(n) { cout << "Constructing TA\n"; }
+  };
+
+  class ResearchTA : public TA {
+     public:
+      ResearchTA(const string &n) : Person(n), TA(n) { cout << "Constructing ResearchTA\n"; }
+
+      void introduce() { cout << "Hi, I'm ResearchTA: " << name << endl; }
+  };
+
+  int main()
+  {
+      // 只有最底层的派生类初始化虚基类才有意义，而且它必须要初始化虚基类
+
+      // ResearchTA的有效
+      ResearchTA rta("Bob");
+
+      // TA的有效
+      TA ta("inmove");
+      rta.introduce();
+      return 0;
+  }
+#+end_src

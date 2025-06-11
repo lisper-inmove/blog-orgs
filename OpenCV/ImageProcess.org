@@ -1,0 +1,200 @@
+#+TITLE: 图像处理函数
+#+DATE: 2025-06-09 21:59:08
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* cvtColor
+#+begin_src cpp
+  #include <opencv2/imgproc.hpp>
+  void cvtColor(InputArray src, OutputArray dst, int code, int dstCn);
+#+end_src
+
+dstCn表示输出图像通道数，默认为0，由src和code共同决定
+code由 cv::COLOR_* 命名
+
+* 画基本图形
+** 点 - Point
+OpenCV中，点分为2D和3D，它们由模板类 Point_ 定义而得。
+#+begin_src cpp
+  typedef Point_<int> Point2i;
+  typedef Point_<float> Point2f;
+  typedef Point3_<int> Point3i;
+  typedef Point3_<double> Point3d;
+
+  typedef Point2i Point;
+#+end_src
+** 矩形类 Rect
+#+begin_src cpp
+  Rect(int x, int y, int width, int height);
+  Rect(Point pt, Size sz);
+  Rect(Point p1, Point p2);
+#+end_src
+
+Rect(或者Rect2i)是 Rect_<int>的别名，其它的还有 Rect_<float> Rect_<double>，它们的别名分别为Rect2f, Rect2d
+
+1. x,y 表示左上角坐标
+2. pt表示左上角坐标
+3. p1, p2分别表示 左上-右下 坐标
+
+** 在图片上画矩形
+#+begin_src cpp
+  #include "opencv2/imgproc.hpp"
+  void rectangle(InputOutputArray img, Point pt1, Point pt2, const Scalar &color, int thickness=1, int lineType=LINE_8, int shift=0);
+  void rectangle(InputOutputArray img, Rect rec, const Scalar &color, int thickness=1, int lineType=LINE_8, int shift=0);
+#+end_src
+
+1. 第一种方式中，pt1和pt2分别表示 左上-右下 两个顶点
+2. 第二种方式，用Rect类表示矩形
+3. thickness，表示矩形线条的宽度，传-1时表示填充整个矩形
+4. lineType表示线条类型
+   1. LINE_4: 锯齿明显
+   2. LINE_8: 常规线
+   3. LINE_AA: 边缘更平滑
+5. shift表示坐标的小数点位数
+
+** 在图片上画圆
+#+begin_src cpp
+  void circle(InputOutputArray img, Point center, int radius, const Scalar &color, int thickness=1, int lineType=LINE_8, int shift=0);
+#+end_src
+
+** 画椭圆
+#+begin_src cpp
+  void ellispe(InputOutputArray img, Point center, Size axes, double angle, double startAngle, double endAngle, const Scalar &color, int thickness=1, int linetype=LINE_8, int shift=0);
+#+end_src
+
+1. axes: (半长轴，半短轴)
+2. angle: 椭圆的旋转角度，逆时针
+3. startAngle, endAngle: 开始的位置角度，结束的位置角度，参照坐标系为椭圆的坐标系。主轴为x，副轴为y。(0, 180)表示只画上半部分
+
+** 画线段
+#+begin_src cpp
+  void line(InputOutputArray img, Point p1, Point p2, const Scalar &color, int thickness=1, int lineType=LINE_8, int shift=0);
+#+end_src
+
+** 填充多边形
+#+begin_src cpp
+  void fillPoly(Mat &img, const Point **pts, const int *npts, int ncontours, const Scalar &color, int lineType=LINE_8, int shift=0, Point offset=Point());
+#+end_src
+1. pts: 多边形的顶点数。注意一定要顺时针定义。比如长方形要遵从 左上-右上-右下-左下 的顺序
+2. npts: 每个多边形的顶点数
+3. ncontours: 画的多边形的个数，可以小于npts的长度
+4. offset: 所有多边形整体平移
+
+** 绘制文字
+#+begin_src cpp
+  void putText(Mat &img, const string &text, Point origin, int fontFace, double fontScale, Scalar color, int thickness=1, int lineType=LINE_8, bool bottomLeftOrigin=false);
+#+end_src
+1. 默认以文字左上角为原点，bottomLeftOrigin为true时，以左下角为原点
+2. 字体以FONT_开头，FONT_ITALIC是斜体，可以和其它字体'|'使用
+3. fontScale用于控制字体大小，默认为1.0
+
+#+begin_src cpp
+  Size getTextSize(const string &text, Point origin, int fontFace, double fontScale, int thickness, int *baseLine);
+#+end_src
+1. baseLine为输出参数，表示文字最底部的y坐标
+
+** 添加边框
+#+begin_src cpp
+  void copyMakeBorder(InputArray src, OutputArray dst, int top, int bottom, int left, int right, int borderType, const Scalar &value=Scalar());
+#+end_src
+1. value只有在 borderType为 BORDER_CONSTANT 时生效
+2. borderType为边框的值
+  #+begin_src cpp
+    #include <iostream>
+    #include <opencv4/opencv2/core/base.hpp>
+    #include <opencv4/opencv2/core/types.hpp>
+    #include "opencv2/core/mat.hpp"
+    #include "opencv2/core.hpp"
+    #include "opencv2/highgui.hpp"
+    #include "opencv2/imgproc.hpp"
+    using namespace std;
+    using namespace cv;
+
+    int main()
+    {
+        Mat r1 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+        // 复制最外层n次
+        copyMakeBorder(r1, r1, 2, 2, 2, 2, BORDER_REPLICATE);
+        cout << r1 << endl;
+
+        // 以最外层为轴，以对称的位置填充
+        Mat r2 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        copyMakeBorder(r2, r2, 2, 2, 2, 2, BORDER_REFLECT_101);
+        cout << r2 << endl;
+
+        // 与101不同的时，最外层也会被用于填充
+        Mat r3 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        copyMakeBorder(r3, r3, 2, 2, 2, 2, BORDER_REFLECT);
+        cout << r3 << endl;
+
+        // 与101相同，但是会倒序。相当于将最外层的n行平移到另一层
+        Mat r4 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        copyMakeBorder(r4, r4, 2, 2, 2, 2, BORDER_WRAP);
+        cout << r4 << endl;
+
+        // 用value填充。默认是0
+        Mat r5 = (Mat_<double>(3, 3) << 1, 2, 3, 4, 5, 6, 7, 8, 9);
+        copyMakeBorder(r5, r5, 2, 2, 2, 2, BORDER_CONSTANT, Scalar(255, 0, 0));
+        cout << r5 << endl;
+
+        return 0;
+    }
+  #+end_src
+
+** 例子
+#+begin_src cpp
+  #include <iostream>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/core.hpp"
+  #include "opencv2/highgui.hpp"
+  #include "opencv2/imgproc.hpp"
+  using namespace std;
+  using namespace cv;
+
+  int main()
+  {
+      Mat image = Mat::zeros(512, 512, CV_8UC3);
+      Rect rect(10, 10, 30, 30);
+      rectangle(image, rect, Scalar(0, 0, 255), 1, 8, 0);
+
+      circle(image, Point2i(300, 150), 50, Scalar(0, 255, 0));
+
+      ellipse(image, Point2i(400, 300), Size(50, 20), 50.0, 90, 270, Scalar(255, 0, 0), 5);
+
+      Point triangle1[] = {Point(50, 50), Point(150, 50), Point(100, 150)};
+      Point triangle2[] = {Point(200, 200), Point(300, 200), Point(250, 300)};
+      Point rect2[]     = {
+              Point(250, 300),
+              Point(300, 300),
+              Point(300, 400),
+              Point(250, 400),
+      };
+
+      // 所有顶点数组的指针
+      const Point *polygons[] = {triangle1, triangle2, rect2};
+      // 每个多边形的顶点数量
+      int npts[] = {3, 3, 4};
+      // 绘制多边形
+      fillPoly(image, polygons, npts, 3, Scalar(0, 255, 0), LINE_8, 0, Point(10, 10));
+
+      // 文字
+      putText(image, "Hello World", Point(400, 100), FONT_HERSHEY_PLAIN, 1, Scalar(200, 200, 100));
+
+      int baseline;
+      Size s = getTextSize("Hello World", FONT_HERSHEY_PLAIN, 2.0, 1, &baseline);
+      cout << "Base Line: " << baseline << " Size: " << s << endl;
+
+      copyMakeBorder(image, image, 10, 20, 30, 40, BORDER_CONSTANT, Scalar(255, 0, 255));
+
+      imshow("image", image);
+      waitKey(0);
+      destroyAllWindows();
+      return 0;
+  }
+#+end_src

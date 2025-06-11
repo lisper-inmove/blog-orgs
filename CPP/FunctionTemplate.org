@@ -1,0 +1,129 @@
+#+TITLE: 函数模板
+#+DATE: 2025-06-07 23:46:11
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: CPP
+
+* 函数模板
+#+begin_src cpp
+  #include <iostream>
+  #include <type_traits>
+  #include <string.h>
+  #include <stdio.h>
+  using namespace std;
+
+  class Base {
+     protected:
+      string env_;
+
+     public:
+      Base(string env) : env_(env) {}
+  };
+
+  class Person : public Base {
+     private:
+      string name_;
+      int age_;
+
+     public:
+      Person(string name, int age) : Base("Dev"), name_(name), age_(age) {}
+      string getName() { return name_; }
+      int getAge() { return age_; }
+  };
+
+  class Unrelated {};
+
+  template <typename T>
+  T max1(T a, T b)
+  {
+      return a > b ? a : b;
+  }
+
+  Person max1(Person p1, Person p2)
+  {
+      return p1.getAge() > p2.getAge() ? p1 : p2;
+  }
+
+  // 模板特化
+  template <>
+  const char *max1<const char *>(const char *a, const char *b)
+  {
+      return (strcmp(a, b) > 0) ? a : b;
+  }
+
+  template <typename T1, typename T2>
+  T1 printPair(T1 a, T2 b)
+  {
+      cout << a << " - " << b << endl;
+      return a;
+  }
+
+  // 只有某个类的子类对象才能调用此函数
+  // C++11/C++14
+  template <typename T>
+  typename enable_if<is_base_of<Base, T>::value>::type callHello(const T &obj)
+  {
+      cout << "Hello" << endl;
+  }
+
+  // C++20 ***
+  template <typename T>
+  concept DerivedFromBase = is_base_of<Base, T>::value;
+
+  template <DerivedFromBase T>
+  void callHello2(const T &obj)
+  {
+      cout << "Hello 2" << endl;
+  }
+
+  // 自定义concept
+  template <typename T>
+  concept Addable = requires(T a, T b)
+  {
+      a + b;
+  };
+  template <Addable T>
+  T add1(T a, T b)
+  {
+      return a + b;
+  }
+
+  // 要求T必须实现成员函数serialize和reset
+  // *** 鸭子类型
+  template <typename T>
+  concept Serializable = requires(T obj)
+  {
+      {
+          obj.serialize()
+          } -> std::convertible_to<std::string>;
+      {
+          obj.reset()
+          } -> std::same_as<void>;
+  };
+
+  /**
+
+     requires(T a) {
+      a.f();                             // 成员函数
+      { a.g() } -> std::same_as<int>;    // 有返回值限制
+      { a + a } -> std::convertible_to<T>; // 支持操作符
+      typename T::iterator;             // 有某个成员类型
+  }
+
+   ,*/
+
+  int main()
+  {
+      max1<int>(3, 4);
+      max1<double>(3.0, 4.0);
+      callHello(Person("inmove", 33));
+      // callHello(Unrelated()); // error
+      callHello2(Person("inmove", 35));
+      add1(3, 4);
+      // add1(Person("inmove", 33), Person("Mei", 33)); // error
+      return 0;
+  }
+
+#+end_src

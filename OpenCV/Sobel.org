@@ -1,0 +1,87 @@
+#+TITLE: Sobel算子
+#+DATE: 2025-05-30 15:48:18
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* 介绍
+Sobel算子是一种图像处理算法，主要用于 *边缘检测*
+它通过计算图像灰度在水平方向和垂直方向上的梯度来检测边缘。
+
+X方向的算子
+#+attr_formula:
+#+begin_src latex
+  \[
+  G_x = \begin{bmatrix}
+  -1 & 0 & +1 \\
+  -2 & 0 & +2 \\
+  -1 & 0 & +1
+  \end{bmatrix}
+  \]
+#+end_src
+
+y方向的算子
+#+attr_formula:
+#+begin_src latex
+  \[
+  G_y = \begin{bmatrix}
+  -1 & -2 & -1 \\
+  0 & 0 & 0 \\
+  +1 & +2 & +1
+  \end{bmatrix}
+  \]
+#+end_src
+
+x方向算子的差分近似
+#+attr_formula:
+#+begin_src latex
+  \[
+  G_x(x, y) = \left[ f(x+1, y-1) + 2f(x+1, y) + f(x+1, y+1) \right] - \left[ f(x-1, y-1) + 2f(x-1, y) + f(x-1, y+1) \right]
+  \]
+#+end_src
+将最中间的看成当前像素点，坐标为 (x, y)，其余8个点的坐标可以通过x, y表示，通过差分近似就可以得到它的一阶偏导数（梯度）。
+
+* OpenCV
+#+begin_src cpp
+  void Sobel(InputArray src, OutputArray dst,
+             int ddepth, int dx, int dy,
+             int ksize = 3, double scale = 1,
+             double delta = 0, int borderType = BORDER_DEFAULT);
+#+end_src
+1. dx, dy: 导数阶数，通常为0或1
+2. ksize: Sobel核大小，只能是奇数，通常为3
+3. scale: 缩放系数
+4. delta: 偏移量
+
+#+begin_src cpp
+  #include <iostream>
+  #include <opencv4/opencv2/core.hpp>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/highgui.hpp>
+
+  #include "opencv2/opencv.hpp"
+
+  using namespace cv;
+  using namespace std;
+
+  int main() {
+      Mat srcImage = cv::imread("/home/inmove/Desktop/test-images/GreatWall.jpg", IMREAD_GRAYSCALE);
+      cv::imshow("SrcImage", srcImage);
+      Mat resultX, resultY, resultXY;
+
+      Sobel(srcImage, resultX, CV_16S, 1, 0);
+      convertScaleAbs(resultX, resultX);
+
+      Sobel(srcImage, resultY, CV_16S, 0, 1);
+      convertScaleAbs(resultY, resultY);
+
+      resultXY = resultX + resultY;
+
+      cv::imshow("Result", resultXY);
+      cv::waitKey(0);
+      cv::destroyAllWindows();
+      return 0;
+  }
+#+end_src
