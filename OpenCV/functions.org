@@ -1,0 +1,33 @@
+#+TITLE: OpenCV Functions
+#+DATE: 2025-06-12 23:45:54
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* saturate_cast
+该函数的作用是将数字转成目标类型。自动进行饱和处理。
+1. 如果值超出目标类型最大(小)值，就设置为最大(小)值
+
+#+begin_src cpp
+  #include <opencv2/opencv.hpp>
+  #include <iostream>
+  using namespace std;
+  using namespace cv;
+
+  int main() {
+      int val1 = 300;
+      int val2 = -50;
+      int val3 = 400;
+
+      uchar result1 = saturate_cast<uchar>(val1); // => 255
+      uchar result2 = saturate_cast<uchar>(val2); // => 0
+      uchar result3 = (uchar)val3;                // => 144
+
+      cout << "val1 -> " << (int)result1 << endl;
+      cout << "val2 -> " << (int)result2 << endl;
+      cout << "val3 -> " << (int)result3 << endl;
+      return 0;
+  }
+#+end_src
