@@ -11,3 +11,32 @@
 #+begin_src latex
 y = log(x)
 #+end_src
+
+* 归一化(Normalization)
+
+** Min-Max归一化公式
+#+attr_formula:
+#+begin_src latex
+  \[
+  x' = a + \frac{(x - x_{\min})(b - a)}{x_{\max} - x_{\min}}
+  \]
+#+end_src
+归一化到[0,1]
+#+attr_formula:
+#+begin_src latex
+  \[
+  x' = \frac{(x - x_{\min})}{x_{\max} - x_{\min}}
+  \]
+#+end_src
+
+** Z-Score标准化公式
+μ：均值，
+σ：标准差
+结果数据均值为 0，标准差为 1
+更适合用于分布不均或存在异常值的情况
+#+attr_formula:
+#+begin_src latex
+  \[
+  x' = \frac{x - \mu}{\sigma}
+  \]
+#+end_src
