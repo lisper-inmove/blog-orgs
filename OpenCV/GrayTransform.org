@@ -1,4 +1,4 @@
-#+TITLE: 灰度的线性变换
+#+TITLE: 灰度变换
 #+DATE: 2025-06-12 23:50:54
 #+DISPLAY: t
 #+STARTUP: indent
@@ -134,7 +134,20 @@ Michelon 对比度
 #+end_src
 * 对数变换 与 反对数变换
 
-[[https://www.inmove.top/blog/Li9wb3N0cy9NYXRoL01hdGhGb3JtdWxhLm9yZw][y = log(x) 的函数图]]
+#+attr_formula:
+#+begin_src latex
+  \[
+  y = \log(x)
+  \]
+#+end_src
+
+#+attr_formula:
+#+begin_src latex
+  \[
+  s = \frac{(v + 1)^r - 1}{v}
+  \]
+#+end_src
+
 
 从函数图可以看出来，x越大，其切线的的斜率越小，所以对图片做对数变换的时候，灰度越小，所以像整体对比度会减少。
 暗部细节会被增强。
@@ -210,4 +223,60 @@ Michelon 对比度
 
       return 0;
   }
+#+end_src
+* 幂律变换
+#+attr_formula:
+#+begin_src latex
+  \[
+  y = c \cdot r^{\gamma}
+  \]
+#+end_src
+γ > 1时，将较窄范围的低灰度值映射为较宽范围的灰度值，同时将较宽范围的高灰度值映射为较窄范围。
+γ < 1时，则与之相反
+
+γ < 1时，r越小，切线斜率越大
+
+#+begin_src cpp
+  #include <math.h>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/core.hpp"
+  #include <cmath>
+  #include <iostream>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+
+  #include "opencv2/highgui.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  void gammaTransform(Mat &input, Mat &output, float gamma, int c)
+  {
+      int height = input.rows;
+      int width  = input.cols;
+      for (int i = 0; i < height; i++) {
+          for (int j = 0; j < width; j++) {
+              int value              = input.at<uchar>(i, j);
+              output.at<uchar>(i, j) = pow(value, gamma) * c;
+          }
+      }
+      normalize(output, output, 0, 255, NORM_MINMAX);
+  }
+
+  int main()
+  {
+      Mat image  = imread("/home/inmove/Desktop/test-images/gza.jpg", IMREAD_GRAYSCALE);
+      Mat result = Mat::zeros(image.size(), image.type());
+
+      gammaTransform(image, result, 0.3, 1);
+
+      imshow("src", image);
+      imshow("result", result);
+
+      waitKey(0);
+      destroyAllWindows();
+
+      return 0;
+  }
+
 #+end_src

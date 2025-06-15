@@ -1,0 +1,111 @@
+#+TITLE: 直方图修正
+#+DATE: 2025-06-14 19:35:52
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* 直方图
+直方图就是一张图片上，各个灰度值出现的频率。
+OpenCV提供了函数计算直方图
+#+begin_src cpp
+  void calcHist(const Mat *images, int nimages, const int *channels, InputArray mask, OutputArray hist, int dims, const int *histSize, const float **ranges, bool uniform=true, bool accumulate=false);
+#+end_src
+
+1. images: 输入矩阵。这些图像必须有相同的大小和深度。
+2. nimages: 输入矩阵个数
+3. channels: 要统计的通道索引
+4. mask: 掩码，只有不为0才会统计。为空表示不使用掩码
+5. hist: 输出目标，是一个二维数组，一个元素对应一张图的结果
+6. dims: 需要计算的直方图的维数
+7. histSize: 每个维度的bin数量，即直方图中柱子的数量
+8. ranges: 每一维数度的取值范围
+9. uniform: 是否均匀标识符
+10. accumulate: 累计标识符
+
+#+begin_src cpp
+  #include <math.h>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/core.hpp"
+  #include <cmath>
+  #include <iostream>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+  #include <opencv4/opencv2/imgproc.hpp>
+
+  #include "opencv2/highgui.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  void drawHistogram(Mat &image)
+  {
+      int bins              = 256;
+      int hist_size[]       = {bins};
+      float range[]         = {0, 256};
+      const float *ranges[] = {range};
+      Mat hist;
+      int channels[] = {0};
+      calcHist(&image, 1, channels, Mat(), hist, 1, hist_size, ranges, true, false);
+
+      double max_val;
+      minMaxLoc(hist, 0, &max_val, 0, 0);
+      int scale       = 2;
+      int hist_height = 256;
+      Mat hist_img    = Mat::zeros(hist_height, bins * scale, CV_8UC3);
+      for (int i = 0; i < bins; i++) {
+          float bin_val = hist.at<float>(i);
+          int intensity = cvRound(bin_val * hist_height / max_val);
+          rectangle(hist_img, Point(i * scale, hist_height - 1),
+                    Point((i + 1) * scale - 1, hist_height - intensity), CV_RGB(255, 255, 255));
+      }
+
+      imshow("Src", image);
+      imshow("Histogram", hist_img);
+      waitKey(0);
+      destroyAllWindows();
+  }
+
+  int main()
+  {
+      Mat image  = imread("/home/inmove/Desktop/test-images/gza.jpg", IMREAD_GRAYSCALE);
+      drawHistogram(image);
+      return 0;
+  }
+
+#+end_src
+
+* 均衡直方图
+#+begin_src cpp
+  #include <math.h>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/core.hpp"
+  #include <cmath>
+  #include <iostream>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+  #include <opencv4/opencv2/imgproc.hpp>
+
+  #include "opencv2/highgui.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  int main()
+  {
+      Mat image  = imread("/home/inmove/Desktop/test-images/gza.jpg", IMREAD_GRAYSCALE);
+      Mat result = Mat::zeros(image.size(), image.type());
+
+      equalizeHist(image, result);
+
+      imshow("src", image);
+      imshow("result", result);
+
+      waitKey(0);
+      destroyAllWindows();
+
+      return 0;
+  }
+
+#+end_src

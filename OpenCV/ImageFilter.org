@@ -1,0 +1,47 @@
+#+TITLE: 图像平滑处理
+#+DATE: 2025-06-15 00:24:57
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: OpenCV
+
+* 归一化方框滤波
+#+begin_src cpp
+  blur(InputArray src, OutputArray dst, Size ksize, Point anchor = Point(-1, -1), int borderType=BORDER_DEFA)
+#+end_src
+
+#+begin_src cpp
+  #include <math.h>
+  #include "opencv2/core/mat.hpp"
+  #include "opencv2/core.hpp"
+  #include <cmath>
+  #include <iostream>
+  #include <opencv4/opencv2/core/base.hpp>
+  #include <opencv4/opencv2/core/types.hpp>
+  #include <opencv4/opencv2/imgproc.hpp>
+
+  #include "opencv2/highgui.hpp"
+
+  using namespace std;
+  using namespace cv;
+
+  void onTrackBarUpdate(int value, void *) {}
+
+  int main()
+  {
+      Mat image  = imread("/home/inmove/Desktop/test-images/gza.jpg", IMREAD_GRAYSCALE);
+      Mat result = Mat::zeros(image.size(), image.type());
+
+      blur(image, result, Size(5, 5));
+
+      imshow("src", image);
+      imshow("result", result);
+
+      waitKey(0);
+      destroyAllWindows();
+
+      return 0;
+  }
+
+#+end_src

@@ -12,6 +12,36 @@
 y = log(x)
 #+end_src
 
+* 均值，方差，标准差
+
+均值
+#+attr_formula:
+#+begin_src latex
+  \[
+  \mu = \frac{1}{n} \sum_{i=1}^{n} x_i
+  \]
+#+end_src
+
+标准差（Standard Deviation，简称SD）是衡量数据集分散程度的一种常用统计量。它表示数据点与均值之间的平均偏差。标准差越大，数据的波动或分散程度越大；标准差越小，数据则越集中。
+标准差，其中是均值μ
+#+attr_formula:
+#+begin_src latex
+  \[
+  \sigma = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (x_i - \mu)^2}
+  \]
+#+end_src
+
+方差，标准差是方差的平方根
+#+attr_formula:
+#+begin_src latex
+  \[
+  \sigma^2 = \frac{1}{n} \sum_{i=1}^{n} (x_i - \mu)^2
+  \]
+#+end_src
+
+* 协方差
+协方差是衡量两个随机变量之间关系的一种统计量
+
 * 归一化(Normalization)
 
 ** Min-Max归一化公式
