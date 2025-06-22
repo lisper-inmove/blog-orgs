@@ -39,9 +39,6 @@ y = log(x)
   \]
 #+end_src
 
-* 协方差
-协方差是衡量两个随机变量之间关系的一种统计量
-
 * 归一化(Normalization)
 
 ** Min-Max归一化公式
@@ -68,5 +65,30 @@ y = log(x)
 #+begin_src latex
   \[
   x' = \frac{x - \mu}{\sigma}
+  \]
+#+end_src
+
+* 距离
+** 欧式距离(Euclidean Distance)
+#+attr_formula:
+#+begin_src latex
+  \[
+  d_{\text{Euclidean}}(\mathbf{p}, \mathbf{q}) = \sqrt{\sum_{i=1}^n (p_i - q_i)^2}
+  \]
+#+end_src
+
+** 曼哈顿距离（街区距离，Manhattan/City Block Distance）
+#+attr_formula:
+#+begin_src latex
+  \[
+  d_{\text{Manhattan}}(\mathbf{p}, \mathbf{q}) = \sum_{i=1}^n |p_i - q_i|
+  \]
+#+end_src
+
+** 切比雪夫距离（棋盘距离，Chebyshev Distance）
+#+attr_formula:
+#+begin_src latex
+  \[
+  d_{\text{Chebyshev}}(\mathbf{p}, \mathbf{q}) = \max_{i=1}^n |p_i - q_i|
   \]
 #+end_src
