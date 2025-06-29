@@ -6,6 +6,134 @@
 #+AUTHOR: inmove
 #+CATEGORIES: CPP
 
+* 定义类时默认生成的函数
+1. 默认构造函数
+2. 默认析构函数
+3. 拷贝构造函数
+4. 拷贝赋值运算符
+5. 移动构造函数
+6. 移动赋值运算符
+#+begin_src cpp
+  class A {
+      int x;
+  };
+  // 相当于编译器生成：
+  class A {
+  public:
+      A();                        // 默认构造
+      A(const A&);                // 拷贝构造
+      A(A&&);                     // 移动构造（C++11起）
+      A& operator=(const A&);     // 拷贝赋值
+      A& operator=(A&&);          // 移动赋值（C++11起）
+      ~A();                       // 析构函数
+  };
+#+end_src
+
+** 拷贝构造函数与赋值运算符
+如果有新对象被定义，一定有构造函数被调用。这个时候的'='用的就是复制构造函数
+如果没有新对象被定义，一定不会调用构造函数，这个时候就是 operator=
+#+begin_src cpp
+  #include <iostream>
+  #include <string>
+
+  using namespace std;
+
+  class Stock {
+     private:
+      int x_;
+
+     public:
+      // 默认构造函数
+      Stock() {}
+      Stock(const Stock &s) { cout << "Copy Constructor called" << endl; }
+      Stock(int x) : x_(x) {}
+
+      Stock &operator=(const Stock &s)
+      {
+          cout << "operator called" << endl;
+          return *this;
+      }
+  };
+
+  void printStock(Stock s)
+  {
+      cout << "Get a stock" << endl;
+  }
+
+  int main()
+  {
+      const Stock stock = Stock(3);
+      cout << "Copy Constructor: " << endl;
+      const Stock stock1 = stock;
+      Stock stock2;
+      cout << "operator=: " << endl;
+      stock2 = stock1;
+
+      // 拷贝构造函数被，然后被传给printStock函数
+      printStock(stock);
+      return 0;
+  }
+#+end_src
+
+** 移动构造 和 移动赋值
+移动构造函数 和 移动赋值运算符 是为了提升性能引入的，特别适合处理资源所有权转移（如动态内存、文件句柄等），避免不必要的深拷贝。
+#+begin_src cpp
+  #include <iostream>
+  #include <utility>
+  #include <cstring>
+
+  using namespace std;
+
+  class MyString {
+     private:
+      char *data_;
+
+     public:
+      MyString(const char *s)
+      {
+          std::cout << "构造\n";
+          data_ = new char[strlen(s) + 1];
+          strcpy(data_, s);
+      }
+
+      ~MyString()
+      {
+          std::cout << "析构\n";
+          delete[] data_;
+      }
+
+      // 移动构造函数
+      MyString(MyString &&other) noexcept
+      {
+          std::cout << "移动构造\n";
+          data_       = other.data_;
+          other.data_ = nullptr;
+      }
+
+      // 移动赋值
+      MyString &operator=(MyString &&other) noexcept
+      {
+          std::cout << "移动赋值\n";
+          if (this != &other) {
+              delete[] data_;
+              data_       = other.data_;
+              other.data_ = nullptr;
+          }
+          return *this;
+      }
+
+      void show() { std::cout << (data_ ? data_ : "空") << "\n"; }
+  };
+
+  int main()
+  {
+      MyString a("Hello");
+      MyString b("World");
+      b = std::move(a);  // 显式触发移动赋值
+      b.show();
+  }
+#+end_src
+
 * 虚基类实现多重继承
 虚基类
 #+begin_src cpp
@@ -62,4 +190,39 @@
       rta.introduce();
       return 0;
   }
+#+end_src
+
+* explicit
+将构造函数加上 explicit 关键字，可以阻止它们被用来执行隐式类型转换
+#+begin_src cpp
+  #include <iostream>
+  #include <string>
+
+  using namespace std;
+
+  class Stock {
+     private:
+      int x_;
+
+     public:
+      Stock(int x) : x_(x) {}
+  };
+
+  class Person {
+     private:
+      int x_;
+
+     public:
+      explicit Person(int x) : x_(x) {}
+  };
+
+  int main()
+  {
+      const Stock stock  = Stock(3);
+      const Stock stock1 = 3;
+      // Error
+      // const Person p = 4;
+      return 0;
+  }
+
 #+end_src
