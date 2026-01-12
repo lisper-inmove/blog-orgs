@@ -1,0 +1,89 @@
+#+TITLE: C++基础
+#+DATE: 2026-01-12 21:39:02
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: CPP
+
+* 类型转换
+** static_cast
+编译时完成类型检查,无运行时开销
+用于相关类型之间的转换
+#+begin_src cpp
+  double d = 3.14;
+  int i = static_cast<int>(d);
+
+  class Base {};
+  class Derived: public Base {};
+
+  Derived derived;
+  Base* base_ptr = static_cast<Base*>(&derived);  // 向上转换，安全
+  Derived* derived_ptr = static_cast<Derived*>(base_ptr);  // 向下转换，不安全
+
+  void *p = &i;
+  int *pi = static_cast<int*>(p);
+#+end_src
+** dynamic_cast
+用于多态类型的安全转换，运行时检查，有运行时开销
+#+begin_src cpp
+  class Base {
+  public:
+    virtual ~Base() {}  // 必须有虑函数
+  };
+
+  class Derived : public Base {};
+  class Other : public Base {};
+
+  Base *base = new Derived();
+
+  Derived* derived = dynamic_cast<Derived*>(base); // 成功
+  Other* other = dynamic_cast<Other*>(base); // 返回 nullptr
+
+  // 引用转换，失败抛异常
+  // Derived& dref = dynamic_cast<Derived&>(*base);
+#+end_src
+** const_cast
+用于添加或者移除 *const* 和 *volatile*
+不改变底层数据，只改变类型限定符。
+主要用于兼容旧接口
+#+begin_src cpp
+  // 移除 const（谨慎使用！）
+  const int ci = 10;
+  int* modifiable = const_cast<int*>(&ci);
+  ,*modifiable = 20;  // 未定义行为！ci 原本是 const
+
+  // 合法使用：调用非 const 版本的函数
+  class Data {
+      mutable int cache;
+  public:
+      int getValue() const {
+          // 修改 mutable 成员是合法的
+          Data* self = const_cast<Data*>(this);
+          self->cache = compute();  // 假设 compute() 是 const 方法
+          return cache;
+      }
+  };
+
+  // 添加 const
+  void print(const std::string& str);
+  std::string s = "hello";
+  print(const_cast<const std::string&>(s));
+#+end_src
+** reterpreter_cast
+最危险的转换，简单按位重新解释数据。最低级的转换，几乎无检查。平台相关，不可移植。非常危险，容易出错。用于低级编程、硬件访问等
+#+begin_src cpp
+  // 指针与整数间转换
+  int i = 42;
+  void* p = reinterpret_cast<void*>(&i);
+  uintptr_t addr = reinterpret_cast<uintptr_t>(p);
+
+  // 不相关类型指针间转换
+  struct Data { int x; double y; };
+  Data data;
+  char* bytes = reinterpret_cast<char*>(&data);  // 访问原始内存
+
+  // 函数指针转换
+  typedef void (*FuncPtr)();
+  FuncPtr func = reinterpret_cast<FuncPtr>(0x12345678);  // 危险！
+#+end_src
