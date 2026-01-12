@@ -1,6 +1,6 @@
 #+TITLE: 5. 最长回文子串
 #+DATE: 2023-09-29 13:43:09
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

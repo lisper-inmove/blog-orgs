@@ -1,6 +1,6 @@
 #+TITLE: 1021. 删除最外层括号
 #+DATE: 2023-10-07 22:36:23
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

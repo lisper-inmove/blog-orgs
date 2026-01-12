@@ -1,6 +1,6 @@
 #+TITLE: 496. 下一个更大元素I
 #+DATE: 2023-10-01 02:49:40
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

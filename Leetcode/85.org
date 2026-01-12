@@ -1,6 +1,6 @@
 #+TITLE: 85. 最大矩形
 #+DATE: 2023-10-01 00:28:29
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove

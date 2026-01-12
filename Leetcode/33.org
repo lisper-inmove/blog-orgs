@@ -1,6 +1,6 @@
 #+TITLE: 33. 搜索旋转排序数组
 #+DATE: 2023-10-01 20:59:03
-#+DISPLAY: t
+#+DISPLAY: nil
 #+STARTUP: indent
 #+OPTIONS: toc:10
 #+AUTHOR: inmove
