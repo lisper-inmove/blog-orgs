@@ -1,0 +1,10 @@
+#+TITLE: Windows Commands
+#+DATE: 2026-01-14 02:52:43
+#+DISPLAY: nil
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: Windows
+
+* 检查远程端口是否开放
+Test-NetConnection -ComputerName server.example.com -Port 8080  # 远程
