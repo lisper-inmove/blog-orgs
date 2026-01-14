@@ -1,0 +1,193 @@
+#+TITLE: Atomic
+#+DATE: 2026-01-14 19:57:42
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: CPP
+
+* 基本的使用
+多线程编程中，共享的数据结构很复杂，对它修改时往往不是一步完成，这种情况需要使用std::mutex来保护。
+但是如果是比较简单的数据，std::mutex则又太复杂。std::atomic则适用这种简单的锁的场景。
+
+#+begin_src cpp
+  #include <iostream>
+  #include <atomic>
+
+  struct Demo {
+      Demo() {
+          std::cout << "Demo constructor called!" << std::endl;
+      }
+      int a;
+      int b;
+  };
+
+  void demo() {
+      std::atomic<char> ac('H');
+      std::atomic<int> ai(0);
+      std::atomic<bool> ab(0);
+      std::atomic<double> ad(3.14);
+
+      std::atomic<char *> ap1(nullptr);
+      std::atomic<int *> ap2(nullptr);
+
+      std::atomic<Demo> ao;
+  }
+
+  void demo01() {
+      std::atomic<int> ai(0);
+
+      // ai.load() 是原子操作，赋值到atomic_value是非原子操作
+      int atomic_value = ai.load();
+
+      // 以下都是原子操作
+      ai.store(20);
+      ai = 30;
+
+      // 设置新值，返回旧值
+      int old_value = ai.exchange(40);
+
+      // 以上大部分都支持 /////////////////////////
+
+      // int 支持的操作比较多
+      ai += 10;  // 等价于 ai.fetch_add(10)
+      ai -= 10;  // ai.fetch_sub(10)
+      ai |= 10;  // ai.fetch_or(10)
+      ai &= 10;  // ai.fetch_and(10)
+      ai ^= 10;  // ai.fetch_xor(10)
+      ai++;
+      ++ai;
+
+      // 不支持以上操作
+      std::atomic<double> ad(3.14);
+      std::atomic<bool> ab(true);
+
+      std::atomic<int*> ap(nullptr);
+      ap++;
+      ap--;
+      ap += 1;
+      ap -= 2;
+      ap.fetch_add(2);
+      ap.fetch_sub(2);
+  }
+#+end_src
+
+自定义类型使用atomic时，该类有以下限制：
+1. 不能有 拷贝构造，拷贝赋值，移动构造，移动赋值，析构 函数
+2. 不能有虚函数
+3. 不能包含引用成员
+必须是 trivially copyable
+* CAS
+Compare-And-Swap 或 Compare-And-Exchange。实现无锁同步
+#+begin_src cpp
+  bool compare_exchange_strong(T& expected, T desired);
+  bool compare_exchange_weak(T& expected, T desired);
+#+end_src
+
+strong: 只要原子变量值和expected相同，一定保证更新成功
+weak: 即使原子变量值和expected相机，也有可能因为硬件优化等原因，返回false(虚假的失败)
+
+使用weak的话，一般需要用循环的方式去做更新。它的性能比strong要更高。
+
+有的平台，它们的实现可能是一样的。
+
+#+begin_src cpp
+  #include <iostream>
+  #include <thread>
+  #include <chrono>
+  #include <mutex>
+  #include <atomic>
+
+  std::atomic<int> counter(0);
+  std::mutex mtx;
+
+  void worker() {
+      for (int i = 0; i < 100; ++i) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(50));
+          int old_value = counter.load();
+          int new_value;
+          do {
+              new_value = (old_value == 20) ? 0 : old_value + 1;
+          } while (!counter.compare_exchange_strong(old_value, new_value));
+
+          // 这里加锁只是为了保证输出不混乱
+          std::lock_guard<std::mutex> lock(mtx);
+          std::cout << old_value << "\t" << std::this_thread::get_id() << std::endl;
+      }
+  }
+
+  void demo() {
+      std::thread t1(worker);
+      std::thread t2(worker);
+      t1.join();
+      t2.join();
+  }
+
+  int main() {
+      demo();
+      return 0;
+  }
+
+#+end_src
+
+* 基本原理
+atomic依赖两种方式实现
+1. CPU硬件级别的原子操作: 现代 CPU（如 x86、ARM）提供多种原子操作指令，可以直接对某些大小和对齐要求的类型实现高效的无锁原子操
+   1.1 类型大小小于等于 8 字节（64 位）
+   1.2 类型型大小为 2 的幂次方（1、2、4、8 字节）。
+2. 操作系统级别的同步机制：当类型过大、不满足对齐要求，或目标平台/编译器不支持对应硬件原子指令时，std::atomic 可能通过内部互斥锁（如 std::mutex）模拟原子性，以牺牲性能换取正确性
+
+通过 std::atomic<T>::is_lock_free() 来判断，如果该函数返回 true 表示使用硬件原子指令实现；返回 false 则可能是基于系统级别的同步机制实现。
+* 内存序
+编译器和 CPU 为了让程序跑得更快，有时候会偷偷调整代码执行顺序，只要在单线程里程序逻辑不变就行
+
+#+begin_src cpp
+  std::atomic<bool> ready{ false };
+  int data = 0;
+
+  // 线程 A
+  void thread_writer()
+  {
+      // 普通写入
+      data = 42;
+      // 原子标志位
+      ready.store(true);
+
+      /**
+         因为重排，有可能执行顺序变为：
+         ready.store(true);
+         data = 42;
+       ,*/
+  }
+
+  // 线程 B
+  void thread_reader()
+  {
+      // 等待标志位为 true
+      while (!ready.load());
+      // 可能触发断言失败！
+      assert(data == 42);
+  }
+#+end_src
+
+memory_order_relaxed：当前线程里，编译器和 CPU 可以随便重排这条原子操作的前后指令。
+memory_order_release：保证这条原子写 之前 的所有普通读写操作，都不能被重排到它后面。
+memory_order_acquire：保证这条原子读 之后 的所有普通读写操作，都不能被重排到它前面。
+memory_order_acq_rel：既阻止前面的操作被重排到后面，也阻止后面的操作被重排到前面。
+memory_order_seq_cst：*默认值* 不仅保证原子操作本身的原子性，还额外保证所有线程对这些原子修改的观察顺序是一致的。
+
+** 修改顺序一致性
+#+begin_src cpp
+  std::atomic<int> x{0};
+  // 线程 T1
+  x.store(1, std::memory_order_release);
+  // 线程 T2
+  x.store(2, std::memory_order_release);
+  // 线程 A
+  int a1 = x.load();
+  int a2 = x.load();
+  // 线程 B
+  int b1 = x.load();
+  int b2 = x.load();
+#+end_src
+A线程看到的可能是 1 -> 2，B线程可能看到的是 2 -> 1，这个时候就需要 memory_order_seq_cst 来保证
