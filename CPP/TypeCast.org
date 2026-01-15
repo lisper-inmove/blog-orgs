@@ -1,4 +1,4 @@
-#+TITLE: C++基础
+#+TITLE: 类型转换
 #+DATE: 2026-01-12 21:39:02
 #+DISPLAY: t
 #+STARTUP: indent

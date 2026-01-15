@@ -1,0 +1,79 @@
+#+TITLE: Smart Ptr
+#+DATE: 2026-01-15 21:37:23
+#+DISPLAY: t
+#+STARTUP: indent
+#+OPTIONS: toc:10
+#+AUTHOR: inmove
+#+CATEGORIES: CPP
+
+* auto_ptr
+C++98引入的智能指针，C++11中被标记为已废弃，C++17中被移除
+缺陷: 没有共享所有权，不支持拷贝语义
+
+* unique_ptr
+独占所有权的智能指针。动态分配的对象在其生命周期结束时，自动释放内存。
+
+禁止拷贝和赋值。与auto_ptr相比，语义明确，明确的禁止拷贝和赋值。
+=unique_ptr(const unique_ptr&) = delete=
+=unique_ptr& operator=(const unique_ptr&) = delete=
+
+支持移动拷贝和移动赋值
+=unique_ptr<Person> up1(std::move(up0))=
+=up1=std::move(up0)=
+
+容器是支持拷贝的，所以unique_ptr的对象不能用在容器中
+** 自定义删除器
+unique_ptr默认的删除对象时使用的是delete，并不适用于所有类。比如，FILE。这个时候就需要自定义删除器。
+自定义的删除器是一个可调用对象，它的参数是unique_ptr管理的对象。
+
+用函数对象定义删除器
+#+begin_src cpp
+  class FileDeleter {
+  public:
+      void operator(FILE* fp) {
+          if (fp) {
+              fclose(fp);
+          }
+      };
+  };
+
+  unique_ptr<FILE, FileDeleter> up(fopen("test.txt", "w"), FileDeleter());
+  // unique_ptr<FILE, std::function<void(FILE *)>> up(fopen("test.txt", "w"), FileDeleter());
+#+end_src
+
+用函数定义删除器
+#+begin_src cpp
+  void my_deleter(FILE* fp) {
+      if (fp != nullptr) {
+          fclose(fp);
+          fp = nullptr;
+      }
+  }
+
+  unique_ptr<FILE, void(*)(FILE *)> up(fopen("test.txt", "w"), my_deleter);
+  // unique_ptr<FILE, decltype<&my_deleter> up(fopen("test.txt", "w"), my_deleter);
+  // unique_ptr<FILE, function<void(FILE*)>> up(fopen("test.txt", "w"), my_deleter);
+#+end_src
+
+匿名函数作为删除器
+#+begin_src cpp
+  unique_ptr<FILE, function<void(FILE*)>> uptr(fopen("test.txt", "w"), [](FILE* f) {
+      if (f) fclose(f);
+  });
+#+end_src
+
+* shared_ptr
+多个shared_ptr实例共享同一对象的所有权。使用引用计数来跟踪有多少个shared_ptr实例指向同一个对象，并在最后一个实例销毁时自动释放对象。
+
+与unique_ptr不同之处: 支持拷贝和赋值，也就可以放到容器中
+
+创建一个shared_ptr时，实际有两个对象，一个是被引用的对象，另一个引用计数对象，它也是一个被共享的指针。
+
+** 自定义删除器
+#+begin_src cpp
+  shared_ptr<FILE> sp1(fopen("test.txt", "w"), my_deleter);
+  shared_ptr<FILE> sp2(fopen("test.txt", "w"), MyDeleter());
+  shared_ptr<FILE> sp3(fopen("test.txt", "w"), [](FILE *fp) {
+      if (fp) fclose(fp);
+   });
+#+end_src
