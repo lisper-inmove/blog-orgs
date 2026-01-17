@@ -77,3 +77,105 @@ unique_ptr默认的删除对象时使用的是delete，并不适用于所有类�
       if (fp) fclose(fp);
    });
 #+end_src
+
+* weak_ptr
+weak_ptr是辅助shared_ptr的角色存在的，主要作用是解决循环引用的问题
+我们不会直接创建weak_ptr的对象，而是通过shared_ptr去创建
+weak_ptr创建时不会增加引用计数
+shared_ptr销毁时，weak_ptr自动失效
+#+begin_src cpp
+  shared_ptr<Person> sp1 = make_shared<Person>(10, 20);
+  weak_ptr<Person> wp1(sp1);
+  if (wp1.expired())  {
+      return;
+  }
+  // weak_ptr<Person> wp1 = sp1;
+  cout << sp1.use_count() << endl;
+
+  // 返回一个新的shared_ptr对象，也有可能返回空指针。引用计数加1
+  auto sp2 = wp1.lock();
+  sp2->show();
+#+end_src
+
+** 双向链表造成循环引用
+#+begin_src cpp
+  class Node {
+  public:
+      int data;
+      // shared_ptr造成循环引用
+      // 用weak_ptr解决循环引用问题
+      shared_ptr<Node> next;
+      shared_ptr<Node> prev;
+
+      Node(int val) : data(val), next(nullptr), prev(nullptr) {}
+  };
+
+  void useNode() {
+      Node* node1 = shared_ptr<Node>(new Node(10));
+      Node* node2 = shared_ptr<Node>(new Node(20));
+      node1->next = node2;
+      node2->prev = node1;
+  }
+#+end_src
+
+* 智能指针工厂函数
+
+make_unique
+1. 比unique_ptr更加简洁
+2. 更加安全，make_unique在函数执行过程中发生异常时，也能保证资源的正确释放
+
+#+begin_src cpp
+  unique_ptr<Person> up1 = make_unique<Person>();
+  unique_ptr<Person> up2 = make_unique<Person>(1, 2);
+
+  // 只能调用无参构造函数
+  unique_ptr<Person[]> up3 = make_unique<Person[]>(3);
+#+end_src
+
+#+begin_src cpp
+  #include <iostream>
+  #include <memory>
+  #include <stdexcept>
+
+  using std::cout;
+  using std::endl;
+  using std::unique_ptr;
+  using std::make_unique;
+
+  class Person {
+  public:
+      Person() {
+          cout << "构造函数" << endl;
+      }
+      ~Person() {
+          cout << "析构函数" << endl;
+      }
+  };
+
+  int test() {
+      cout << "test函数中" << endl;
+      throw std::exception();
+      return 100;
+  }
+
+  void do_logic(unique_ptr<Person> p, int number) {}
+
+  int main() {
+      try {
+          // 不同的编译器，函数调用的参数的求值顺序可能不同
+          // 有的编译器会先调用 new Person，然后调用test()，抛出异常，造成内存泄漏
+          // Linux 下用 g++测试时并未出现内存泄漏
+          // do_logic(unique_ptr<Person>(new Person), test());
+
+          do_logic(make_unique<Person>(), test());
+      } catch (...) {
+          cout << "捕获到异常" << endl;
+      }
+      return 0;
+  }
+#+end_src
+
+make_shared 比 shared_ptr效率更高
+shared_ptr 会分配两次内存，一次是动态对象的内存，另一次是引用计数对象的内存。
+make_shared只分配一次，一次分配好所需内存，然后在内存上创建对象
+make_shared不支持创建用于管理动态对象数组的shared_ptr对象
